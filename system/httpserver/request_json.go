@@ -80,32 +80,6 @@ func (c *HttpServer) RequestJson(function string, requestText []byte, host strin
 	case nodeinterface.FuncResourcePropGet:
 		result, err = c.ResourcePropGet(requestText)
 
-		// *** Cloud ***
-	case nodeinterface.FuncCloudLogin:
-		result, err = c.CloudLogin(requestText)
-	case nodeinterface.FuncCloudLogout:
-		result, err = c.CloudLogout(requestText)
-	case nodeinterface.FuncCloudState:
-		result, err = c.CloudState(requestText)
-	case nodeinterface.FuncCloudNodes:
-		result, err = c.CloudNodes(requestText)
-	case nodeinterface.FuncCloudAddNode:
-		result, err = c.CloudAddNode(requestText)
-	case nodeinterface.FuncCloudUpdateNode:
-		result, err = c.CloudUpdateNode(requestText)
-	case nodeinterface.FuncCloudRemoveNode:
-		result, err = c.CloudRemoveNode(requestText)
-	case nodeinterface.FuncCloudGetSettings:
-		result, err = c.CloudGetSettings(requestText)
-	case nodeinterface.FuncCloudSetSettings:
-		result, err = c.CloudSetSettings(requestText)
-	case nodeinterface.FuncCloudAccountInfo:
-		result, err = c.CloudAccountInfo(requestText)
-	case nodeinterface.FuncCloudSetCurrentNodeId:
-		result, err = c.CloudSetCurrentNodeId(requestText)
-	case nodeinterface.FuncCloudGetSettingsProfiles:
-		result, err = c.CloudGetSettingsProfiles(requestText)
-
 	// *** Data Item ***
 	case nodeinterface.FuncDataItemList:
 		result, err = c.DataItemList(requestText)

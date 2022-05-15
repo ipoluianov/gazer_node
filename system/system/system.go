@@ -2,11 +2,11 @@ package system
 
 import (
 	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/system/cloud"
 	"github.com/gazercloud/gazernode/system/history"
 	"github.com/gazercloud/gazernode/system/resources"
 	"github.com/gazercloud/gazernode/system/settings"
 	"github.com/gazercloud/gazernode/system/units/units_system"
+	"github.com/gazercloud/gazernode/system/xchg"
 	"sync"
 	"time"
 )
@@ -24,7 +24,8 @@ type System struct {
 
 	unitsSystem *units_system.UnitsSystem
 
-	cloudConnection *cloud.Connection
+	//cloudConnection *cloud.Connection
+	xchgPoint *xchg.Point
 
 	history   *history.History
 	resources *resources.Resources
@@ -53,7 +54,8 @@ func NewSystem(ss *settings.Settings) *System {
 	c.itemsByName = make(map[string]*common_interfaces.Item)
 	c.itemsById = make(map[uint64]*common_interfaces.Item)
 
-	c.cloudConnection = cloud.NewConnection(c.ss.ServerDataPath())
+	//c.cloudConnection = cloud.NewConnection(c.ss.ServerDataPath())
+	c.xchgPoint = xchg.NewPoint()
 
 	c.unitsSystem = units_system.New(&c)
 	c.history = history.NewHistory(c.ss)
@@ -72,7 +74,7 @@ func (c *System) Settings() *settings.Settings {
 
 func (c *System) SetRequester(requester common_interfaces.Requester) {
 	c.requester = requester
-	c.cloudConnection.SetRequester(c.requester)
+	c.xchgPoint.SetRequester(c.requester)
 }
 
 func (c *System) Start() {
@@ -88,7 +90,7 @@ func (c *System) Start() {
 			realItem.Value = item.Value
 		}
 	}
-	c.cloudConnection.Start()
+	c.xchgPoint.Start()
 	c.history.Start()
 	c.unitsSystem.Start()
 
@@ -99,7 +101,7 @@ func (c *System) Stop() {
 	c.stopping = true
 	c.unitsSystem.Stop()
 	c.history.Stop()
-	c.cloudConnection.Stop()
+	c.xchgPoint.Stop()
 	c.SaveConfig()
 	c.saveSessions()
 
@@ -124,7 +126,7 @@ func (c *System) StatGazerNode() (res common_interfaces.StatGazerNode) {
 }
 
 func (c *System) StatGazerCloud() (res common_interfaces.StatGazerCloud) {
-	res = c.cloudConnection.Stat()
+	//res = c.xchgPoint.Stat()
 	return
 }
 
