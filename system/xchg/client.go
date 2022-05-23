@@ -45,7 +45,7 @@ func NewClient(localAddr string, onRcv func([]byte)) *Client {
 }
 
 func (c *Client) getIPsByAddress(_ string) []string {
-	return []string{"51.195.119.145"}
+	return []string{"54.37.73.160", "54.37.73.229"}
 }
 
 func (c *Client) findServerForHosting(addr string) (resultIp string) {
