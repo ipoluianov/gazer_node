@@ -45,7 +45,7 @@ func NewClient(localAddr string, onRcv func([]byte)) *Client {
 }
 
 func (c *Client) getIPsByAddress(_ string) []string {
-	return []string{"51.195.116.147", "51.195.119.145"}
+	return []string{"51.195.119.145"}
 }
 
 func (c *Client) findServerForHosting(addr string) (resultIp string) {
@@ -67,7 +67,7 @@ func (c *Client) findServerForHosting(addr string) (resultIp string) {
 }
 
 func (c *Client) findServerByAddress(addr string) (resultIp string) {
-	fmt.Println("findServerByAddress")
+	fmt.Println("findServerByAddress", addr)
 	ips := c.getIPsByAddress(addr)
 	for _, ip := range ips {
 		code, _, err := c.Request(c.httpClientPing, "http://"+ip+":8987", map[string][]byte{"f": []byte("p"), "a": []byte(addr)})
@@ -85,7 +85,7 @@ func (c *Client) findServerByAddress(addr string) (resultIp string) {
 }
 
 func (c *Client) Send(addr string, data []byte) (err error) {
-	fmt.Println("Send to", addr, "data", string(data))
+	//fmt.Println("Send to", addr, "data_len:", len(data))
 	var ok bool
 	var code int
 	currentIP := ""
@@ -96,17 +96,18 @@ func (c *Client) Send(addr string, data []byte) (err error) {
 	needToResend := false
 
 	if ok && currentIP != "" {
-		fmt.Println("Send(1): found ip:", currentIP)
-		code, _, err = c.Request(c.httpClientSend, "http://"+currentIP+":8987", map[string][]byte{"f": []byte("w"), "a": []byte(addr), "d": data})
+		var resp []byte
+		//fmt.Println("Send(1): found ip:", currentIP)
+		code, resp, err = c.Request(c.httpClientSend, "http://"+currentIP+":8987", map[string][]byte{"f": []byte("w"), "a": []byte(addr), "d": data})
 		if err != nil || code != 200 {
-			fmt.Println("Send(1) error", err, code)
+			fmt.Println("Send(1) error", err, code, string(resp))
 			needToResend = true
 			c.mtx.Lock()
 			c.IPsByAddress[addr] = ""
 			currentIP = ""
 			c.mtx.Unlock()
 		} else {
-			fmt.Println("Send(1) OK")
+			//fmt.Println("Send(1) OK")
 		}
 	} else {
 		needToResend = true

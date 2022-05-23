@@ -3,7 +3,6 @@ package xchg
 import (
 	"encoding/json"
 	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/utilities/logger"
 )
 
 type Point struct {
@@ -19,18 +18,19 @@ func NewPoint() *Point {
 }
 
 func (c *Point) onRcv(frame []byte) {
-	logger.Println("RECEIVED", frame)
+	//logger.Println("RECEIVED", frame)
 
 	var f Frame
 	json.Unmarshal(frame, &f)
-	logger.Println("function", f.Function)
+	//logger.Println("function", f.Function, f.Src, f.Transaction)
 
 	respBytes, _ := c.requester.RequestJson(f.Function, f.Data, "", true)
 
 	var resp Frame
 	resp.Function = f.Function
-	resp.Src = "node"
+	resp.Src = f.Src
 	resp.Data = respBytes
+	resp.Transaction = f.Transaction
 	bs, _ := json.MarshalIndent(resp, "", " ")
 
 	c.client.Send(f.Src, bs)
