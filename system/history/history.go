@@ -26,17 +26,17 @@ func NewHistory(ss *settings.Settings) *History {
 }
 
 func (c *History) Start() {
-	logger.Println("HISTORY starting begin")
+	//logger.Println("HISTORY starting begin")
 
 	c.started = true
 	c.stopping = false
 	go c.thWorker()
 
-	logger.Println("HISTORY starting end")
+	//logger.Println("HISTORY starting end")
 }
 
 func (c *History) Stop() {
-	logger.Println("HISTORY stopping begin")
+	//logger.Println("HISTORY stopping begin")
 
 	c.stopping = true
 
@@ -47,7 +47,7 @@ func (c *History) Stop() {
 		}
 	}
 
-	logger.Println("HISTORY flushing ...")
+	//logger.Println("HISTORY flushing ...")
 	c.mtx.Lock()
 	for _, item := range c.items {
 		go item.FinishFlush()
@@ -66,7 +66,7 @@ func (c *History) Stop() {
 		time.Sleep(250 * time.Millisecond)
 	}
 	c.mtx.Unlock()
-	logger.Println("HISTORY flushing ... OK")
+	//logger.Println("HISTORY flushing ... OK")
 
 	if c.started {
 		logger.Println("HISTORY stopping: timeout")
@@ -75,7 +75,7 @@ func (c *History) Stop() {
 }
 
 func (c *History) thWorker() {
-	logger.Println("HISTORY worker begin")
+	//logger.Println("HISTORY worker begin")
 
 	lastFlushDT := time.Now()
 

@@ -131,7 +131,7 @@ func (c *System) saveSessions() {
 }
 
 func (c *System) loadSessions() {
-	logger.Println("System loadSessions begin")
+	//logger.Println("System loadSessions begin")
 	configString, err := ioutil.ReadFile(c.ss.ServerDataPath() + "/sessions.json")
 	if err == nil {
 		err = json.Unmarshal(configString, &c.sessions)
@@ -141,9 +141,9 @@ func (c *System) loadSessions() {
 	} else {
 		logger.Println("loadSessions error ", err)
 	}
-	logger.Println("System loadSessions")
-	logger.Println(c.sessions)
-	logger.Println("System loadSessions end")
+	//logger.Println("System loadSessions")
+	//logger.Println(c.sessions)
+	//logger.Println("System loadSessions end")
 }
 
 func (c *System) UserList() (nodeinterface.UserListResponse, error) {

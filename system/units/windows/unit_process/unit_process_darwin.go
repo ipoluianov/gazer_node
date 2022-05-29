@@ -65,7 +65,6 @@ func (c *UnitSystemProcess) InternalUnitStop() {
 
 func (c *UnitSystemProcess) Tick() {
 	c.Started = true
-	logger.Println("UNIT <Process Windows> started:", c.Id())
 
 	dtOperationTime := time.Now().UTC()
 
@@ -121,7 +120,6 @@ func (c *UnitSystemProcess) Tick() {
 		dtOperationTime = time.Now().UTC()
 	}
 
-	logger.Println("UNIT <Process Windows> stopped:", c.Id())
 	c.Started = false
 }
 

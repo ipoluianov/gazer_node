@@ -42,9 +42,9 @@ func NewHttpServer(sys *system.System) *HttpServer {
 }
 
 func (c *HttpServer) Start() {
-	logger.Println("HttpServer start")
+	//logger.Println("HttpServer start")
 
-	generateTLS(c.system.Settings())
+	//generateTLS(c.system.Settings())
 
 	c.r = mux.NewRouter()
 
@@ -72,7 +72,7 @@ func (c *HttpServer) Start() {
 }
 
 func (c *HttpServer) thListen() {
-	logger.Println("HttpServer thListen begin")
+	//logger.Println("HttpServer thListen begin")
 	err := c.srv.ListenAndServe()
 	if err != nil {
 		logger.Println("HttpServer thListen error: ", err)
