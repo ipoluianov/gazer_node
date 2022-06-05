@@ -6,13 +6,13 @@ import (
 	"crypto/cipher"
 	"crypto/rand"
 	"crypto/rsa"
-	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/gazercloud/gazernode/utilities/logger"
 	"io"
 	"io/ioutil"
 	"mime/multipart"
@@ -26,26 +26,29 @@ type Client struct {
 	httpClientSend    *http.Client
 	httpClientReceive *http.Client
 	httpClientPing    *http.Client
-	localAddrIP       string
-	localAddr         string
+	xchgIP            string
 	stopping          bool
 	IPsByAddress      map[string]string
-	OnReceived        func([]byte)
+	OnReceived        func([]byte) ([]byte, error)
 
 	// Local keys
-	privateKey   *rsa.PrivateKey
+	privateKey    *rsa.PrivateKey
+	privateKeyBS  []byte
+	privateKey64  string
+	privateKeyHex string
+
 	publicKeyBS  []byte
-	privateKeyBS []byte
 	publicKey64  string
+	publicKeyHex string
 
 	// AES Key
-	secretBytes []byte
-	counter     uint64
+	aesKey  []byte
+	counter uint64
+	lid     uint64
 }
 
-func NewClient(localAddr string, onRcv func([]byte)) *Client {
+func NewClient(localAddr string, onRcv func([]byte) ([]byte, error)) *Client {
 	var c Client
-	c.localAddr = localAddr
 	c.OnReceived = onRcv
 
 	c.httpClientSend = &http.Client{}
@@ -58,7 +61,7 @@ func NewClient(localAddr string, onRcv func([]byte)) *Client {
 	c.httpClientPing.Timeout = 3000 * time.Millisecond
 
 	c.IPsByAddress = make(map[string]string)
-	c.localAddrIP = ""
+	c.xchgIP = ""
 
 	c.generateKeys()
 
@@ -76,25 +79,25 @@ func (c *Client) generateKeys() {
 
 	//c.privateKey, _ = rsa.GenerateKey(rand.Reader, 2048)
 
-	c.publicKeyBS = x509.MarshalPKCS1PublicKey(&c.privateKey.PublicKey)
 	c.privateKeyBS = x509.MarshalPKCS1PrivateKey(c.privateKey)
-	shaCode := sha256.Sum256(c.publicKeyBS)
-	c.localAddr = hex.EncodeToString(shaCode[:16])
+
+	c.publicKeyBS = x509.MarshalPKCS1PublicKey(&c.privateKey.PublicKey)
 	c.publicKey64 = base64.StdEncoding.EncodeToString(c.publicKeyBS)
-	//fmt.Println("Private Key: ", base64.StdEncoding.EncodeToString(c.privateKeyBS), "len:", len(c.privateKeyBS))
-	//fmt.Println("Public Key: ", c.publicKey64, "len:", len(c.publicKeyBS))
-	fmt.Println("XCHG --- Address: ", c.localAddr)
-	//fmt.Println("XCHG --- Private Key: ", base64.StdEncoding.EncodeToString(c.privateKeyBS))
+	c.publicKeyHex = hex.EncodeToString(c.publicKeyBS)
+	fmt.Println("XCHG --- Address: ", c.publicKey64)
 }
 
 func (c *Client) getIPsByAddress(_ string) []string {
 	return []string{"127.0.0.1"}
 }
 
-func (c *Client) findServerForHosting(addr string) (resultIp string) {
-	fmt.Println("XCHG --- findServerForHosting", addr)
-	ips := c.getIPsByAddress(addr)
+func (c *Client) findServerForHosting(publicKeyBS []byte) (resultIp string) {
+	//fmt.Println("XCHG --- findServerForHosting", hex.EncodeToString(publicKeyBS))
+	ips := c.getIPsByAddress(hex.EncodeToString(publicKeyBS))
 	for _, ip := range ips {
+		resultIp = ip
+		break
+
 		code, _, err := c.Request(c.httpClientPing, "http://"+ip+":8987", map[string][]byte{"f": []byte("i")})
 		if err != nil {
 			continue
@@ -110,7 +113,7 @@ func (c *Client) findServerForHosting(addr string) (resultIp string) {
 }
 
 func (c *Client) findServerByAddress(addr string) (resultIp string) {
-	fmt.Println("findServerByAddress", addr)
+	//fmt.Println("findServerByAddress", addr)
 	ips := c.getIPsByAddress(addr)
 	for _, ip := range ips {
 		code, _, err := c.Request(c.httpClientPing, "http://"+ip+":8987", map[string][]byte{"f": []byte("p"), "a": []byte(addr)})
@@ -179,39 +182,113 @@ func (c *Client) requestInit() error {
 	var data []byte
 	var err error
 
-	code, data, err = c.Request(c.httpClientReceive, "http://"+c.localAddrIP+":8987", map[string][]byte{"f": []byte("init"), "a": []byte(c.localAddr), "public_key": []byte(c.publicKey64)})
-	if err != nil {
-		fmt.Println("rcv err:", err)
-		c.localAddrIP = ""
-		return err
+	{
+		requestInit1 := make([]byte, 0)
+		requestInit1 = append(requestInit1, 0x00) // Init1
+		requestInit1 = append(requestInit1, c.publicKeyBS...)
+
+		code, data, err = c.Request(c.httpClientReceive, "http://"+c.xchgIP+":8987", map[string][]byte{"f": []byte("b"), "d": []byte(base64.StdEncoding.EncodeToString(requestInit1))})
+		if err != nil {
+			fmt.Println("rcv err:", err)
+			c.xchgIP = ""
+			return err
+		}
+		if code != 200 {
+			fmt.Println("code:", code)
+			c.xchgIP = ""
+			return errors.New("Code != 200")
+		}
+
+		fmt.Println("Received Data init 1:", string(data))
+
+		var encryptedBytes []byte
+		var decryptedBytes []byte
+		encryptedBytes, err = base64.StdEncoding.DecodeString(string(data))
+		if err != nil {
+			fmt.Println("ERROR: ", err)
+			return err
+		}
+
+		decryptedBytes, err = rsa.DecryptPKCS1v15(rand.Reader, c.privateKey, encryptedBytes)
+		if err != nil {
+			return err
+		}
+		c.aesKey = decryptedBytes
+		logger.Println("AES: ", hex.EncodeToString(c.aesKey))
+		if err != nil {
+			return err
+		}
 	}
 
-	if code != 200 {
-		fmt.Println("code:", code)
-		c.localAddrIP = ""
-		return errors.New("Code != 200")
-	}
+	{
+		requestInit2 := make([]byte, 1+4)
+		requestInit2[0] = 0x01
+		binary.LittleEndian.PutUint32(requestInit2[1:], uint32(len(c.publicKeyBS)))
+		requestInit2 = append(requestInit2, c.publicKeyBS...)
+		var encryptedPublicKey []byte
+		encryptedPublicKey, err = c.encryptAES(c.publicKeyBS, c.aesKey)
+		if err != nil {
+			return err
+		}
 
-	fmt.Println(string(data))
+		requestInit2 = append(requestInit2, encryptedPublicKey...)
 
-	var encryptedBytes []byte
-	var decryptedBytes []byte
-	encryptedBytes, err = base64.StdEncoding.DecodeString(string(data))
-	if err != nil {
-		return err
-	}
+		code, data, err = c.Request(c.httpClientReceive, "http://"+c.xchgIP+":8987", map[string][]byte{"f": []byte("b"), "d": []byte(base64.StdEncoding.EncodeToString(requestInit2))})
+		if err != nil {
+			fmt.Println("rcv err:", err)
+			c.xchgIP = ""
+			return err
+		}
+		if code != 200 {
+			fmt.Println("code:", code, string(data))
+			c.xchgIP = ""
+			return errors.New("Code != 200")
+		}
 
-	decryptedBytes, err = rsa.DecryptPKCS1v15(rand.Reader, c.privateKey, encryptedBytes)
-	if err != nil {
-		return err
+		var encryptedBytes []byte
+		//var decryptedBytes []byte
+		encryptedBytes, err = base64.StdEncoding.DecodeString(string(data))
+		if err != nil {
+			return err
+		}
+
+		var init2Response []byte
+		init2Response, err = c.decryptAES(encryptedBytes, c.aesKey)
+		if err != nil {
+			fmt.Println("1111")
+			return err
+		}
+
+		if len(init2Response) != 16 {
+			fmt.Println("11112222", len(init2Response))
+			err = errors.New("len(init2Response) != 8")
+			return err
+		}
+
+		c.lid = binary.LittleEndian.Uint64(init2Response[0:])
+		c.counter = binary.LittleEndian.Uint64(init2Response[8:])
+
+		fmt.Println("lid:", c.lid, "counter:", c.counter)
 	}
-	c.secretBytes, err = base64.StdEncoding.DecodeString(string(decryptedBytes))
-	if err != nil {
-		return err
-	}
-	c.counter = 0
 
 	return nil
+}
+
+func (c *Client) encryptAES(decryptedMessage []byte, key []byte) (encryptedMessage []byte, err error) {
+	var ch cipher.Block
+	ch, err = aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+	var gcm cipher.AEAD
+	gcm, err = cipher.NewGCM(ch)
+	nonce := make([]byte, gcm.NonceSize())
+	_, err = io.ReadFull(rand.Reader, nonce)
+	if err != nil {
+		return nil, err
+	}
+	encryptedMessage = gcm.Seal(nonce, nonce, decryptedMessage, nil)
+	return
 }
 
 func (c *Client) thRcv() {
@@ -220,45 +297,48 @@ func (c *Client) thRcv() {
 	var err error
 
 	for !c.stopping {
-		if c.localAddrIP == "" {
-			c.localAddrIP = c.findServerForHosting(c.localAddr)
+		if c.xchgIP == "" {
+			c.xchgIP = c.findServerForHosting(c.publicKeyBS)
 		}
 
-		if c.localAddrIP == "" {
+		if c.xchgIP == "" {
 			time.Sleep(1 * time.Second)
 			fmt.Println("no server for hosting found")
 			continue
 		}
 
-		if len(c.secretBytes) != 32 {
+		if len(c.aesKey) != 32 {
 			err = c.requestInit()
 			if err != nil {
 				fmt.Println("XCHG -- no secret bytes", err)
 				time.Sleep(1 * time.Second)
-				c.localAddrIP = ""
-				c.secretBytes = nil
+				c.xchgIP = ""
+				c.aesKey = nil
+				c.lid = 0
 				c.counter = 0
 				continue
 			}
 		}
 
-		if len(c.secretBytes) != 32 {
+		if len(c.aesKey) != 32 {
 			time.Sleep(1 * time.Second)
 			fmt.Println("XCHG -- no secret bytes")
-			c.localAddrIP = ""
-			c.secretBytes = nil
+			c.xchgIP = ""
+			c.aesKey = nil
+			c.lid = 0
 			c.counter = 0
 			continue
 		}
 
 		var ch cipher.Block
-		ch, err = aes.NewCipher(c.secretBytes)
+		ch, err = aes.NewCipher(c.aesKey)
 		if err != nil {
 			time.Sleep(1 * time.Second)
 			fmt.Println("XCHG -- cannot create Cipher")
-			c.localAddrIP = ""
-			c.secretBytes = nil
+			c.xchgIP = ""
+			c.aesKey = nil
 			c.counter = 0
+			c.lid = 0
 			continue
 		}
 		var gcm cipher.AEAD
@@ -268,25 +348,28 @@ func (c *Client) thRcv() {
 		if err != nil {
 			time.Sleep(1 * time.Second)
 			fmt.Println("XCHG -- cannot fill nonce")
-			c.localAddrIP = ""
-			c.secretBytes = nil
+			c.xchgIP = ""
+			c.aesKey = nil
 			c.counter = 0
+			c.lid = 0
 			continue
 		}
 
 		c.counter++
 
-		counterBytes := make([]byte, 8)
-		binary.LittleEndian.PutUint64(counterBytes, c.counter)
-		encryptedAES := gcm.Seal(nonce, nonce, counterBytes, nil)
-		fmt.Println("XCHG - ", encryptedAES, len(encryptedAES))
-		encryptedAES64 := base64.StdEncoding.EncodeToString(encryptedAES)
+		readRequestBS := make([]byte, 9)
+		readRequestBS[0] = 0x02
+		binary.LittleEndian.PutUint64(readRequestBS[1:], c.lid)
+		counterBS := make([]byte, 8)
+		binary.LittleEndian.PutUint64(counterBS, c.counter)
+		encryptedCounter := gcm.Seal(nonce, nonce, counterBS, nil)
+		readRequestBS = append(readRequestBS, encryptedCounter...)
 
 		fmt.Println("XCHG - READ")
-		code, data, err = c.Request(c.httpClientReceive, "http://"+c.localAddrIP+":8987", map[string][]byte{"f": []byte("r"), "a": []byte(c.localAddr), "d": []byte(encryptedAES64)})
+		code, data, err = c.Request(c.httpClientReceive, "http://"+c.xchgIP+":8987", map[string][]byte{"f": []byte("b"), "d": []byte(base64.StdEncoding.EncodeToString(readRequestBS))})
 		if err != nil {
 			fmt.Println("rcv err:", err)
-			c.localAddrIP = ""
+			c.xchgIP = ""
 			continue
 		}
 
@@ -296,28 +379,55 @@ func (c *Client) thRcv() {
 			continue
 		}*/
 
+		//fmt.Println("Code", code, data)
+
 		if code != 200 && code != 204 {
-			fmt.Println("Code", code)
-			c.localAddrIP = ""
-			c.secretBytes = nil
+
+			c.xchgIP = ""
+			c.aesKey = nil
+			c.lid = 0
 			time.Sleep(1 * time.Second)
 			continue
 		}
 
 		if code == 200 {
-			data, _ = base64.StdEncoding.DecodeString(string(data))
-			data, err = c.decryptAES(data, c.secretBytes)
-			if err != nil {
-				fmt.Println("Decrypt error", err)
-				c.localAddrIP = ""
-				c.secretBytes = nil
-				time.Sleep(1 * time.Second)
-				continue
+			if len(data) > 0 {
+				data, _ = base64.StdEncoding.DecodeString(string(data))
+				data, err = c.decryptAES(data, c.aesKey)
+				if err != nil {
+					fmt.Println("Decrypt error", err)
+					c.xchgIP = ""
+					c.aesKey = nil
+					c.lid = 0
+					time.Sleep(1 * time.Second)
+					continue
+				}
+				transactionId := binary.LittleEndian.Uint64(data[0:])
+				data = data[8:]
+				fmt.Println("Received request", transactionId, string(data))
+				response, err := c.OnReceived(data)
+				if err != nil {
+					continue
+				}
+				fmt.Println("RESPONSE: ", string(response))
+
+				{
+					putRequestBS := make([]byte, 9)
+					putRequestBS[0] = 0x03
+					binary.LittleEndian.PutUint64(putRequestBS[1:], c.lid)
+
+					responseBS := make([]byte, 8)
+					binary.LittleEndian.PutUint64(responseBS, transactionId)
+					responseBS = append(responseBS, response...)
+					encryptedResponse := gcm.Seal(nonce, nonce, responseBS, nil)
+
+					putRequestBS = append(putRequestBS, encryptedResponse...)
+					code, data, err = c.Request(c.httpClientReceive, "http://"+c.xchgIP+":8987", map[string][]byte{"f": []byte("b"), "d": []byte(base64.StdEncoding.EncodeToString(putRequestBS))})
+				}
+
+				_ = response
 			}
 
-			fmt.Println("Received request", string(data))
-
-			c.OnReceived(data)
 		}
 	}
 }
