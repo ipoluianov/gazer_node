@@ -368,8 +368,9 @@ func (c *Client) thRcv() {
 		fmt.Println("XCHG - READ")
 		code, data, err = c.Request(c.httpClientReceive, "http://"+c.xchgIP+":8987", map[string][]byte{"f": []byte("b"), "d": []byte(base64.StdEncoding.EncodeToString(readRequestBS))})
 		if err != nil {
-			fmt.Println("rcv err:", err)
+			fmt.Println("XCHG - READ ERR:", err)
 			c.xchgIP = ""
+			time.Sleep(1000 * time.Millisecond)
 			continue
 		}
 
@@ -435,12 +436,10 @@ func (c *Client) thRcv() {
 func (c *Client) decryptAES(message []byte, key []byte) (decryptedMessage []byte, err error) {
 	ch, err := aes.NewCipher(key)
 	if err != nil {
-		fmt.Println("111", err)
 		return nil, err
 	}
 	gcm, err := cipher.NewGCM(ch)
 	if err != nil {
-		fmt.Println("222", err)
 		return nil, err
 	}
 	nonceSize := gcm.NonceSize()
@@ -450,8 +449,7 @@ func (c *Client) decryptAES(message []byte, key []byte) (decryptedMessage []byte
 	nonce, ciphertext := message[:nonceSize], message[nonceSize:]
 	decryptedMessage, err = gcm.Open(nil, nonce, ciphertext, nil)
 	if err != nil {
-		fmt.Println("333", err)
-		return nil, err
+		return
 	}
 	return
 }
