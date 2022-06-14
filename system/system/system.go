@@ -25,7 +25,7 @@ type System struct {
 	unitsSystem *units_system.UnitsSystem
 
 	//cloudConnection *cloud.Connection
-	xchgPoint *xchg.Point
+	xchgPoint *xchg.GazerXchgServer
 
 	history   *history.History
 	resources *resources.Resources
