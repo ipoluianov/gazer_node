@@ -9,7 +9,8 @@ import (
 	"github.com/ipoluianov/gazer_node/system/resources"
 	"github.com/ipoluianov/gazer_node/system/settings"
 	"github.com/ipoluianov/gazer_node/system/units/units_system"
-	"github.com/ipoluianov/gazer_node/system/xchg"
+	xchg_server "github.com/ipoluianov/gazer_node/system/xchg"
+	"github.com/ipoluianov/xchg/xchg_network"
 )
 
 type System struct {
@@ -26,7 +27,7 @@ type System struct {
 	unitsSystem *units_system.UnitsSystem
 
 	//cloudConnection *cloud.Connection
-	xchgPoint *xchg.GazerXchgServer
+	xchgPoint *xchg_server.GazerXchgServer
 
 	history   *history.History
 	resources *resources.Resources
@@ -56,7 +57,7 @@ func NewSystem(ss *settings.Settings) *System {
 	c.itemsById = make(map[uint64]*common_interfaces.Item)
 
 	//c.cloudConnection = cloud.NewConnection(c.ss.ServerDataPath())
-	c.xchgPoint = xchg.NewPoint()
+	c.xchgPoint = xchg_server.NewGazerXchgServer()
 
 	c.unitsSystem = units_system.New(&c)
 	c.history = history.NewHistory(c.ss)
@@ -90,8 +91,11 @@ func (c *System) Start() {
 		if realItem, ok := c.itemsByName[item.Name]; ok {
 			realItem.Value = item.Value
 		}
+
 	}
-	c.xchgPoint.Start()
+
+	c.xchgPoint = xchg_server.NewGazerXchgServer()
+	c.xchgPoint.Start(c.ss.ServerDataPath(), xchg_network.NewNetworkDefault())
 	c.history.Start()
 	c.unitsSystem.Start()
 

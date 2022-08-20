@@ -12,12 +12,13 @@ require (
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/google/uuid v1.2.0
 	github.com/gorilla/mux v1.8.0
-	github.com/ipoluianov/gomisc v0.0.7 // indirect
+	github.com/ipoluianov/gomisc v0.0.20 // indirect
+	github.com/ipoluianov/xchg v0.0.19 // indirect
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
 	github.com/jackc/pgx v3.6.2+incompatible
 	github.com/josephspurrier/goversioninfo v1.2.0
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
-	github.com/kardianos/service v1.2.0
+	github.com/kardianos/service v1.2.1
 	github.com/kbinani/win v0.3.0
 	github.com/lib/pq v1.10.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
