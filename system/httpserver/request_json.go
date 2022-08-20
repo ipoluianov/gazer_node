@@ -2,8 +2,9 @@ package httpserver
 
 import (
 	"errors"
-	"github.com/gazercloud/gazernode/system/protocols/nodeinterface"
-	"github.com/gazercloud/gazernode/utilities/logger"
+
+	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
 
 func (c *HttpServer) RequestJson(function string, requestText []byte, host string, fromCloud bool) ([]byte, error) {

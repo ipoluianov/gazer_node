@@ -10,12 +10,13 @@ import (
 	"crypto/x509/pkix"
 	"encoding/pem"
 	"fmt"
-	"github.com/gazercloud/gazernode/system/settings"
-	"github.com/gazercloud/gazernode/utilities/logger"
 	"io/ioutil"
 	"math/big"
 	"os"
 	"time"
+
+	"github.com/ipoluianov/gazer_node/system/settings"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
 
 func certPublic(ss *settings.Settings) []byte {

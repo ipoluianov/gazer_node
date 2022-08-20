@@ -2,10 +2,11 @@ package gazer_client
 
 import (
 	"encoding/json"
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/system/protocols/lookup"
-	nodeinterface2 "github.com/gazercloud/gazernode/system/protocols/nodeinterface"
 	"net/url"
+
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/system/protocols/lookup"
+	nodeinterface2 "github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
 )
 
 func (c *GazerNodeClient) Lookup(entity string) (lookup.Result, error) {

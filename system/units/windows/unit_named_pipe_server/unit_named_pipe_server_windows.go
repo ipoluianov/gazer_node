@@ -3,16 +3,18 @@ package unit_system_named_pipe_server
 import (
 	"encoding/json"
 	"errors"
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/resources"
-	"github.com/gazercloud/gazernode/system/units/units_common"
-	"github.com/gazercloud/gazernode/utilities/logger"
-	"github.com/gazercloud/gazernode/utilities/uom"
-	"github.com/google/uuid"
 	"net"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/Microsoft/go-winio"
+	"github.com/google/uuid"
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/resources"
+	"github.com/ipoluianov/gazer_node/system/units/units_common"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
+	"github.com/ipoluianov/gazer_node/utilities/uom"
 )
 
 type UnitSystemNamedPipeServer struct {

@@ -8,14 +8,15 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/system/protocols/nodeinterface"
-	"github.com/gazercloud/gazernode/utilities/logger"
 	"io/ioutil"
 	"math/rand"
 	"sort"
 	"strconv"
 	"time"
+
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
 
 var DefaultUserName string

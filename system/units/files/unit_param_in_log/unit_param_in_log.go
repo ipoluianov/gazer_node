@@ -3,11 +3,11 @@ package unit_filecontent
 import (
 	"encoding/json"
 	"errors"
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/resources"
-	"github.com/gazercloud/gazernode/system/units/units_common"
 	"io/ioutil"
 	"time"
+
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/system/units/units_common"
 )
 
 type UnitParamInLog struct {
@@ -28,7 +28,7 @@ const (
 var Image []byte
 
 func init() {
-	Image = resources.R_files_sensors_sensor_file_content_png
+	//Image = resources.R_files_sensors_sensor_file_content_png
 }
 
 func (c *UnitParamInLog) GetConfigMeta() string {

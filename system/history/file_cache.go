@@ -2,9 +2,10 @@ package history
 
 import (
 	"encoding/binary"
-	"github.com/gazercloud/gazernode/common_interfaces"
 	"io/ioutil"
 	"time"
+
+	"github.com/ipoluianov/gazer_node/common_interfaces"
 )
 
 type FileCache struct {

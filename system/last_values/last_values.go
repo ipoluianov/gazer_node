@@ -3,13 +3,14 @@ package last_values
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/system/settings"
 	"io/ioutil"
 	"os"
 	"sort"
 	"strconv"
 	"time"
+
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/system/settings"
 )
 
 func Write(ss *settings.Settings, items []*common_interfaces.Item) {

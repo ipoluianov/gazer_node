@@ -3,8 +3,9 @@ package cmd
 import (
 	"errors"
 	"fmt"
+
 	"github.com/fatih/color"
-	"github.com/gazercloud/gazernode/gazer_client"
+	"github.com/ipoluianov/gazer_node/gazer_client"
 )
 
 func (c *Session) cmdConnect(p []string) error {

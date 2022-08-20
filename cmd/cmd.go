@@ -5,12 +5,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/fatih/color"
-	"github.com/gazercloud/gazernode/gazer_client"
-	"github.com/gazercloud/gazernode/utilities/paths"
 	"io/ioutil"
 	"os"
 	"strings"
+
+	"github.com/fatih/color"
+	"github.com/ipoluianov/gazer_node/gazer_client"
+	"github.com/ipoluianov/gazer_node/utilities/paths"
 )
 
 type Session struct {

@@ -3,15 +3,16 @@ package unit_serial_port_key_value
 import (
 	"encoding/json"
 	"errors"
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/resources"
-	"github.com/gazercloud/gazernode/system/units/units_common"
-	"github.com/gazercloud/gazernode/utilities/logger"
-	"github.com/tarm/serial"
 	"runtime"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/resources"
+	"github.com/ipoluianov/gazer_node/system/units/units_common"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
+	"github.com/tarm/serial"
 )
 
 type ConfigItem struct {

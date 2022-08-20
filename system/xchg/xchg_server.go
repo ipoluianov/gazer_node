@@ -12,14 +12,15 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"github.com/gazercloud/gazernode/utilities/logger"
-	"github.com/ipoluianov/gomisc/crypt_tools"
 	"io"
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"sync"
 	"time"
+
+	"github.com/ipoluianov/gazer_node/utilities/logger"
+	"github.com/ipoluianov/gomisc/crypt_tools"
 )
 
 type Server struct {

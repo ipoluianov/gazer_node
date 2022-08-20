@@ -1,8 +1,8 @@
 package unit_process
 
 import (
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/system/units/units_common"
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/system/units/units_common"
 )
 
 type UnitSystemProcess struct {

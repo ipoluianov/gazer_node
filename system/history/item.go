@@ -3,14 +3,15 @@ package history
 import (
 	"encoding/binary"
 	"fmt"
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/system/settings"
-	"github.com/gazercloud/gazernode/utilities"
-	"github.com/gazercloud/gazernode/utilities/logger"
 	"os"
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/system/settings"
+	"github.com/ipoluianov/gazer_node/utilities"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
 
 type Item struct {

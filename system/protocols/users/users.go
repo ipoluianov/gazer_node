@@ -2,9 +2,10 @@ package users
 
 import (
 	"errors"
-	"github.com/gazercloud/gazernode/utilities/state"
 	"sort"
 	"sync"
+
+	"github.com/ipoluianov/gazer_node/utilities/state"
 )
 
 type Users struct {

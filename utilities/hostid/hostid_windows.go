@@ -2,12 +2,13 @@ package hostid
 
 import (
 	"encoding/json"
-	"github.com/gazercloud/gazernode/utilities/logger"
-	"github.com/gazercloud/gazernode/utilities/paths"
-	"github.com/google/uuid"
-	"golang.org/x/sys/windows/registry"
 	"io/ioutil"
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
+	"github.com/ipoluianov/gazer_node/utilities/paths"
+	"golang.org/x/sys/windows/registry"
 )
 
 type HostId struct {

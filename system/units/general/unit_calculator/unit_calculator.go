@@ -4,13 +4,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/Knetic/govaluate"
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/resources"
-	"github.com/gazercloud/gazernode/system/units/units_common"
-	"github.com/gazercloud/gazernode/utilities/uom"
 	"strconv"
 	"time"
+
+	"github.com/Knetic/govaluate"
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/resources"
+	"github.com/ipoluianov/gazer_node/system/units/units_common"
+	"github.com/ipoluianov/gazer_node/utilities/uom"
 )
 
 type Item struct {

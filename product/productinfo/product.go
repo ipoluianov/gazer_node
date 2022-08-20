@@ -2,7 +2,9 @@ package productinfo
 
 import (
 	"bytes"
-	"github.com/gazercloud/gazernode/resources"
+
+	"github.com/ipoluianov/gazer_node/resources"
+
 	//"github.com/gazercloud/gazerui/canvas"
 	"image"
 )

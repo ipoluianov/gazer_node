@@ -1,7 +1,7 @@
 package history
 
 import (
-	"github.com/gazercloud/gazernode/common_interfaces"
+	"github.com/ipoluianov/gazer_node/common_interfaces"
 )
 
 type ReadResultItem struct {

@@ -4,13 +4,14 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"encoding/json"
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/system/units/units_common"
-	"github.com/gazercloud/gazernode/utilities/logger"
 	"io/ioutil"
 	"math/rand"
 	"os"
 	"sort"
+
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/system/units/units_common"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
 
 type Config struct {

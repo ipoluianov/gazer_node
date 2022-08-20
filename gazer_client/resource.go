@@ -2,8 +2,9 @@ package gazer_client
 
 import (
 	"encoding/json"
-	"github.com/gazercloud/gazernode/common_interfaces"
-	nodeinterface2 "github.com/gazercloud/gazernode/system/protocols/nodeinterface"
+
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	nodeinterface2 "github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
 )
 
 func (c *GazerNodeClient) ResAdd(name string, tp string, content []byte) (string, error) {

@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/gazercloud/gazernode/product/productinfo"
-	"github.com/josephspurrier/goversioninfo"
 	"io/ioutil"
 	"os"
 	"time"
+
+	"github.com/ipoluianov/gazer_node/product/productinfo"
+	"github.com/josephspurrier/goversioninfo"
 )
 
 func main() {

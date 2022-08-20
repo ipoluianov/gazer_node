@@ -5,10 +5,6 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"errors"
-	"github.com/gazercloud/gazernode/common_interfaces"
-	nodeinterface2 "github.com/gazercloud/gazernode/system/protocols/nodeinterface"
-	"github.com/gazercloud/gazernode/utilities/logger"
-	"github.com/gazercloud/gazernode/utilities/packer"
 	"io/ioutil"
 	"math/rand"
 	"net"
@@ -17,6 +13,11 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	nodeinterface2 "github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
+	"github.com/ipoluianov/gazer_node/utilities/packer"
 )
 
 type Connection struct {

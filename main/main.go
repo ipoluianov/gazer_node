@@ -6,8 +6,8 @@
 package main
 
 import (
-	"github.com/gazercloud/gazernode/app"
-	"github.com/gazercloud/gazernode/application"
+	"github.com/ipoluianov/gazer_node/app"
+	"github.com/ipoluianov/gazer_node/application"
 )
 
 func main() {

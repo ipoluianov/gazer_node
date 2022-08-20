@@ -3,12 +3,13 @@ package system
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gazercloud/gazernode/common_interfaces"
 	"io/ioutil"
 	"os"
 	"sort"
 	"strconv"
 	"time"
+
+	"github.com/ipoluianov/gazer_node/common_interfaces"
 )
 
 func (c *System) WriteLastValues(items []*common_interfaces.Item) {

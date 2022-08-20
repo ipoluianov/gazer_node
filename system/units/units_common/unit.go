@@ -3,11 +3,12 @@ package units_common
 import (
 	"errors"
 	"fmt"
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/utilities/uom"
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/utilities/uom"
 )
 
 type Unit struct {

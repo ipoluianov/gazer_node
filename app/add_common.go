@@ -2,12 +2,13 @@ package app
 
 import (
 	"flag"
-	"github.com/gazercloud/gazernode/application"
-	"github.com/gazercloud/gazernode/system/httpserver"
-	"github.com/gazercloud/gazernode/system/settings"
-	"github.com/gazercloud/gazernode/system/system"
-	"github.com/gazercloud/gazernode/utilities/hostid"
-	"github.com/gazercloud/gazernode/utilities/logger"
+
+	"github.com/ipoluianov/gazer_node/application"
+	"github.com/ipoluianov/gazer_node/system/httpserver"
+	"github.com/ipoluianov/gazer_node/system/settings"
+	"github.com/ipoluianov/gazer_node/system/system"
+	"github.com/ipoluianov/gazer_node/utilities/hostid"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
 
 var httpServer *httpserver.HttpServer
