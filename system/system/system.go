@@ -94,7 +94,6 @@ func (c *System) Start() {
 
 	}
 
-	c.xchgPoint = xchg_server.NewGazerXchgServer()
 	c.xchgPoint.Start(c.ss.ServerDataPath(), xchg_network.NewNetworkDefault())
 	c.history.Start()
 	c.unitsSystem.Start()

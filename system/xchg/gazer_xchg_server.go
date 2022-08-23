@@ -4,6 +4,7 @@ import (
 	"crypto/rsa"
 	"encoding/base32"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -57,6 +58,7 @@ func (c *GazerXchgServer) ServerProcessorCall(function string, parameter []byte)
 		return
 	}
 	response, err = c.requester.RequestJson(function, parameter, "", true)
+	fmt.Println("call resp", function, len(response), len(xchg_connections.PackBytes(response)), err)
 	return
 }
 
