@@ -12,7 +12,7 @@ require (
 	github.com/google/uuid v1.2.0
 	github.com/gorilla/mux v1.8.0
 	github.com/ipoluianov/gomisc v0.0.20
-	github.com/ipoluianov/xchg v0.0.26
+	github.com/ipoluianov/xchg v0.0.31
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
 	github.com/jackc/pgx v3.6.2+incompatible
 	github.com/josephspurrier/goversioninfo v1.2.0

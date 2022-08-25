@@ -48,6 +48,7 @@ func (c *GazerXchgServer) Stop() {
 
 func (c *GazerXchgServer) ServerProcessorAuth(authData []byte) (err error) {
 	if string(authData) == "pass" {
+		logger.Println("AUTH OK")
 		return nil
 	}
 	return errors.New(xchg.ERR_XCHG_ACCESS_DENIED)
