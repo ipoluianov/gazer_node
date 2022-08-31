@@ -94,7 +94,7 @@ func (c *System) Start() {
 
 	}
 
-	c.xchgPoint.Start(c.ss.ServerDataPath(), xchg_network.NewNetworkDefault())
+	c.xchgPoint.Start(c.ss.ServerDataPath(), xchg_network.NewNetworkFromInternet())
 	c.history.Start()
 	c.unitsSystem.Start()
 

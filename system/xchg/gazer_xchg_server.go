@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"time"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
@@ -58,8 +59,10 @@ func (c *GazerXchgServer) ServerProcessorCall(function string, parameter []byte)
 	if c.requester == nil {
 		return
 	}
+	dtBegin := time.Now()
 	response, err = c.requester.RequestJson(function, parameter, "", true)
-	fmt.Println("call resp", function, len(response), len(xchg_connections.PackBytes(response)), err)
+	dtEnd := time.Now()
+	fmt.Println("call resp", function, len(response), len(xchg_connections.PackBytes(response)), err, dtEnd.Sub(dtBegin).Milliseconds())
 	return
 }
 
