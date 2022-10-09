@@ -3,16 +3,16 @@ package unit_system_named_pipe_server
 import (
 	"encoding/json"
 	"errors"
+	"net"
+	"strings"
+	"sync"
+	"time"
+
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/gazercloud/gazernode/resources"
 	"github.com/gazercloud/gazernode/system/units/units_common"
 	"github.com/gazercloud/gazernode/utilities/logger"
 	"github.com/gazercloud/gazernode/utilities/uom"
-	"github.com/google/uuid"
-	"net"
-	"strings"
-	"sync"
-	"time"
 )
 
 type UnitSystemNamedPipeServer struct {
@@ -112,7 +112,7 @@ func (c *UnitSystemNamedPipeServer) Tick() {
 }
 
 func (c *UnitSystemNamedPipeServer) serve() {
-	logger.Println("UnitSystemNamedPipeServer serve begin")
+	/*logger.Println("UnitSystemNamedPipeServer serve begin")
 	var err error
 	c.listener, err = winio.ListenPipe("\\\\.\\pipe\\"+c.config.PipeName, nil)
 	if err != nil {
@@ -135,7 +135,7 @@ func (c *UnitSystemNamedPipeServer) serve() {
 		c.mtx.Unlock()
 	}
 	c.listener.Close()
-	logger.Println("UnitSystemNamedPipeServer serve end")
+	logger.Println("UnitSystemNamedPipeServer serve end")*/
 }
 
 func (c *UnitSystemNamedPipeServer) removeClient(id string) {

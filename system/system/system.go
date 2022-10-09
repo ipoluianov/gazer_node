@@ -1,14 +1,15 @@
 package system
 
 import (
+	"sync"
+	"time"
+
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/gazercloud/gazernode/system/history"
 	"github.com/gazercloud/gazernode/system/resources"
 	"github.com/gazercloud/gazernode/system/settings"
 	"github.com/gazercloud/gazernode/system/units/units_system"
-	"github.com/gazercloud/gazernode/system/xchg"
-	"sync"
-	"time"
+	"github.com/ipoluianov/xchg/xchg"
 )
 
 type System struct {
@@ -25,7 +26,7 @@ type System struct {
 	unitsSystem *units_system.UnitsSystem
 
 	//cloudConnection *cloud.Connection
-	xchgPoint *xchg.GazerXchgServer
+	xchgPoint *XchgServer
 
 	history   *history.History
 	resources *resources.Resources
@@ -55,7 +56,8 @@ func NewSystem(ss *settings.Settings) *System {
 	c.itemsById = make(map[uint64]*common_interfaces.Item)
 
 	//c.cloudConnection = cloud.NewConnection(c.ss.ServerDataPath())
-	c.xchgPoint = xchg.NewPoint()
+	privateKey, _ := xchg.GenerateRSAKey()
+	c.xchgPoint = NewXchgServer(privateKey)
 
 	c.unitsSystem = units_system.New(&c)
 	c.history = history.NewHistory(c.ss)
