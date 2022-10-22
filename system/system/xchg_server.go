@@ -10,11 +10,13 @@ import (
 
 type XchgServer struct {
 	serverConnection *xchg.Peer
+	masterKey        string
 	requester        common_interfaces.Requester
 }
 
-func NewXchgServer(privateKey *rsa.PrivateKey) *XchgServer {
+func NewXchgServer(privateKey *rsa.PrivateKey, masterKey string) *XchgServer {
 	var c XchgServer
+	c.masterKey = masterKey
 	c.serverConnection = xchg.NewPeer(privateKey)
 	c.serverConnection.SetProcessor(&c)
 	return &c
@@ -33,7 +35,7 @@ func (c *XchgServer) SetRequester(requester common_interfaces.Requester) {
 }
 
 func (c *XchgServer) ServerProcessorAuth(authData []byte) (err error) {
-	if string(authData) == "pass" {
+	if string(authData) == c.masterKey {
 		return nil
 	}
 	return errors.New(xchg.ERR_XCHG_ACCESS_DENIED)
