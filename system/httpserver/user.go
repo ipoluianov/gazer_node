@@ -2,10 +2,11 @@ package httpserver
 
 import (
 	"encoding/json"
+
 	"github.com/gazercloud/gazernode/system/protocols/nodeinterface"
 )
 
-func (c *HttpServer) SessionOpen(request []byte, host string) (response []byte, err error) {
+/*func (c *HttpServer) SessionOpen(request []byte, host string) (response []byte, err error) {
 	var req nodeinterface.SessionOpenRequest
 	var resp nodeinterface.SessionOpenResponse
 	err = json.Unmarshal(request, &req)
@@ -20,9 +21,9 @@ func (c *HttpServer) SessionOpen(request []byte, host string) (response []byte, 
 
 	response, err = json.MarshalIndent(resp, "", " ")
 	return
-}
+}*/
 
-func (c *HttpServer) SessionActivate(request []byte) (response []byte, err error) {
+/*func (c *HttpServer) SessionActivate(request []byte) (response []byte, err error) {
 	var req nodeinterface.SessionActivateRequest
 	var resp nodeinterface.SessionActivateResponse
 	err = json.Unmarshal(request, &req)
@@ -39,7 +40,7 @@ func (c *HttpServer) SessionActivate(request []byte) (response []byte, err error
 
 	response, err = json.MarshalIndent(resp, "", " ")
 	return
-}
+}*/
 
 func (c *HttpServer) SessionRemove(request []byte) (response []byte, err error) {
 	var req nodeinterface.SessionRemoveRequest

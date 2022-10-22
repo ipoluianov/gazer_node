@@ -4,12 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	nodeinterface2 "github.com/gazercloud/gazernode/system/protocols/nodeinterface"
-	"github.com/gazercloud/gazernode/system/system"
-	"github.com/gazercloud/gazernode/utilities/logger"
-	"github.com/gazercloud/gazernode/utilities/packer"
-	"github.com/gazercloud/gazernode/web"
-	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -18,6 +12,13 @@ import (
 	"regexp"
 	"strings"
 	"time"
+
+	nodeinterface2 "github.com/gazercloud/gazernode/system/protocols/nodeinterface"
+	"github.com/gazercloud/gazernode/system/system"
+	"github.com/gazercloud/gazernode/utilities/logger"
+	"github.com/gazercloud/gazernode/utilities/packer"
+	"github.com/gazercloud/gazernode/web"
+	"github.com/gorilla/mux"
 )
 
 type HttpServer struct {
@@ -169,12 +170,12 @@ func (c *HttpServer) processApiRequest(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		if function != nodeinterface2.FuncSessionOpen && function != nodeinterface2.FuncSessionActivate {
+		/*if function != nodeinterface2.FuncSessionOpen && function != nodeinterface2.FuncSessionActivate {
 			_, err = c.system.CheckSession(sessionToken)
 			if err != nil {
 				logger.Println("Session Token error: ", err, "Token:", sessionToken)
 			}
-		}
+		}*/
 
 		if err == nil {
 			responseText, err = c.RequestJson(function, []byte(requestJson), r.RemoteAddr, false)

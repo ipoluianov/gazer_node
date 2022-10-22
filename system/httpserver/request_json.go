@@ -2,6 +2,7 @@ package httpserver
 
 import (
 	"errors"
+
 	"github.com/gazercloud/gazernode/system/protocols/nodeinterface"
 	"github.com/gazercloud/gazernode/utilities/logger"
 )
@@ -99,10 +100,10 @@ func (c *HttpServer) RequestJson(function string, requestText []byte, host strin
 		result, err = c.DataItemPropGet(requestText)
 
 		// *** Data Item ***
-	case nodeinterface.FuncSessionOpen:
+	/*case nodeinterface.FuncSessionOpen:
 		result, err = c.SessionOpen(requestText, host)
 	case nodeinterface.FuncSessionActivate:
-		result, err = c.SessionActivate(requestText)
+		result, err = c.SessionActivate(requestText)*/
 	case nodeinterface.FuncSessionRemove:
 		result, err = c.SessionRemove(requestText)
 	case nodeinterface.FuncSessionList:

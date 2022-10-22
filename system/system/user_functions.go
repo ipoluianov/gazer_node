@@ -8,14 +8,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"sort"
+
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/gazercloud/gazernode/system/protocols/nodeinterface"
 	"github.com/gazercloud/gazernode/utilities/logger"
-	"io/ioutil"
-	"math/rand"
-	"sort"
-	"strconv"
-	"time"
 )
 
 var DefaultUserName string
@@ -35,7 +33,7 @@ type UserSession struct {
 	Host                      string `json:"host"`
 }
 
-func (c *System) CheckSession(sessionToken string) (string, error) {
+/*func (c *System) CheckSession(sessionToken string) (string, error) {
 	var userName string
 	var err error
 	c.mtx.Lock()
@@ -46,7 +44,7 @@ func (c *System) CheckSession(sessionToken string) (string, error) {
 	}
 	c.mtx.Unlock()
 	return userName, err
-}
+}*/
 
 func (c *System) RemoveSession(sessionToken string) error {
 	var err error
@@ -85,7 +83,7 @@ func (c *System) SessionList(userName string) (nodeinterface.SessionListResponse
 	return result, err
 }
 
-func (c *System) OpenSession(name string, password string, host string) (nodeinterface.SessionOpenResponse, error) {
+/*func (c *System) OpenSession(name string, password string, host string) (nodeinterface.SessionOpenResponse, error) {
 	var result nodeinterface.SessionOpenResponse
 	var err error
 
@@ -116,7 +114,7 @@ func (c *System) OpenSession(name string, password string, host string) (nodeint
 
 	c.mtx.Unlock()
 	return result, err
-}
+}*/
 
 func (c *System) saveSessions() {
 	bs, err := json.MarshalIndent(c.sessions, "", " ")
