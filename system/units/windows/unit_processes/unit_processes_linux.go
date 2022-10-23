@@ -18,8 +18,8 @@ func init() {
 }
 
 func (c *UnitSystemProcesses) InternalUnitStart() error {
-	var err error
-	type Config struct {
+	//var err error
+	/*type Config struct {
 		ProcessName string  `json:"process_name"`
 		Period      float64 `json:"period"`
 	}
@@ -92,7 +92,7 @@ func (c *UnitSystemProcesses) InternalUnitStart() error {
 		return err
 	}
 
-	go c.Tick()
+	go c.Tick()*/
 	return nil
 }
 
@@ -100,7 +100,7 @@ func (c *UnitSystemProcesses) InternalUnitStop() {
 }
 
 func (c *UnitSystemProcesses) Tick() {
-	c.Started = true
+	/*c.Started = true
 
 	dtOperationTime := time.Now().UTC()
 
@@ -239,7 +239,7 @@ func (c *UnitSystemProcesses) Tick() {
 		c.SetString("Executable", "", "stopped")
 	}
 
-	c.Started = false
+	c.Started = false*/
 }
 
 func GetProcesses() []ProcessInfo {
