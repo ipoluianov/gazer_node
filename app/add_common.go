@@ -2,6 +2,7 @@ package app
 
 import (
 	"flag"
+
 	"github.com/gazercloud/gazernode/application"
 	"github.com/gazercloud/gazernode/system/httpserver"
 	"github.com/gazercloud/gazernode/system/settings"
@@ -24,7 +25,7 @@ func start(dataPath string) {
 	httpServer = httpserver.NewHttpServer(sys)
 	sys.SetRequester(httpServer)
 	sys.Start()
-	httpServer.Start()
+	//httpServer.Start()
 }
 
 func stop() {

@@ -4,16 +4,14 @@ go 1.16
 
 require (
 	github.com/Knetic/govaluate v3.0.0+incompatible
-	github.com/Microsoft/go-winio v0.5.1 // indirect
 	github.com/StackExchange/wmi v1.2.1 // indirect
 	github.com/cockroachdb/apd v1.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/fatih/color v1.13.0 // indirect
+	github.com/fatih/color v1.13.0
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/google/uuid v1.2.0
 	github.com/gorilla/mux v1.8.0
-	github.com/ipoluianov/gomisc v0.0.7 // indirect
-	github.com/ipoluianov/xchg v0.0.44 // indirect
+	github.com/ipoluianov/xchg v0.0.47
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
 	github.com/jackc/pgx v3.6.2+incompatible
 	github.com/josephspurrier/goversioninfo v1.2.0
