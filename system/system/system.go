@@ -100,12 +100,12 @@ func NewSystem(ss *settings.Settings) *System {
 		privateKey, _ := xchg.GenerateRSAKey()
 		privateKeyPEM = RSAPrivateKeyToPem(privateKey)
 		ioutil.WriteFile(ss.ServerDataPath()+"/private_key.pem", []byte(privateKeyPEM), 666)
-		publicKeyBS := xchg.RSAPublicKeyToDer(&privateKey.PublicKey)
-		address := xchg.AddressForPublicKeyBS(publicKeyBS)
-		ioutil.WriteFile(ss.ServerDataPath()+"/address.txt", []byte(address), 666)
 	}
 
 	privateKey, _ := RSAPrivateKeyFromPem(privateKeyPEM)
+	publicKeyBS := xchg.RSAPublicKeyToDer(&privateKey.PublicKey)
+	address := xchg.AddressForPublicKeyBS(publicKeyBS)
+	ioutil.WriteFile(ss.ServerDataPath()+"/address.txt", []byte(address), 666)
 
 	c.xchgPoint = NewXchgServer(privateKey, c.currentMasterKey)
 

@@ -3,6 +3,7 @@ package system
 import (
 	"crypto/rsa"
 	"errors"
+	"fmt"
 
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/ipoluianov/xchg/xchg"
@@ -19,11 +20,13 @@ func NewXchgServer(privateKey *rsa.PrivateKey, masterKey string) *XchgServer {
 	c.masterKey = masterKey
 	c.serverConnection = xchg.NewPeer(privateKey)
 	c.serverConnection.SetProcessor(&c)
+	serverAddress := xchg.AddressForPublicKey(&privateKey.PublicKey)
+	fmt.Println(serverAddress)
 	return &c
 }
 
 func (c *XchgServer) Start() {
-	c.serverConnection.Start()
+	c.serverConnection.StartHttpOnly()
 }
 
 func (c *XchgServer) Stop() {
