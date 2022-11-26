@@ -2,6 +2,8 @@ package system
 
 import (
 	"crypto/rsa"
+	"crypto/x509"
+	"encoding/hex"
 	"errors"
 	"fmt"
 
@@ -21,12 +23,18 @@ func NewXchgServer(privateKey *rsa.PrivateKey, masterKey string) *XchgServer {
 	c.serverConnection = xchg.NewPeer(privateKey)
 	c.serverConnection.SetProcessor(&c)
 	serverAddress := xchg.AddressForPublicKey(&privateKey.PublicKey)
+
+	bs, _ := x509.MarshalPKIXPublicKey(&privateKey.PublicKey)
+	hh := hex.EncodeToString(bs)
+	fmt.Println(hh)
+
+	fmt.Println(privateKey.PublicKey.N)
 	fmt.Println(serverAddress)
 	return &c
 }
 
 func (c *XchgServer) Start() {
-	c.serverConnection.StartHttpOnly()
+	c.serverConnection.StartUDPOnly()
 }
 
 func (c *XchgServer) Stop() {
