@@ -3,13 +3,14 @@ package unit_processes
 import (
 	"encoding/json"
 	"errors"
+	"syscall"
+	"time"
+	"unsafe"
+
 	"github.com/gazercloud/gazernode/resources"
 	"github.com/gazercloud/gazernode/utilities/logger"
 	"github.com/gazercloud/gazernode/utilities/uom"
 	"golang.org/x/sys/windows"
-	"syscall"
-	"time"
-	"unsafe"
 )
 
 var Image []byte
@@ -52,7 +53,7 @@ func (c *UnitSystemProcesses) InternalUnitStop() {
 func (c *UnitSystemProcesses) Tick() {
 	c.Started = true
 	logger.Println("UNIT <Processes Windows> started:", c.Id())
-	c.SetStringForAll("", uom.STARTED)
+	//c.SetStringForAll("", uom.STARTED)
 
 	dtOperationTime := time.Now().UTC()
 

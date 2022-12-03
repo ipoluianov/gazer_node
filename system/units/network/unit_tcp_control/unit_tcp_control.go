@@ -3,12 +3,12 @@ package unit_tcp_telnet_control
 import (
 	"encoding/json"
 	"errors"
+	"net"
+	"time"
+
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/gazercloud/gazernode/resources"
 	"github.com/gazercloud/gazernode/system/units/units_common"
-	"net"
-	"strings"
-	"time"
 )
 
 type Item struct {
@@ -142,7 +142,7 @@ func (c *UnitTcpControl) Tick() {
 		timeEnd := time.Now()
 		duration := timeEnd.Sub(timeBegin)
 
-		for _, item := range c.config.Items {
+		/*for _, item := range c.config.Items {
 			val, err := c.GetItem(item.Name)
 			if err == nil {
 				format := item.Format
@@ -161,7 +161,7 @@ func (c *UnitTcpControl) Tick() {
 					}
 				}
 			}
-		}
+		}*/
 
 		if err != nil {
 			c.SetString(ItemNameStatus, "timeout", "error")

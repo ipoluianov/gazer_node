@@ -12,7 +12,6 @@ import (
 	"github.com/gazercloud/gazernode/resources"
 	"github.com/gazercloud/gazernode/system/units/units_common"
 	"github.com/gazercloud/gazernode/utilities/logger"
-	"github.com/gazercloud/gazernode/utilities/uom"
 )
 
 type UnitSystemNamedPipeServer struct {
@@ -86,7 +85,7 @@ func (c *UnitSystemNamedPipeServer) GetConfigMeta() string {
 func (c *UnitSystemNamedPipeServer) Tick() {
 	logger.Println("UnitSystemNamedPipeServer Tick begin")
 	c.Started = true
-	c.SetStringForAll("", uom.STARTED)
+	//c.SetStringForAll("", uom.STARTED)
 
 	go c.serve() // separated thread
 
@@ -106,7 +105,7 @@ func (c *UnitSystemNamedPipeServer) Tick() {
 	c.removeAllClients()
 
 	c.Started = false
-	c.SetStringForAll("", uom.STOPPED)
+	//c.SetStringForAll("", uom.STOPPED)
 
 	logger.Println("UnitSystemNamedPipeServer Tick end")
 }

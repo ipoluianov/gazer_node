@@ -3,11 +3,11 @@ package units_common
 import (
 	"errors"
 	"fmt"
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/utilities/uom"
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/gazercloud/gazernode/common_interfaces"
 )
 
 type Unit struct {
@@ -18,11 +18,11 @@ type Unit struct {
 	unitDisplayName string
 	config          string
 	iUnit           common_interfaces.IUnit
-	iDataStorage    common_interfaces.IDataStorage
-	lastError       string
-	lastErrorDT     time.Time
-	lastInfo        string
-	lastInfoDT      time.Time
+	//iDataStorage    common_interfaces.IDataStorage
+	lastError   string
+	lastErrorDT time.Time
+	lastInfo    string
+	lastInfoDT  time.Time
 
 	Properties map[string]common_interfaces.ItemProperty
 
@@ -32,10 +32,21 @@ type Unit struct {
 	Stopping bool
 
 	watchItems map[string]bool
+
+	output chan common_interfaces.UnitMessage
 }
 
 func (c *Unit) Init() {
 	c.Properties = make(map[string]common_interfaces.ItemProperty)
+	c.output = make(chan common_interfaces.UnitMessage)
+}
+
+func (c *Unit) Dispose() {
+	close(c.output)
+}
+
+func (c *Unit) OutputChannel() chan common_interfaces.UnitMessage {
+	return c.output
 }
 
 func (c *Unit) PropSetIfNotExists(name string, value string) {
@@ -126,17 +137,16 @@ func (c *Unit) GetConfigMeta() string {
 }
 
 func (c *Unit) InternalInitItems() {
-	c.SetStringForAll("", uom.STARTED)
+	//c.SetStringForAll("", uom.STARTED)
 }
 
 func (c *Unit) InternalDeInitItems() {
-	c.SetStringForAll("", uom.STOPPED)
+	//c.SetStringForAll("", uom.STOPPED)
 }
 
-func (c *Unit) Start(iDataStorage common_interfaces.IDataStorage) error {
+func (c *Unit) Start() error {
 	var err error
 	c.watchItems = make(map[string]bool)
-	c.iDataStorage = iDataStorage
 	if c.Started {
 		return errors.New("already started")
 	}
@@ -168,9 +178,9 @@ func (c *Unit) Stop() {
 	}
 	c.LogInfo("stopping ...")
 
-	for itemWatched, _ := range c.watchItems {
+	/*for itemWatched, _ := range c.watchItems {
 		c.iDataStorage.RemoveFromWatch(c.Id(), itemWatched)
-	}
+	}*/
 
 	c.SetStringService("status", "stopping", "")
 	c.Stopping = true
@@ -191,13 +201,18 @@ const (
 	ItemNameError     = "error"
 )
 
-func (c *Unit) IDataStorage() common_interfaces.IDataStorage {
+/*func (c *Unit) IDataStorage() common_interfaces.IDataStorage {
 	return c.iDataStorage
-}
+}*/
 
 func (c *Unit) SetStringService(name string, value string, UOM string) {
 	fullName := c.Id() + "/" + UnitServicePrefix + name
-	c.iDataStorage.SetItemByName(fullName, value, UOM, time.Now().UTC(), false)
+	c.output <- &common_interfaces.UnitMessageItemValue{
+		ItemName: fullName,
+		Value:    value,
+		UOM:      UOM,
+	}
+	//c.iDataStorage.SetItemByName(fullName, value, UOM, time.Now().UTC(), false)
 }
 
 func (c *Unit) LogInfo(value string) {
@@ -208,7 +223,12 @@ func (c *Unit) LogInfo(value string) {
 	c.lastLogDT = dt
 	if c.lastInfo != value || time.Now().UTC().Sub(c.lastInfoDT) > 5*time.Second {
 		fullName := c.Id() + "/" + UnitServicePrefix + "log"
-		c.iDataStorage.SetItemByName(fullName, value, "", dt, false)
+		//c.iDataStorage.SetItemByName(fullName, value, "", dt, false)
+		c.output <- &common_interfaces.UnitMessageItemValue{
+			ItemName: fullName,
+			Value:    value,
+			UOM:      "",
+		}
 		c.lastInfoDT = time.Now().UTC()
 	}
 	c.lastInfo = value
@@ -224,7 +244,11 @@ func (c *Unit) LogError(value string) {
 
 	if c.lastError != value || time.Now().UTC().Sub(c.lastErrorDT) > 5*time.Second {
 		fullName := c.Id() + "/" + UnitServicePrefix + "log"
-		c.iDataStorage.SetItemByName(fullName, value, "error", dt, false)
+		c.output <- &common_interfaces.UnitMessageItemValue{
+			ItemName: fullName,
+			Value:    value,
+			UOM:      "error",
+		}
 		c.lastErrorDT = time.Now().UTC()
 	}
 	c.lastError = value
@@ -233,24 +257,36 @@ func (c *Unit) LogError(value string) {
 
 func (c *Unit) SetError(value string) {
 	fullName := c.Id() + "/" + UnitServicePrefix + ItemNameError
-	c.iDataStorage.SetItemByName(fullName, value, "", time.Now().UTC(), false)
+	c.output <- &common_interfaces.UnitMessageItemValue{
+		ItemName: fullName,
+		Value:    value,
+		UOM:      "",
+	}
 }
 
-func (c *Unit) SetStringForAll(value string, UOM string) {
+/*func (c *Unit) SetStringForAll(value string, UOM string) {
 	fullName := c.Id()
 	c.iDataStorage.SetAllItemsByUnitName(fullName, value, UOM, time.Now().UTC(), false)
-}
+}*/
 
 func (c *Unit) SetString(name string, value string, UOM string) {
 	fullName := c.Id()
 	if len(name) > 0 {
 		fullName = c.Id() + "/" + name
 	}
-	c.iDataStorage.SetItemByName(fullName, value, UOM, time.Now().UTC(), false)
+	c.output <- &common_interfaces.UnitMessageItemValue{
+		ItemName: fullName,
+		Value:    value,
+		UOM:      UOM,
+	}
 }
 
 func (c *Unit) SetPropertyIfDoesntExist(itemName string, propName string, propValue string) {
-	c.iDataStorage.SetPropertyIfDoesntExist(c.Id()+"/"+itemName, propName, propValue)
+	c.output <- &common_interfaces.UnitMessageSetProperty{
+		ItemName:  c.Id() + "/" + itemName,
+		PropName:  propName,
+		PropValue: propValue,
+	}
 }
 
 func (c *Unit) TouchItem(name string) {
@@ -258,7 +294,10 @@ func (c *Unit) TouchItem(name string) {
 	if len(name) > 0 {
 		fullName = c.Id() + "/" + name
 	}
-	c.iDataStorage.TouchItem(fullName)
+	//c.iDataStorage.TouchItem(fullName)
+	c.output <- &common_interfaces.UnitMessageItemTouch{
+		ItemName: fullName,
+	}
 }
 
 func (c *Unit) SetInt(name string, value int, UOM string) {
@@ -293,7 +332,7 @@ func (c *Unit) SetFloat64(name string, value float64, UOM string, precision int)
 	c.SetString(name, strconv.FormatFloat(value, 'f', precision, 64), UOM)
 }
 
-func (c *Unit) GetValue(name string) string {
+/*func (c *Unit) GetValue(name string) string {
 	item, err := c.iDataStorage.GetItem(name)
 	if err != nil {
 		return ""
@@ -307,9 +346,9 @@ func (c *Unit) GetItem(name string) (common_interfaces.ItemValue, error) {
 		return common_interfaces.ItemValue{}, err
 	}
 	return item.Value, nil
-}
+}*/
 
-func (c *Unit) GetItemsOfUnit(unitId string) ([]common_interfaces.ItemGetUnitItems, error) {
+/*func (c *Unit) GetItemsOfUnit(unitId string) ([]common_interfaces.ItemGetUnitItems, error) {
 	return c.iDataStorage.GetUnitValues(unitId), nil
 }
 
@@ -321,7 +360,7 @@ func (c *Unit) AddToWatch(itemName string) {
 func (c *Unit) RemoveFromWatch(itemName string) {
 	c.iDataStorage.RemoveFromWatch(c.Id(), itemName)
 	delete(c.watchItems, itemName)
-}
+}*/
 
 func (c *Unit) ItemChanged(itemName string, value common_interfaces.ItemValue) {
 }

@@ -54,5 +54,6 @@ func (c *XchgServer) ServerProcessorAuth(authData []byte) (err error) {
 
 func (c *XchgServer) ServerProcessorCall(function string, parameter []byte) (response []byte, err error) {
 	response, err = c.requester.RequestJson(function, parameter, "", false)
+	fmt.Println("ServerProcessorCall", function, len(parameter), len(response), err)
 	return
 }

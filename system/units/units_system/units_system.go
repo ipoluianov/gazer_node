@@ -3,6 +3,10 @@ package units_system
 import (
 	"errors"
 	"fmt"
+	"runtime"
+	"sync"
+	"time"
+
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/gazercloud/gazernode/resources"
 	"github.com/gazercloud/gazernode/system/protocols/nodeinterface"
@@ -30,17 +34,16 @@ import (
 	"github.com/gazercloud/gazernode/system/units/windows/unit_storage"
 	"github.com/gazercloud/gazernode/system/units/windows/unit_system_memory"
 	"github.com/gazercloud/gazernode/utilities/logger"
-	"runtime"
-	"sync"
-	"time"
 )
 
 type UnitsSystem struct {
 	units        []common_interfaces.IUnit
 	unitTypes    []*UnitType
 	unitTypesMap map[string]*UnitType
-	iDataStorage common_interfaces.IDataStorage
-	mtx          sync.Mutex
+	//iDataStorage common_interfaces.IDataStorage
+	mtx sync.Mutex
+
+	output chan common_interfaces.UnitMessage
 }
 
 var unitCategoriesIcons map[string][]byte
@@ -75,7 +78,7 @@ func New(iDataStorage common_interfaces.IDataStorage) *UnitsSystem {
 	var c UnitsSystem
 	c.unitTypes = make([]*UnitType, 0)
 	c.unitTypesMap = make(map[string]*UnitType)
-	c.iDataStorage = iDataStorage
+	c.output = make(chan common_interfaces.UnitMessage)
 
 	var unitType *UnitType
 
@@ -158,6 +161,10 @@ func New(iDataStorage common_interfaces.IDataStorage) *UnitsSystem {
 	return &c
 }
 
+func (c *UnitsSystem) OutputChannel() chan common_interfaces.UnitMessage {
+	return c.output
+}
+
 func (c *UnitsSystem) RegisterUnit(typeName string, category string, displayName string, constructor func() common_interfaces.IUnit, imgBytes []byte, description string) *UnitType {
 	var sType UnitType
 	sType.TypeCode = typeName
@@ -231,7 +238,8 @@ func (c *UnitsSystem) UnitTypeForDisplayByType(t string) string {
 
 func (c *UnitsSystem) Start() {
 	for _, unit := range c.units {
-		unit.Start(c.iDataStorage)
+		c.StartUnit(unit.Id())
+		//unit.Start(c.iDataStorage)
 	}
 }
 
@@ -268,7 +276,7 @@ func (c *UnitsSystem) Stop() {
 	logger.Println("UNITS_SYSTEM stopping end")
 }
 
-func (c *UnitsSystem) MakeUnitByType(unitType string, dataStorage common_interfaces.IDataStorage) common_interfaces.IUnit {
+func (c *UnitsSystem) MakeUnitByType(unitType string) common_interfaces.IUnit {
 	var unit common_interfaces.IUnit
 
 	for _, st := range c.unitTypes {
@@ -302,8 +310,14 @@ func (c *UnitsSystem) AddUnit(unitType string, unitId string, displayName string
 		}
 	}
 
+	funcToOutput := func(ch chan common_interfaces.UnitMessage) {
+		for msg := range ch {
+			c.output <- msg
+		}
+	}
+
 	if !nameIsExists {
-		unit = c.MakeUnitByType(unitType, c.iDataStorage)
+		unit = c.MakeUnitByType(unitType)
 		if unit != nil {
 			unit.SetId(unitId)
 			unit.SetDisplayName(displayName)
@@ -311,6 +325,7 @@ func (c *UnitsSystem) AddUnit(unitType string, unitId string, displayName string
 			unit.SetConfig(config)
 			unit.SetIUnit(unit)
 			c.units = append(c.units, unit)
+			go funcToOutput(unit.OutputChannel())
 		} else {
 			return nil, errors.New("cannot create unit")
 		}
@@ -413,7 +428,7 @@ func (c *UnitsSystem) Units() []units_common.UnitInfo {
 func (c *UnitsSystem) StartUnit(unitId string) error {
 	for _, s := range c.units {
 		if s.Id() == unitId {
-			s.Start(c.iDataStorage)
+			s.Start()
 		}
 	}
 	return nil
@@ -442,6 +457,7 @@ func (c *UnitsSystem) RemoveUnits(units []string) error {
 				logger.Println("UnitsSystem RemoveUnits unit", deletedUnit.Id())
 				idsOfDeletedUnits = append(idsOfDeletedUnits, deletedUnit.Id())
 				deletedUnit.Stop()
+				deletedUnit.Dispose()
 				c.units = append(c.units[:unitIndex], c.units[unitIndex+1:]...)
 				break
 			}
@@ -451,7 +467,9 @@ func (c *UnitsSystem) RemoveUnits(units []string) error {
 	c.mtx.Unlock()
 
 	for _, idOfDeletedUnit := range idsOfDeletedUnits {
-		_ = c.iDataStorage.RemoveItemsOfUnit(idOfDeletedUnit)
+		c.output <- &common_interfaces.UnitMessageRemoteItemsOfUnit{
+			UnitId: idOfDeletedUnit,
+		}
 	}
 
 	return nil
@@ -485,7 +503,7 @@ func (c *UnitsSystem) GetConfigByType(unitType string) (string, string, error) {
 
 	for _, st := range c.unitTypes {
 		if st.TypeCode == unitType {
-			sens := c.MakeUnitByType(st.TypeCode, nil)
+			sens := c.MakeUnitByType(st.TypeCode)
 			if sens != nil {
 				return st.DisplayName, sens.GetConfigMeta(), nil
 			} else {
@@ -540,7 +558,7 @@ func (c *UnitsSystem) SetConfig(unitId string, name string, config string, fromC
 
 		unit.SetConfig(config)
 
-		unit.Start(c.iDataStorage)
+		unit.Start()
 	}
 
 	return nil

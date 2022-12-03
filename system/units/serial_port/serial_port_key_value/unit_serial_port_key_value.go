@@ -3,15 +3,16 @@ package unit_serial_port_key_value
 import (
 	"encoding/json"
 	"errors"
+	"runtime"
+	"strconv"
+	"strings"
+	"time"
+
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/gazercloud/gazernode/resources"
 	"github.com/gazercloud/gazernode/system/units/units_common"
 	"github.com/gazercloud/gazernode/utilities/logger"
 	"github.com/tarm/serial"
-	"runtime"
-	"strconv"
-	"strings"
-	"time"
 )
 
 type ConfigItem struct {
@@ -109,7 +110,7 @@ func (c *UnitSerialPortKeyValue) InternalUnitStart() error {
 
 	c.items = make(map[string]*ConfigItem)
 
-	for _, item := range config.Items {
+	/*for _, item := range config.Items {
 		c.items[item.Name] = item
 		c.TouchItem(item.Name)
 		c.AddToWatch(c.Id() + "/" + item.Name)
@@ -120,7 +121,7 @@ func (c *UnitSerialPortKeyValue) InternalUnitStart() error {
 		}
 	}
 
-	c.IDataStorage().SetProperty(c.Id()+"/status", "view", "table-01")
+	c.IDataStorage().SetProperty(c.Id()+"/status", "view", "table-01")*/
 
 	parity := serial.ParityNone
 	if config.Parity == "none" {

@@ -2,15 +2,16 @@ package system
 
 import (
 	"fmt"
+	"net"
+	"strconv"
+	"strings"
+
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/gazercloud/gazernode/system/protocols/lookup"
 	"github.com/gazercloud/gazernode/system/protocols/nodeinterface"
 	"github.com/gazercloud/gazernode/system/units/windows/unit_process"
 	"github.com/gazercloud/gazernode/utilities/logger"
 	"go.bug.st/serial"
-	"net"
-	"strconv"
-	"strings"
 )
 
 func SplitWithoutEmpty(req string, sep rune) []string {
@@ -75,7 +76,7 @@ func (c *System) AddUnit(unitName string, unitType string, config string, fromCl
 	if err != nil {
 		return "", err
 	}
-	err = unit.Start(c)
+	unit.Start()
 	if err != nil {
 		return "", err
 	}

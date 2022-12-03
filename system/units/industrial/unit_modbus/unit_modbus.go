@@ -5,12 +5,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/system/units/units_common"
-	"github.com/gazercloud/gazernode/utilities/logger"
 	"net"
 	"sync"
 	"time"
+
+	"github.com/gazercloud/gazernode/common_interfaces"
+	"github.com/gazercloud/gazernode/system/units/units_common"
+	"github.com/gazercloud/gazernode/utilities/logger"
 )
 
 type Item struct {
@@ -261,7 +262,7 @@ func (c *UnitModbus) Tick() {
 
 		timeBegin := time.Now()
 
-		for _, item := range c.config.Items {
+		/*for _, item := range c.config.Items {
 			if item.Type == 0 {
 				var val common_interfaces.ItemValue
 				val, err = c.GetItem(item.Name)
@@ -269,7 +270,7 @@ func (c *UnitModbus) Tick() {
 					err = c.WriteCoil(c.conn, uint16(item.Addr), val.Value == "1")
 				}
 			}
-		}
+		}*/
 
 		for _, item := range c.config.Items {
 			if item.Type == 1 {

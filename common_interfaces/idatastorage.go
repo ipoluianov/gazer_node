@@ -5,7 +5,7 @@ import (
 )
 
 type IDataStorage interface {
-	SetItemByName(name string, value string, UOM string, dt time.Time, external bool) error
+	SetItemByNameOld(name string, value string, UOM string, dt time.Time, external bool) error
 	SetAllItemsByUnitName(name string, value string, UOM string, dt time.Time, external bool) error
 	TouchItem(name string) (*Item, error)
 	GetItem(name string) (Item, error)

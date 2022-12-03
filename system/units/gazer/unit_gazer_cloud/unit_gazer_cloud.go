@@ -1,10 +1,11 @@
 package unit_gazer_cloud
 
 import (
+	"time"
+
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/gazercloud/gazernode/resources"
 	"github.com/gazercloud/gazernode/system/units/units_common"
-	"time"
 )
 
 type UnitGazerCloud struct {
@@ -51,11 +52,11 @@ func (c *UnitGazerCloud) Tick() {
 			time.Sleep(100 * time.Millisecond)
 		}
 
-		statGazerCloud := c.IDataStorage().StatGazerCloud()
+		/*statGazerCloud := c.IDataStorage().StatGazerCloud()
 
 		c.SetFloat64("CallsPerSecond", statGazerCloud.CallsPerSecond, "", 1)
 		c.SetFloat64("InTraffic", statGazerCloud.ReceiveSpeed/1024, "KB/sec", 1)
-		c.SetFloat64("OutTraffic", statGazerCloud.SendSpeed/1024, "KB/sec", 1)
+		c.SetFloat64("OutTraffic", statGazerCloud.SendSpeed/1024, "KB/sec", 1)*/
 	}
 
 	time.Sleep(1 * time.Millisecond)

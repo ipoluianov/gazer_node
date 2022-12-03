@@ -3,10 +3,11 @@ package unit_raspberry_pi_gpio
 import (
 	"encoding/json"
 	"errors"
+	"time"
+
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/gazercloud/gazernode/resources"
 	"github.com/gazercloud/gazernode/system/units/units_common"
-	"time"
 )
 
 type UnitRaspberryPiGPIO struct {
@@ -103,7 +104,7 @@ func (c *UnitRaspberryPiGPIO) Tick() {
 
 		c.SetInt(ItemNameResult, 0, "")
 
-		st, err := c.IDataStorage().GetItem(c.Id() + "/name")
+		/*st, err := c.IDataStorage().GetItem(c.Id() + "/name")
 		if err != nil {
 			if st.Value.Value == "1" {
 				// High
@@ -115,7 +116,7 @@ func (c *UnitRaspberryPiGPIO) Tick() {
 		if err != nil {
 			c.SetString(ItemNameResult, err.Error(), "error")
 			continue
-		}
+		}*/
 	}
 	c.SetString(ItemNameResult, "", "stopped")
 	c.Started = false

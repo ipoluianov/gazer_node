@@ -3,10 +3,11 @@ package unit_repeater
 import (
 	"encoding/json"
 	"errors"
+	"time"
+
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/gazercloud/gazernode/resources"
 	"github.com/gazercloud/gazernode/system/units/units_common"
-	"time"
 )
 
 type Item struct {
@@ -60,9 +61,9 @@ func (c *UnitRepeater) InternalUnitStart() error {
 
 	c.SetString(ItemNameStatus, "", "starting")
 
-	for _, item := range c.config.Items {
+	/*for _, item := range c.config.Items {
 		c.AddToWatch(item.ItemFrom)
-	}
+	}*/
 
 	go c.Tick()
 	return nil

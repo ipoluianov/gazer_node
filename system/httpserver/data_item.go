@@ -3,15 +3,16 @@ package httpserver
 import (
 	"encoding/json"
 	"errors"
+	"math"
+	"strconv"
+	"strings"
+	"time"
+
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/gazercloud/gazernode/system/history"
 	"github.com/gazercloud/gazernode/system/protocols/nodeinterface"
 	"github.com/gazercloud/gazernode/utilities/logger"
 	"github.com/gazercloud/gazernode/utilities/uom"
-	"math"
-	"strconv"
-	"strings"
-	"time"
 )
 
 func (c *HttpServer) DataItemList(request []byte) (response []byte, err error) {
@@ -50,7 +51,7 @@ func (c *HttpServer) DataItemWrite(request []byte) (response []byte, err error) 
 		return
 	}
 
-	err = c.system.SetItemByName(req.ItemName, req.Value, "", time.Now().UTC(), true)
+	err = c.system.SetItemByNameOld(req.ItemName, req.Value, "", time.Now().UTC(), true)
 	if err != nil {
 		return
 	}

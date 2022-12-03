@@ -36,6 +36,8 @@ type System struct {
 
 	unitsSystem *units_system.UnitsSystem
 
+	unitsChannels []chan *common_interfaces.UnitMessage
+
 	//cloudConnection *cloud.Connection
 	xchgPoint *XchgServer
 
@@ -110,6 +112,8 @@ func NewSystem(ss *settings.Settings) *System {
 	c.xchgPoint = NewXchgServer(privateKey, c.currentMasterKey)
 
 	c.unitsSystem = units_system.New(&c)
+	go c.processUnitMessages(c.unitsSystem.OutputChannel())
+
 	c.history = history.NewHistory(c.ss)
 	c.resources = resources.NewResources(c.ss)
 
@@ -191,6 +195,25 @@ func (c *System) Stop() {
 	}
 
 	c.WriteLastValues(c.items)
+}
+
+func (c *System) processUnitMessages(unitChannel chan common_interfaces.UnitMessage) {
+	for msg := range unitChannel {
+		switch msg.(type) {
+		case *common_interfaces.UnitMessageItemValue:
+			msgItemValue := msg.(*common_interfaces.UnitMessageItemValue)
+			c.SetItemByNameOld(msgItemValue.ItemName, msgItemValue.Value, msgItemValue.UOM, time.Now(), false)
+		case *common_interfaces.UnitMessageSetProperty:
+			msgSetProperty := msg.(*common_interfaces.UnitMessageSetProperty)
+			c.SetPropertyIfDoesntExist(msgSetProperty.ItemName, msgSetProperty.PropName, msgSetProperty.PropValue)
+		case *common_interfaces.UnitMessageItemTouch:
+			msgItemTouch := msg.(*common_interfaces.UnitMessageItemTouch)
+			c.TouchItem(msgItemTouch.ItemName)
+		case *common_interfaces.UnitMessageRemoteItemsOfUnit:
+			msgRemoteItemsOfUnit := msg.(*common_interfaces.UnitMessageRemoteItemsOfUnit)
+			c.RemoveItemsOfUnit(msgRemoteItemsOfUnit.UnitId)
+		}
+	}
 }
 
 func (c *System) RegApiCall() {

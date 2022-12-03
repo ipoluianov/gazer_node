@@ -3,14 +3,12 @@ package unit_calculator
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
-	"github.com/Knetic/govaluate"
+	"time"
+
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/gazercloud/gazernode/resources"
 	"github.com/gazercloud/gazernode/system/units/units_common"
 	"github.com/gazercloud/gazernode/utilities/uom"
-	"strconv"
-	"time"
 )
 
 type Item struct {
@@ -105,9 +103,9 @@ func (c *UnitCalculator) Tick() {
 		}
 		dtOperationTime = time.Now()
 
-		for index, _ := range c.config.Items {
+		/*for index, _ := range c.config.Items {
 			c.calcItem(&c.config.Items[index])
-		}
+		}*/
 	}
 
 	for _, item := range c.config.Items {
@@ -118,7 +116,7 @@ func (c *UnitCalculator) Tick() {
 	c.Started = false
 }
 
-func (c *UnitCalculator) calcItem(item *Item) {
+/*func (c *UnitCalculator) calcItem(item *Item) {
 	result := ""
 
 	expression, err := govaluate.NewEvaluableExpressionWithFunctions(item.Formula, c.functions())
@@ -137,7 +135,7 @@ func (c *UnitCalculator) calcItem(item *Item) {
 	}
 
 	c.SetString(item.Item, result, uom.NONE)
-}
+}*/
 
 func (c *UnitCalculator) ItemChanged(itemName string, value common_interfaces.ItemValue) {
 	if !c.Started {
@@ -150,6 +148,7 @@ func (c *UnitCalculator) ItemChanged(itemName string, value common_interfaces.It
 	}*/
 }
 
+/*
 func (c *UnitCalculator) functions() map[string]govaluate.ExpressionFunction {
 	functionsResult := map[string]govaluate.ExpressionFunction{
 		"item": func(args ...interface{}) (interface{}, error) {
@@ -267,3 +266,4 @@ func (c *UnitCalculator) functions() map[string]govaluate.ExpressionFunction {
 	}
 	return functionsResult
 }
+*/

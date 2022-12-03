@@ -1,8 +1,32 @@
 package common_interfaces
 
+type UnitMessage interface{}
+
+type UnitMessageItemValue struct {
+	ItemName string
+	Value    string
+	UOM      string
+}
+
+type UnitMessageItemTouch struct {
+	ItemName string
+}
+
+type UnitMessageSetProperty struct {
+	ItemName  string
+	PropName  string
+	PropValue string
+}
+
+type UnitMessageRemoteItemsOfUnit struct {
+	UnitId string
+}
+
 type IUnit interface {
 	Init()
+	Dispose()
 	Id() string
+	OutputChannel() chan UnitMessage
 	SetId(unitId string)
 	Type() string
 	SetType(unitType string)
@@ -10,7 +34,7 @@ type IUnit interface {
 	SetDisplayName(unitDisplayName string)
 	SetIUnit(iUnit IUnit)
 	MainItem() string
-	Start(iDataStorage IDataStorage) error
+	Start() error
 	Stop()
 	IsStarted() bool
 	SetConfig(config string)

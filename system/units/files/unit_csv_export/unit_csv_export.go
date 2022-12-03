@@ -3,7 +3,6 @@ package unit_csv_export
 import (
 	"encoding/json"
 	"errors"
-	"os"
 	"time"
 
 	"github.com/gazercloud/gazernode/common_interfaces"
@@ -106,7 +105,7 @@ func (c *UnitCsvExport) Tick() {
 		}
 		dtOperationTime = time.Now().UTC()
 
-		for _, item := range c.config.Items {
+		/*for _, item := range c.config.Items {
 			value, err := c.GetItem(item.Name)
 			if err == nil {
 				var f *os.File
@@ -122,7 +121,7 @@ func (c *UnitCsvExport) Tick() {
 				_, err = f.Write([]byte(line))
 				_ = f.Close()
 			}
-		}
+		}*/
 	}
 	c.SetString(ItemNameStatus, "", "stopped")
 	c.Started = false

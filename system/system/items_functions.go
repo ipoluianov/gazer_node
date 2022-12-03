@@ -2,17 +2,18 @@ package system
 
 import (
 	"errors"
+	"strconv"
+	"strings"
+	"time"
+
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/gazercloud/gazernode/product/productinfo"
 	"github.com/gazercloud/gazernode/system/history"
 	"github.com/gazercloud/gazernode/system/protocols/nodeinterface"
 	"github.com/gazercloud/gazernode/utilities/logger"
-	"strconv"
-	"strings"
-	"time"
 )
 
-func (c *System) SetItemByName(name string, value string, UOM string, dt time.Time, external bool) error {
+func (c *System) SetItemByNameOld(name string, value string, UOM string, dt time.Time, external bool) error {
 	var item *common_interfaces.Item
 	if name == "" {
 		return nil
@@ -86,7 +87,7 @@ func (c *System) SetItem(itemId uint64, value common_interfaces.ItemValue, count
 
 	if watcher, ok := c.itemWatchers[item.Name]; ok {
 		watchersUnits = make([]string, 0)
-		for watcherUnitId, _ := range watcher.UnitIDs {
+		for watcherUnitId := range watcher.UnitIDs {
 			watchersUnits = append(watchersUnits, watcherUnitId)
 		}
 	}
