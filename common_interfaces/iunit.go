@@ -22,6 +22,12 @@ type UnitMessageRemoteItemsOfUnit struct {
 	UnitId string
 }
 
+type UnitMessageSetAllItemsByUnitName struct {
+	UnitId string
+	Value  string
+	UOM    string
+}
+
 type IUnit interface {
 	Init()
 	Dispose()

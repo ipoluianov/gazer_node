@@ -1,12 +1,14 @@
 package unit_system_memory
 
 import (
+	"time"
+
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/gazercloud/gazernode/resources"
 	"github.com/gazercloud/gazernode/system/units/units_common"
+	"github.com/gazercloud/gazernode/utilities/logger"
 	"github.com/gazercloud/gazernode/utilities/uom"
 	"github.com/shirou/gopsutil/mem"
-	"time"
 )
 
 type UnitSystemMemory struct {
@@ -46,6 +48,14 @@ func (c *UnitSystemMemory) GetConfigMeta() string {
 }
 
 func (c *UnitSystemMemory) Tick() {
+	defer func() {
+		if r := recover(); r != nil {
+			logger.Println("Panic in Unit")
+			c.Started = false
+			c.SetStringForAll("panic", "error")
+		}
+	}()
+	dtBegin := time.Now()
 	c.Started = true
 	for !c.Stopping {
 		for i := 0; i < 10; i++ {
@@ -64,6 +74,10 @@ func (c *UnitSystemMemory) Tick() {
 		c.SetUInt64("Available", v.Available/1048576, uom.MB)
 		c.SetUInt64("Used", v.Used/1048576, uom.MB)
 		c.SetFloat64("UsedPercent", percents, "%", 1)
+
+		if time.Now().Sub(dtBegin).Seconds() > 5 {
+			panic("This is panic!")
+		}
 	}
 
 	time.Sleep(1 * time.Millisecond)

@@ -212,6 +212,9 @@ func (c *System) processUnitMessages(unitChannel chan common_interfaces.UnitMess
 		case *common_interfaces.UnitMessageRemoteItemsOfUnit:
 			msgRemoteItemsOfUnit := msg.(*common_interfaces.UnitMessageRemoteItemsOfUnit)
 			c.RemoveItemsOfUnit(msgRemoteItemsOfUnit.UnitId)
+		case *common_interfaces.UnitMessageSetAllItemsByUnitName:
+			msgSetAllItemsByUnitName := msg.(*common_interfaces.UnitMessageSetAllItemsByUnitName)
+			c.SetAllItemsByUnitName(msgSetAllItemsByUnitName.UnitId, msgSetAllItemsByUnitName.Value, msgSetAllItemsByUnitName.UOM, time.Now(), false)
 		}
 	}
 }

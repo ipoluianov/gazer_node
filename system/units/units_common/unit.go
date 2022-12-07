@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gazercloud/gazernode/common_interfaces"
+	"github.com/gazercloud/gazernode/utilities/uom"
 )
 
 type Unit struct {
@@ -137,11 +138,12 @@ func (c *Unit) GetConfigMeta() string {
 }
 
 func (c *Unit) InternalInitItems() {
-	//c.SetStringForAll("", uom.STARTED)
+
+	c.SetStringForAll("", uom.STARTED)
 }
 
 func (c *Unit) InternalDeInitItems() {
-	//c.SetStringForAll("", uom.STOPPED)
+	c.SetStringForAll("", uom.STOPPED)
 }
 
 func (c *Unit) Start() error {
@@ -264,10 +266,15 @@ func (c *Unit) SetError(value string) {
 	}
 }
 
-/*func (c *Unit) SetStringForAll(value string, UOM string) {
-	fullName := c.Id()
-	c.iDataStorage.SetAllItemsByUnitName(fullName, value, UOM, time.Now().UTC(), false)
-}*/
+func (c *Unit) SetStringForAll(value string, UOM string) {
+	//fullName := c.Id()
+	//c.iDataStorage.SetAllItemsByUnitName(fullName, value, UOM, time.Now().UTC(), false)
+	c.output <- &common_interfaces.UnitMessageSetAllItemsByUnitName{
+		UnitId: c.Id(),
+		Value:  value,
+		UOM:    UOM,
+	}
+}
 
 func (c *Unit) SetString(name string, value string, UOM string) {
 	fullName := c.Id()
