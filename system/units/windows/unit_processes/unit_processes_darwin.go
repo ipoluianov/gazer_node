@@ -4,7 +4,6 @@ package unit_processes
 #include <stdlib.h>
 #include "libproc.h"
 */
-import "C"
 
 import "C"
 import (
@@ -13,11 +12,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gazercloud/gazernode/resources"
-	"github.com/gazercloud/gazernode/utilities/logger"
 	"syscall"
 	"time"
 	"unsafe"
+
+	"github.com/gazercloud/gazernode/resources"
+	"github.com/gazercloud/gazernode/utilities/logger"
 )
 
 var Image []byte
@@ -128,7 +128,7 @@ func GetProcesses() []ProcessInfo {
 }
 
 func fdusage(pid1 int) (int, error) {
-	pid := C.int(pid1)
+	/*pid := C.int(pid1)
 
 	rlen, err := C.proc_pidinfo(pid, C.PROC_PIDLISTFDS, 0, nil, 0)
 	if rlen <= 0 {
@@ -154,7 +154,8 @@ func fdusage(pid1 int) (int, error) {
 			continue
 		}
 		return int(rlen / C.PROC_PIDLISTFD_SIZE), nil
-	}
+	}*/
+	return 0, nil
 }
 
 type DarwinProcess struct {
