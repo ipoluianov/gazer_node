@@ -12,7 +12,8 @@
             "program": "main/main.go",
             "console": "externalTerminal",
             "output": "gazer_node.exe",
-            "args": ["-server"]
+            "args": ["-server"],
+            "asRoot": false
         }
     ]
 }

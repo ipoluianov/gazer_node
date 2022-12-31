@@ -3,7 +3,6 @@ module github.com/gazercloud/gazernode
 go 1.16
 
 require (
-	github.com/Knetic/govaluate v3.0.0+incompatible
 	github.com/StackExchange/wmi v1.2.1 // indirect
 	github.com/cockroachdb/apd v1.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -11,7 +10,7 @@ require (
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/google/uuid v1.2.0
 	github.com/gorilla/mux v1.8.0
-	github.com/ipoluianov/xchg v0.1.7
+	github.com/ipoluianov/xchg v0.2.0
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
 	github.com/jackc/pgx v3.6.2+incompatible
 	github.com/josephspurrier/goversioninfo v1.2.0
@@ -32,3 +31,5 @@ require (
 	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
 )
+
+replace github.com/ipoluianov/xchg => d:\src\github\xchg

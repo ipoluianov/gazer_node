@@ -76,7 +76,7 @@ func (c *UnitSystemMemory) Tick() {
 		c.SetFloat64("UsedPercent", percents, "%", 1)
 
 		if time.Now().Sub(dtBegin).Seconds() > 5 {
-			panic("This is panic!")
+			//panic("This is panic!")
 		}
 	}
 
