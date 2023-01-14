@@ -13,7 +13,7 @@
             "console": "externalTerminal",
             "output": "gazer_node.exe",
             "args": ["-server"],
-            "asRoot": false
+            "asRoot": true
         }
     ]
 }

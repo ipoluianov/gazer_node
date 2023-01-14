@@ -3,12 +3,13 @@ package unit_general_cgi
 import (
 	"encoding/json"
 	"errors"
+	"os/exec"
+	"time"
+
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/gazercloud/gazernode/resources"
 	"github.com/gazercloud/gazernode/system/units/units_common"
 	"github.com/gazercloud/gazernode/utilities/logger"
-	"os/exec"
-	"time"
 )
 
 type UnitGeneralCGI struct {
@@ -115,6 +116,7 @@ func (c *UnitGeneralCGI) Tick() {
 		out, err := cmd.CombinedOutput()
 		if err != nil {
 			logger.Println("cmd.Run() failed with error:", err)
+			c.SetString("error", err.Error(), "")
 		}
 
 		if len(out) > 1024 {
