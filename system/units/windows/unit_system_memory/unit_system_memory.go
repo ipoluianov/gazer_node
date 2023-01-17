@@ -13,6 +13,8 @@ import (
 
 type UnitSystemMemory struct {
 	units_common.Unit
+
+	totalIsSet bool
 }
 
 var Image []byte
@@ -70,7 +72,10 @@ func (c *UnitSystemMemory) Tick() {
 		percents := (float64(v.Used) / float64(v.Total)) * 100.0
 
 		// Common
-		c.SetUInt64("Total", v.Total/1048576, uom.MB)
+		if !c.totalIsSet {
+			c.SetUInt64("Total", v.Total/1048576, uom.MB)
+			c.totalIsSet = true
+		}
 		c.SetUInt64("Available", v.Available/1048576, uom.MB)
 		c.SetUInt64("Used", v.Used/1048576, uom.MB)
 		c.SetFloat64("UsedPercent", percents, "%", 1)

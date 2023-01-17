@@ -10,7 +10,7 @@ require (
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/google/uuid v1.2.0
 	github.com/gorilla/mux v1.8.0
-	github.com/ipoluianov/xchg v0.2.0
+	github.com/ipoluianov/xchg v0.2.3
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
 	github.com/jackc/pgx v3.6.2+incompatible
 	github.com/josephspurrier/goversioninfo v1.2.0
@@ -32,4 +32,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
 )
 
-replace github.com/ipoluianov/xchg => d:\src\github\xchg
+// replace github.com/ipoluianov/xchg => d:\src\github\xchg
