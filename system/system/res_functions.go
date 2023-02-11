@@ -17,8 +17,8 @@ func (c *System) ResGet(id string, offset int64, size int64) (nodeinterface.Reso
 	return c.resources.Get(id, offset, size)
 }
 
-func (c *System) ResGetThumbnail(id string) (*common_interfaces.ResourcesItem, error) {
-	return c.resources.GetThumbnail(id)
+func (c *System) ResGetByPath(path string, offset int64, size int64) (nodeinterface.ResourceGetResponse, error) {
+	return c.resources.GetByPath(path, offset, size)
 }
 
 func (c *System) ResList(tp string, filter string, offset int, maxCount int) common_interfaces.ResourcesInfo {

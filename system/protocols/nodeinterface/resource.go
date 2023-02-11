@@ -40,6 +40,12 @@ type ResourceGetResponse struct {
 	Hash    string `json:"hash"`
 }
 
+type ResourceGetByPathRequest struct {
+	Path   string `json:"path"`
+	Offset int64  `json:"offset"`
+	Size   int64  `json:"size"`
+}
+
 type ResourceGetThumbnailRequest struct {
 	Id string `json:"id"`
 }

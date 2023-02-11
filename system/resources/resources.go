@@ -4,15 +4,16 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"io/ioutil"
+	"os"
+	"strings"
+	"sync"
+
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/gazercloud/gazernode/system/protocols/nodeinterface"
 	"github.com/gazercloud/gazernode/system/settings"
 	"github.com/gazercloud/gazernode/utilities/logger"
 	"github.com/google/uuid"
-	"io/ioutil"
-	"os"
-	"strings"
-	"sync"
 )
 
 type Resources struct {
@@ -291,35 +292,60 @@ func (c *Resources) Get(id string, offset int64, size int64) (nodeinterface.Reso
 	return result, nil
 }
 
-func (c *Resources) GetThumbnail(id string) (*common_interfaces.ResourcesItem, error) {
-	c.mtx.Lock()
-	defer c.mtx.Unlock()
-
+func (c *Resources) GetAllInfos() []common_interfaces.ResourcesItemInfo {
 	var err error
-	var bs []byte
-
-	dir := c.dir()
-
-	bs, err = ioutil.ReadFile(dir + "/" + id + ".info")
-	if err != nil {
-		return nil, errors.New("no resource found")
+	var infos []common_interfaces.ResourcesItemInfo
+	var files []os.FileInfo
+	files, err = ioutil.ReadDir(c.dir())
+	for _, file := range files {
+		if strings.HasSuffix(file.Name(), ".info") {
+			var bs []byte
+			bs, err = ioutil.ReadFile(c.dir() + "/" + file.Name())
+			if err == nil {
+				var info common_interfaces.ResourcesItemInfo
+				err = json.Unmarshal(bs, &info)
+				if err == nil {
+					infos = append(infos, info)
+				}
+			}
+		}
 	}
+	return infos
+}
 
-	var info common_interfaces.ResourcesItemInfo
-	err = json.Unmarshal(bs, &info)
-	if err != nil {
-		return nil, errors.New("no resource found")
+func (c *Resources) GetIdByPath(path string) (id string, err error) {
+	parts := strings.FieldsFunc(path, func(r rune) bool {
+		return r == '/'
+	})
+	infos := c.GetAllInfos()
+	searchingIndex := 0
+	searchingParentFolderId := ""
+
+	for {
+		found := false
+		for _, info := range infos {
+			if info.GetProp("name") == parts[searchingIndex] && info.GetProp("folder") == searchingParentFolderId {
+				searchingIndex++
+				searchingParentFolderId = info.Id
+				found = true
+				break
+			}
+		}
+		if !found {
+			return "", errors.New("not found")
+		}
+		if searchingIndex == len(parts) {
+			return searchingParentFolderId, nil
+		}
 	}
+}
 
-	bs, err = ioutil.ReadFile(dir + "/" + id + ".thumbnail.content")
+func (c *Resources) GetByPath(path string, offset int64, size int64) (nodeinterface.ResourceGetResponse, error) {
+	id, err := c.GetIdByPath(path)
 	if err != nil {
-		return nil, errors.New("no resource found")
+		return nodeinterface.ResourceGetResponse{}, err
 	}
-
-	var result common_interfaces.ResourcesItem
-	result.Info = info
-	result.Content = bs
-	return &result, nil
+	return c.Get(id, offset, size)
 }
 
 func SplitWithoutEmpty(req string, sep rune) []string {

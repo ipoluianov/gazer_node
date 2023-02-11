@@ -2,6 +2,7 @@ package httpserver
 
 import (
 	"encoding/json"
+
 	"github.com/gazercloud/gazernode/system/protocols/nodeinterface"
 )
 
@@ -56,15 +57,15 @@ func (c *HttpServer) ResourceGet(request []byte) (response []byte, err error) {
 	return
 }
 
-func (c *HttpServer) ResourceGetThumbnail(request []byte) (response []byte, err error) {
-	var req nodeinterface.ResourceGetThumbnailRequest
-	var resp nodeinterface.ResourceGetThumbnailResponse
+func (c *HttpServer) ResourceGetByPath(request []byte) (response []byte, err error) {
+	var req nodeinterface.ResourceGetByPathRequest
+	var resp nodeinterface.ResourceGetResponse
 	err = json.Unmarshal(request, &req)
 	if err != nil {
 		return
 	}
 
-	resp.Item, err = c.system.ResGetThumbnail(req.Id)
+	resp, err = c.system.ResGetByPath(req.Path, req.Offset, req.Size)
 	if err != nil {
 		return
 	}
