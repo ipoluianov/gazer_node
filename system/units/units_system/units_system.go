@@ -13,7 +13,6 @@ import (
 	"github.com/gazercloud/gazernode/system/units/databases/unit_postgreesql"
 	"github.com/gazercloud/gazernode/system/units/files/unit_filecontent"
 	"github.com/gazercloud/gazernode/system/units/files/unit_filesize"
-	"github.com/gazercloud/gazernode/system/units/gazer/unit_gazer_cloud"
 	"github.com/gazercloud/gazernode/system/units/general/unit_general_cgi"
 	"github.com/gazercloud/gazernode/system/units/general/unit_general_cgi_key_value"
 	"github.com/gazercloud/gazernode/system/units/general/unit_hhgttg"
@@ -23,14 +22,12 @@ import (
 	"github.com/gazercloud/gazernode/system/units/network/unit_ping"
 	"github.com/gazercloud/gazernode/system/units/network/unit_ssl"
 	"github.com/gazercloud/gazernode/system/units/network/unit_tcp_connect"
-	unit_tcp_telnet_control "github.com/gazercloud/gazernode/system/units/network/unit_tcp_control"
 	"github.com/gazercloud/gazernode/system/units/raspberry_pi/unit_raspberry_pi_cpu_temp"
 	"github.com/gazercloud/gazernode/system/units/raspberry_pi/unit_raspberry_pi_gpio"
 	unit_serial_port_key_value "github.com/gazercloud/gazernode/system/units/serial_port/serial_port_key_value"
 	"github.com/gazercloud/gazernode/system/units/units_common"
 	"github.com/gazercloud/gazernode/system/units/windows/unit_network"
 	"github.com/gazercloud/gazernode/system/units/windows/unit_process"
-	"github.com/gazercloud/gazernode/system/units/windows/unit_processes"
 	"github.com/gazercloud/gazernode/system/units/windows/unit_storage"
 	"github.com/gazercloud/gazernode/system/units/windows/unit_system_memory"
 	"github.com/gazercloud/gazernode/utilities/logger"
@@ -90,21 +87,13 @@ func New(iDataStorage common_interfaces.IDataStorage) *UnitsSystem {
 	unitType = c.RegisterUnit("network_http_json_requester", "network", "JSON Requester", unit_http_json_requester.New, unit_http_json_requester.Image, "")
 	unitType.Help = "https://gazer.cloud/unit-types/network/json-requester/"
 
-	unitType = c.RegisterUnit("network_tcp_telnet_control", "network", "TCP Telnet Control", unit_tcp_telnet_control.New, unit_tcp_telnet_control.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/network/tcp-telnet-control/"
-
 	unitType = c.RegisterUnit("network_ssl", "network", "SSL", unit_ssl.New, unit_ssl.Image, "")
 	unitType.Help = "https://gazer.cloud/unit-types/network/ssl/"
-
-	//unitType = c.RegisterUnit("network_http_json_items_server", "network", "HTTP Json Items Server", unit_http_json_items_server.New, unit_http_json_items_server.Image, "")
-	//unitType = c.RegisterUnit("network_http_json_units_server", "network", "HTTP Json Units Server", unit_http_json_units_server.New, unit_http_json_units_server.Image, "")
 
 	unitType = c.RegisterUnit("computer_memory", "computer", "Memory", unit_system_memory.New, unit_system_memory.Image, "")
 	unitType.Help = "https://gazer.cloud/unit-types/computer/memory/"
 	unitType = c.RegisterUnit("computer_process", "computer", "Process", unit_process.New, unit_process.Image, "")
 	unitType.Help = "https://gazer.cloud/unit-types/computer/process/"
-	unitType = c.RegisterUnit("computer_processes", "computer", "Processes", unit_processes.New, unit_processes.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/computer/processes/"
 	unitType = c.RegisterUnit("computer_storage", "computer", "Storage", unit_storage.New, unit_storage.Image, "")
 	unitType.Help = "https://gazer.cloud/unit-types/computer/storage/"
 	unitType = c.RegisterUnit("computer_network", "computer", "Network", unit_network.New, unit_network.Image, "")
@@ -112,14 +101,11 @@ func New(iDataStorage common_interfaces.IDataStorage) *UnitsSystem {
 	/*unitType = c.RegisterUnit("computer_named_pipe_server", "computer", "Named Pipe Server", unit_system_named_pipe_server.New, unit_system_named_pipe_server.Image, "")
 	unitType.Help = "https://gazer.cloud/unit-types/computer/memory/"
 	*/
-	//unitType = c.RegisterUnit("computer_network_interface", "computer", "Network Interface", unit_network_interface.New, unit_network_interface.Image, "")
-	//unitType.Help = "https://gazer.cloud/unit-types/computer/network-interface/"
 
 	unitType = c.RegisterUnit("file_size", "file", "File Size", unit_filesize.New, unit_filesize.Image, "")
 	unitType.Help = "https://gazer.cloud/unit-types/files/file-size/"
 	unitType = c.RegisterUnit("file_content", "file", "File Content", unit_filecontent.New, unit_filecontent.Image, "")
 	unitType.Help = "https://gazer.cloud/unit-types/files/file-content/"
-	//unitType = c.RegisterUnit("file_csv_export", "file", "CSV Export", unit_csv_export.New, unit_csv_export.Image, "")
 
 	unitType = c.RegisterUnit("general_cgi", "general", "Console", unit_general_cgi.New, unit_general_cgi.Image, "")
 	unitType.Help = "https://gazer.cloud/unit-types/general/cgi/"
@@ -131,9 +117,6 @@ func New(iDataStorage common_interfaces.IDataStorage) *UnitsSystem {
 	unitType.Help = "https://gazer.cloud/unit-types/general/hhgttg/"
 	unitType = c.RegisterUnit("general_signal_generator", "general", "Signal Generator", unit_signal_generator.New, unit_signal_generator.Image, "")
 	unitType.Help = "https://gazer.cloud/unit-types/general/signal-generator/"
-
-	//unitType = c.RegisterUnit("general_calculator", "general", "Calculator", unit_calculator.New, unit_calculator.Image, "")
-	//unitType.Help = "https://gazer.cloud/unit-types/"
 
 	unitType = c.RegisterUnit("serial_port_key_value", "serial_port", "Serial Port Key=Value", unit_serial_port_key_value.New, unit_serial_port_key_value.Image, "Key/value unit via Serial Port. Format: key=value<new_line>")
 	unitType.Help = "https://gazer.cloud/unit-types/serial-port/serial-port-key-value/"
@@ -147,16 +130,6 @@ func New(iDataStorage common_interfaces.IDataStorage) *UnitsSystem {
 
 	unitType = c.RegisterUnit("database_postgresql", "database", "PostgreSQL", unit_postgreesql.New, unit_postgreesql.Image, "PostgreSQL database query execute")
 	unitType.Help = "https://gazer.cloud/unit-types/databases/postgresql/"
-
-	/*unitType = c.RegisterUnit("database_mysql", "database", "MySQL", unit_mysql.New, unit_mysql.Image, "MySQL database query execute")
-		unitType.Help = `
-	No description available
-	`
-	*/
-	unitType = c.RegisterUnit("gazer_cloud", "gazer", "Gazer Cloud", unit_gazer_cloud.New, unit_gazer_cloud.Image, "Gazer Cloud Monitoring")
-	unitType.Help = ""
-
-	//unitType = c.RegisterUnit("industrial_modbus", "industrial", "Modbus TCP", unit_modbus.New, unit_modbus.Image, "Modbus TCP")
 
 	return &c
 }
