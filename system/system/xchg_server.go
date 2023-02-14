@@ -34,7 +34,7 @@ func NewXchgServer(privateKey *rsa.PrivateKey, masterKey string) *XchgServer {
 }
 
 func (c *XchgServer) Start() {
-	c.serverConnection.StartHttpOnly()
+	c.serverConnection.Start()
 }
 
 func (c *XchgServer) Stop() {

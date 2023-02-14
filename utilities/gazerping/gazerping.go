@@ -2,12 +2,13 @@ package gazerping
 
 import (
 	"errors"
-	"golang.org/x/net/icmp"
-	"golang.org/x/net/ipv4"
 	"net"
 	"os"
 	"sync"
 	"time"
+
+	"golang.org/x/net/icmp"
+	"golang.org/x/net/ipv4"
 )
 
 var sequenceNumber uint16
@@ -88,7 +89,8 @@ func PingHost(addr string, dataFrame []byte, timeoutMs int, source uint16, seque
 	}
 
 	var srv *icmp.PacketConn
-	srv, err = icmp.ListenPacket("ip4:icmp", "0.0.0.0")
+	srv, err = icmp.ListenPacket("udp4", "0.0.0.0")
+	//srv, err = icmp.ListenPacket("ip4:icmp", "0.0.0.0")
 	if err != nil {
 		return
 	}
@@ -107,7 +109,10 @@ func PingHost(addr string, dataFrame []byte, timeoutMs int, source uint16, seque
 	if err != nil {
 		return
 	}
-	if _, err = srv.WriteTo(wb, &net.IPAddr{IP: ipAddr}); err != nil {
+	var destAddr net.Addr
+	//destAddr = &net.IPAddr{IP: ipAddr}
+	destAddr = &net.UDPAddr{IP: ipAddr}
+	if _, err = srv.WriteTo(wb, destAddr); err != nil {
 		return
 	}
 

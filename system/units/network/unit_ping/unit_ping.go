@@ -3,16 +3,17 @@ package unit_ping
 import (
 	"encoding/json"
 	"errors"
+	"math"
+	"net"
+	"runtime"
+	"time"
+
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/gazercloud/gazernode/resources"
 	"github.com/gazercloud/gazernode/system/units/units_common"
 	"github.com/gazercloud/gazernode/utilities"
 	"github.com/gazercloud/gazernode/utilities/gazerping"
 	"github.com/gazercloud/gazernode/utilities/uom"
-	"math"
-	"net"
-	"runtime"
-	"time"
 )
 
 type UnitPing struct {
