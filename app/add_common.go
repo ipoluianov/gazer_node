@@ -25,15 +25,11 @@ func start(dataPath string) {
 	httpServer = httpserver.NewHttpServer(sys)
 	sys.SetRequester(httpServer)
 	sys.Start()
-	//httpServer.Start()
 }
 
 func stop() {
 	if sys != nil {
 		sys.Stop()
-	}
-	if httpServer != nil {
-		_ = httpServer.Stop()
 	}
 }
 
