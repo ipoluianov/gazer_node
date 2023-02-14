@@ -1,16 +1,19 @@
 package unit_network
 
 import (
+	"net"
+	"time"
+
 	"github.com/gazercloud/gazernode/common_interfaces"
 	"github.com/gazercloud/gazernode/resources"
 	"github.com/gazercloud/gazernode/system/units/units_common"
 	"github.com/kbinani/win"
-	"net"
-	"time"
 )
 
 type UnitNetwork struct {
 	units_common.Unit
+
+	addressesOfInterfaces map[int]string
 }
 
 var Image []byte
@@ -21,6 +24,7 @@ func init() {
 
 func New() common_interfaces.IUnit {
 	var c UnitNetwork
+	c.addressesOfInterfaces = make(map[int]string)
 	return &c
 }
 
@@ -87,6 +91,8 @@ func (c *UnitNetwork) Tick() {
 		interfaces, err = net.Interfaces()
 		if err == nil {
 			for _, ni := range interfaces {
+				c.writeAddresses(ni)
+
 				var table win.MIB_IF_ROW2
 				table.InterfaceIndex = win.NET_IFINDEX(ni.Index)
 				win.GetIfEntry2(&table)

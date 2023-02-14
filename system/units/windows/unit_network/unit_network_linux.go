@@ -14,6 +14,8 @@ import (
 
 type UnitNetwork struct {
 	units_common.Unit
+
+	addressesOfInterfaces map[int]string
 }
 
 var Image []byte
@@ -24,6 +26,7 @@ func init() {
 
 func New() common_interfaces.IUnit {
 	var c UnitNetwork
+	c.addressesOfInterfaces = make(map[int]string)
 	return &c
 }
 
@@ -88,6 +91,19 @@ func (c *UnitNetwork) Tick() {
 				rxBytes := int64(0)
 				txPackets := int64(0)
 				txBytes := int64(0)
+
+				// Addresses
+				addrs, err := ni.Addrs()
+				if err != nil {
+					addrsString := ""
+					for _, a := range addrs {
+						if len(addrsString) > 0 {
+							addrsString += " "
+						}
+						addrsString += a.String()
+					}
+					c.SetString(ni.Name+"/Addresses", addrsString, "-")
+				}
 
 				rxPacketsStr, errParamRxPackets := ioutil.ReadFile("/sys/class/net/" + ni.Name + "/statistics/rx_packets")
 				if errParamRxPackets == nil {
