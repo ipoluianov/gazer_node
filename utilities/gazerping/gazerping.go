@@ -27,7 +27,7 @@ func init() {
 	}
 }
 
-func Ping(addr string, dataSize int, timeoutMs int) (result int, peer net.Addr, err error) {
+func Ping(addr string, dataSize int, timeoutMs int, useUdpSocket bool) (result int, peer net.Addr, err error) {
 
 	var data []byte
 	data, _ = defaultData[dataSize]
@@ -44,10 +44,10 @@ func Ping(addr string, dataSize int, timeoutMs int) (result int, peer net.Addr, 
 	}
 	mtx.Unlock()
 
-	return PingHost(addr, data, timeoutMs, srcIndex, seqIndex)
+	return PingHost(addr, data, timeoutMs, srcIndex, seqIndex, useUdpSocket)
 }
 
-func PingHost(addr string, dataFrame []byte, timeoutMs int, source uint16, sequenceNum uint16) (result int, peer net.Addr, err error) {
+func PingHost(addr string, dataFrame []byte, timeoutMs int, source uint16, sequenceNum uint16, useUdpSocket bool) (result int, peer net.Addr, err error) {
 	if len(dataFrame) < 1 || len(dataFrame) > 1400 {
 		err = errors.New("wrong data frame length")
 		return
@@ -89,8 +89,11 @@ func PingHost(addr string, dataFrame []byte, timeoutMs int, source uint16, seque
 	}
 
 	var srv *icmp.PacketConn
-	srv, err = icmp.ListenPacket("udp4", "0.0.0.0")
-	//srv, err = icmp.ListenPacket("ip4:icmp", "0.0.0.0")
+	if useUdpSocket {
+		srv, err = icmp.ListenPacket("udp4", "0.0.0.0")
+	} else {
+		srv, err = icmp.ListenPacket("ip4:icmp", "0.0.0.0")
+	}
 	if err != nil {
 		return
 	}
@@ -110,8 +113,11 @@ func PingHost(addr string, dataFrame []byte, timeoutMs int, source uint16, seque
 		return
 	}
 	var destAddr net.Addr
-	//destAddr = &net.IPAddr{IP: ipAddr}
-	destAddr = &net.UDPAddr{IP: ipAddr}
+	if useUdpSocket {
+		destAddr = &net.UDPAddr{IP: ipAddr}
+	} else {
+		destAddr = &net.IPAddr{IP: ipAddr}
+	}
 	if _, err = srv.WriteTo(wb, destAddr); err != nil {
 		return
 	}

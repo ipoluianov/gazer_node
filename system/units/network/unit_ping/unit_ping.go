@@ -192,7 +192,9 @@ func (c *UnitPing) Tick() {
 		var pingTime int
 		var peer net.Addr
 
-		pingTime, peer, err = gazerping.Ping(c.addr, c.frameSize, c.timeoutMs)
+		useUdpSocket := (!utilities.IsRoot() && runtime.GOOS != "windows")
+
+		pingTime, peer, err = gazerping.Ping(c.addr, c.frameSize, c.timeoutMs, useUdpSocket)
 
 		if err == nil {
 			ip := peer.String()
