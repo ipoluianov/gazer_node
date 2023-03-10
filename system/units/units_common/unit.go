@@ -327,12 +327,24 @@ func (c *Unit) SetUInt32(name string, value uint32, UOM string) {
 	c.SetString(name, fmt.Sprint(value), UOM)
 }
 
+func (c *Unit) SetInt8(name string, value int8, UOM string) {
+	c.SetString(name, fmt.Sprint(value), UOM)
+}
+
+func (c *Unit) SetUInt8(name string, value uint8, UOM string) {
+	c.SetString(name, fmt.Sprint(value), UOM)
+}
+
 func (c *Unit) SetInt16(name string, value int16, UOM string) {
 	c.SetString(name, fmt.Sprint(value), UOM)
 }
 
 func (c *Unit) SetUInt16(name string, value uint16, UOM string) {
 	c.SetString(name, fmt.Sprint(value), UOM)
+}
+
+func (c *Unit) SetFloat32(name string, value float32, UOM string, precision int) {
+	c.SetString(name, strconv.FormatFloat(float64(value), 'f', precision, 64), UOM)
 }
 
 func (c *Unit) SetFloat64(name string, value float64, UOM string, precision int) {

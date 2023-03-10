@@ -22,7 +22,7 @@ import (
 	"github.com/gazercloud/gazernode/system/units/network/unit_ping"
 	"github.com/gazercloud/gazernode/system/units/network/unit_ssl"
 	"github.com/gazercloud/gazernode/system/units/network/unit_tcp_connect"
-	"github.com/gazercloud/gazernode/system/units/network/unit_udp_int_fields"
+	"github.com/gazercloud/gazernode/system/units/network/unit_udp_fields"
 	"github.com/gazercloud/gazernode/system/units/raspberry_pi/unit_raspberry_pi_cpu_temp"
 	"github.com/gazercloud/gazernode/system/units/raspberry_pi/unit_raspberry_pi_gpio"
 	unit_serial_port_key_value "github.com/gazercloud/gazernode/system/units/serial_port/serial_port_key_value"
@@ -91,7 +91,7 @@ func New(iDataStorage common_interfaces.IDataStorage) *UnitsSystem {
 	unitType = c.RegisterUnit("network_ssl", "network", "SSL", unit_ssl.New, unit_ssl.Image, "")
 	unitType.Help = "https://gazer.cloud/unit-types/network/ssl/"
 
-	unitType = c.RegisterUnit("network_udp_int_fields", "network", "UDP int fields", unit_udp_int_fields.New, unit_udp_int_fields.Image, "")
+	unitType = c.RegisterUnit("network_udp_fields", "network", "UDP fields", unit_udp_fields.New, unit_udp_fields.Image, "")
 	unitType.Help = "https://gazer.cloud/unit-types/network/ssl/"
 
 	unitType = c.RegisterUnit("computer_memory", "computer", "Memory", unit_system_memory.New, unit_system_memory.Image, "")
