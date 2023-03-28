@@ -8,6 +8,7 @@ import (
 
 type UnitNetwork struct {
 	units_common.Unit
+	addressesOfInterfaces map[int]string
 }
 
 var Image []byte
