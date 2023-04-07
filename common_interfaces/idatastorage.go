@@ -17,9 +17,6 @@ type IDataStorage interface {
 
 	//Exec(function string, request []byte, host string) ([]byte, error)
 
-	StatGazerNode() StatGazerNode
-	StatGazerCloud() StatGazerCloud
-
 	AddToWatch(unitId string, itemName string)
 	RemoveFromWatch(unitId string, itemName string)
 }

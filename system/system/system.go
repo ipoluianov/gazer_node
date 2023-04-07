@@ -225,15 +225,6 @@ func (c *System) RegApiCall() {
 	c.mtx.Unlock()
 }
 
-func (c *System) StatGazerNode() (res common_interfaces.StatGazerNode) {
-	return
-}
-
-func (c *System) StatGazerCloud() (res common_interfaces.StatGazerCloud) {
-	//res = c.xchgPoint.Stat()
-	return
-}
-
 func (c *System) thMaintenance() {
 	for !c.stopping {
 		for i := 0; i < 10; i++ {
