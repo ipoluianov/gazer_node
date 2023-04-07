@@ -1,4 +1,4 @@
-package httpserver
+package server
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
 )
 
-func (c *HttpServer) ResourceAdd(request []byte) (response []byte, err error) {
+func (c *Server) ResourceAdd(request []byte) (response []byte, err error) {
 	var req nodeinterface.ResourceAddRequest
 	var resp nodeinterface.ResourceAddResponse
 	err = json.Unmarshal(request, &req)
@@ -23,7 +23,7 @@ func (c *HttpServer) ResourceAdd(request []byte) (response []byte, err error) {
 	return
 }
 
-func (c *HttpServer) ResourceSet(request []byte) (response []byte, err error) {
+func (c *Server) ResourceSet(request []byte) (response []byte, err error) {
 	var req nodeinterface.ResourceSetRequest
 	var resp nodeinterface.ResourceSetResponse
 	err = json.Unmarshal(request, &req)
@@ -40,7 +40,7 @@ func (c *HttpServer) ResourceSet(request []byte) (response []byte, err error) {
 	return
 }
 
-func (c *HttpServer) ResourceGet(request []byte) (response []byte, err error) {
+func (c *Server) ResourceGet(request []byte) (response []byte, err error) {
 	var req nodeinterface.ResourceGetRequest
 	var resp nodeinterface.ResourceGetResponse
 	err = json.Unmarshal(request, &req)
@@ -57,7 +57,7 @@ func (c *HttpServer) ResourceGet(request []byte) (response []byte, err error) {
 	return
 }
 
-func (c *HttpServer) ResourceGetByPath(request []byte) (response []byte, err error) {
+func (c *Server) ResourceGetByPath(request []byte) (response []byte, err error) {
 	var req nodeinterface.ResourceGetByPathRequest
 	var resp nodeinterface.ResourceGetResponse
 	err = json.Unmarshal(request, &req)
@@ -74,7 +74,7 @@ func (c *HttpServer) ResourceGetByPath(request []byte) (response []byte, err err
 	return
 }
 
-func (c *HttpServer) ResourceRemove(request []byte) (response []byte, err error) {
+func (c *Server) ResourceRemove(request []byte) (response []byte, err error) {
 	var req nodeinterface.ResourceRemoveRequest
 	var resp nodeinterface.ResourceRemoveResponse
 	err = json.Unmarshal(request, &req)
@@ -108,7 +108,7 @@ func (c *HttpServer) ResourceRemove(request []byte) (response []byte, err error)
 	return
 }*/
 
-func (c *HttpServer) ResourceList(request []byte) (response []byte, err error) {
+func (c *Server) ResourceList(request []byte) (response []byte, err error) {
 	var req nodeinterface.ResourceListRequest
 	var resp nodeinterface.ResourceListResponse
 	err = json.Unmarshal(request, &req)

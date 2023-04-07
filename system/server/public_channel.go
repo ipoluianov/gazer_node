@@ -1,4 +1,4 @@
-package httpserver
+package server
 
 /*
 func (c *HttpServer) PublicChannelList(request []byte) (response []byte, err error) {

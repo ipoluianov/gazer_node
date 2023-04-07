@@ -1,4 +1,4 @@
-package httpserver
+package server
 
 import (
 	"errors"
@@ -7,7 +7,7 @@ import (
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
 
-func (c *HttpServer) RequestJson(function string, requestText []byte, host string, fromCloud bool) ([]byte, error) {
+func (c *Server) RequestJson(function string, requestText []byte, host string, fromCloud bool) ([]byte, error) {
 	var err error
 	var result []byte
 

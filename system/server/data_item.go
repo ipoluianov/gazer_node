@@ -1,4 +1,4 @@
-package httpserver
+package server
 
 import (
 	"encoding/json"
@@ -15,7 +15,7 @@ import (
 	"github.com/ipoluianov/gazer_node/utilities/uom"
 )
 
-func (c *HttpServer) DataItemList(request []byte) (response []byte, err error) {
+func (c *Server) DataItemList(request []byte) (response []byte, err error) {
 	var req nodeinterface.DataItemListRequest
 	var resp nodeinterface.DataItemListResponse
 	err = json.Unmarshal(request, &req)
@@ -29,7 +29,7 @@ func (c *HttpServer) DataItemList(request []byte) (response []byte, err error) {
 	return
 }
 
-func (c *HttpServer) DataItemListAll(request []byte) (response []byte, err error) {
+func (c *Server) DataItemListAll(request []byte) (response []byte, err error) {
 	var req nodeinterface.DataItemListAllRequest
 	var resp nodeinterface.DataItemListAllResponse
 	err = json.Unmarshal(request, &req)
@@ -43,7 +43,7 @@ func (c *HttpServer) DataItemListAll(request []byte) (response []byte, err error
 	return
 }
 
-func (c *HttpServer) DataItemWrite(request []byte) (response []byte, err error) {
+func (c *Server) DataItemWrite(request []byte) (response []byte, err error) {
 	var req nodeinterface.DataItemWriteRequest
 	var resp nodeinterface.DataItemWriteResponse
 	err = json.Unmarshal(request, &req)
@@ -60,7 +60,7 @@ func (c *HttpServer) DataItemWrite(request []byte) (response []byte, err error) 
 	return
 }
 
-func (c *HttpServer) DataItemRemove(request []byte) (response []byte, err error) {
+func (c *Server) DataItemRemove(request []byte) (response []byte, err error) {
 	var req nodeinterface.DataItemRemoveRequest
 	var resp nodeinterface.DataItemRemoveResponse
 	err = json.Unmarshal(request, &req)
@@ -77,7 +77,7 @@ func (c *HttpServer) DataItemRemove(request []byte) (response []byte, err error)
 	return
 }
 
-func (c *HttpServer) DataItemPropSet(request []byte) (response []byte, err error) {
+func (c *Server) DataItemPropSet(request []byte) (response []byte, err error) {
 	var req nodeinterface.DataItemPropSetRequest
 	var resp nodeinterface.DataItemPropSetResponse
 	err = json.Unmarshal(request, &req)
@@ -94,7 +94,7 @@ func (c *HttpServer) DataItemPropSet(request []byte) (response []byte, err error
 	return
 }
 
-func (c *HttpServer) DataItemPropGet(request []byte) (response []byte, err error) {
+func (c *Server) DataItemPropGet(request []byte) (response []byte, err error) {
 	var req nodeinterface.DataItemPropGetRequest
 	var resp nodeinterface.DataItemPropGetResponse
 	err = json.Unmarshal(request, &req)
@@ -111,7 +111,7 @@ func (c *HttpServer) DataItemPropGet(request []byte) (response []byte, err error
 	return
 }
 
-func (c *HttpServer) DataItemHistory(request []byte) (response []byte, err error) {
+func (c *Server) DataItemHistory(request []byte) (response []byte, err error) {
 	var req nodeinterface.DataItemHistoryRequest
 	var resp nodeinterface.DataItemHistoryResponse
 	err = json.Unmarshal(request, &req)
@@ -142,7 +142,7 @@ func (c *HttpServer) DataItemHistory(request []byte) (response []byte, err error
 	return
 }
 
-func (c *HttpServer) DataItemHistoryChart(request []byte) (response []byte, err error) {
+func (c *Server) DataItemHistoryChart(request []byte) (response []byte, err error) {
 	var req nodeinterface.DataItemHistoryChartRequest
 	var resp nodeinterface.DataItemHistoryChartResponse
 	err = json.Unmarshal(request, &req)

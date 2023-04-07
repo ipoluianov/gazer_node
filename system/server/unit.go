@@ -1,4 +1,4 @@
-package httpserver
+package server
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
 )
 
-func (c *HttpServer) UnitAdd(request []byte, fromCloud bool) (response []byte, err error) {
+func (c *Server) UnitAdd(request []byte, fromCloud bool) (response []byte, err error) {
 	var req nodeinterface.UnitAddRequest
 	var resp nodeinterface.UnitAddResponse
 	err = json.Unmarshal(request, &req)
@@ -21,7 +21,7 @@ func (c *HttpServer) UnitAdd(request []byte, fromCloud bool) (response []byte, e
 	return
 }
 
-func (c *HttpServer) UnitRemove(request []byte) (response []byte, err error) {
+func (c *Server) UnitRemove(request []byte) (response []byte, err error) {
 	var req nodeinterface.UnitRemoveRequest
 	var resp nodeinterface.UnitRemoveResponse
 	err = json.Unmarshal(request, &req)
@@ -37,7 +37,7 @@ func (c *HttpServer) UnitRemove(request []byte) (response []byte, err error) {
 	return
 }
 
-func (c *HttpServer) UnitState(request []byte) (response []byte, err error) {
+func (c *Server) UnitState(request []byte) (response []byte, err error) {
 	var req nodeinterface.UnitStateRequest
 	var resp nodeinterface.UnitStateResponse
 	err = json.Unmarshal(request, &req)
@@ -54,7 +54,7 @@ func (c *HttpServer) UnitState(request []byte) (response []byte, err error) {
 	return
 }
 
-func (c *HttpServer) UnitStateAll(request []byte) (response []byte, err error) {
+func (c *Server) UnitStateAll(request []byte) (response []byte, err error) {
 	var req nodeinterface.UnitStateAllRequest
 	var resp nodeinterface.UnitStateAllResponse
 	err = json.Unmarshal(request, &req)
@@ -71,7 +71,7 @@ func (c *HttpServer) UnitStateAll(request []byte) (response []byte, err error) {
 	return
 }
 
-func (c *HttpServer) UnitItemsValues(request []byte) (response []byte, err error) {
+func (c *Server) UnitItemsValues(request []byte) (response []byte, err error) {
 	var req nodeinterface.UnitItemsValuesRequest
 	var resp nodeinterface.UnitItemsValuesResponse
 	err = json.Unmarshal(request, &req)
@@ -85,7 +85,7 @@ func (c *HttpServer) UnitItemsValues(request []byte) (response []byte, err error
 	return
 }
 
-func (c *HttpServer) UnitList(request []byte) (response []byte, err error) {
+func (c *Server) UnitList(request []byte) (response []byte, err error) {
 	var req nodeinterface.UnitListRequest
 	var resp nodeinterface.UnitListResponse
 	err = json.Unmarshal(request, &req)
@@ -99,7 +99,7 @@ func (c *HttpServer) UnitList(request []byte) (response []byte, err error) {
 	return
 }
 
-func (c *HttpServer) UnitStart(request []byte) (response []byte, err error) {
+func (c *Server) UnitStart(request []byte) (response []byte, err error) {
 	var req nodeinterface.UnitStartRequest
 	var resp nodeinterface.UnitStartResponse
 	err = json.Unmarshal(request, &req)
@@ -116,7 +116,7 @@ func (c *HttpServer) UnitStart(request []byte) (response []byte, err error) {
 	return
 }
 
-func (c *HttpServer) UnitStop(request []byte) (response []byte, err error) {
+func (c *Server) UnitStop(request []byte) (response []byte, err error) {
 	var req nodeinterface.UnitStopRequest
 	var resp nodeinterface.UnitStopResponse
 	err = json.Unmarshal(request, &req)
@@ -133,7 +133,7 @@ func (c *HttpServer) UnitStop(request []byte) (response []byte, err error) {
 	return
 }
 
-func (c *HttpServer) UnitSetConfig(request []byte, fromCloud bool) (response []byte, err error) {
+func (c *Server) UnitSetConfig(request []byte, fromCloud bool) (response []byte, err error) {
 	var req nodeinterface.UnitSetConfigRequest
 	var resp nodeinterface.UnitSetConfigResponse
 	err = json.Unmarshal(request, &req)
@@ -150,7 +150,7 @@ func (c *HttpServer) UnitSetConfig(request []byte, fromCloud bool) (response []b
 	return
 }
 
-func (c *HttpServer) UnitGetConfig(request []byte) (response []byte, err error) {
+func (c *Server) UnitGetConfig(request []byte) (response []byte, err error) {
 	var req nodeinterface.UnitGetConfigRequest
 	var resp nodeinterface.UnitGetConfigResponse
 	err = json.Unmarshal(request, &req)
@@ -168,7 +168,7 @@ func (c *HttpServer) UnitGetConfig(request []byte) (response []byte, err error) 
 	return
 }
 
-func (c *HttpServer) UnitPropSet(request []byte) (response []byte, err error) {
+func (c *Server) UnitPropSet(request []byte) (response []byte, err error) {
 	var req nodeinterface.UnitPropSetRequest
 	var resp nodeinterface.UnitPropSetResponse
 	err = json.Unmarshal(request, &req)
@@ -185,7 +185,7 @@ func (c *HttpServer) UnitPropSet(request []byte) (response []byte, err error) {
 	return
 }
 
-func (c *HttpServer) UnitPropGet(request []byte) (response []byte, err error) {
+func (c *Server) UnitPropGet(request []byte) (response []byte, err error) {
 	var req nodeinterface.UnitPropGetRequest
 	var resp nodeinterface.UnitPropGetResponse
 	err = json.Unmarshal(request, &req)
@@ -202,7 +202,7 @@ func (c *HttpServer) UnitPropGet(request []byte) (response []byte, err error) {
 	return
 }
 
-func (c *HttpServer) ResourcePropSet(request []byte) (response []byte, err error) {
+func (c *Server) ResourcePropSet(request []byte) (response []byte, err error) {
 	var req nodeinterface.ResourcePropSetRequest
 	var resp nodeinterface.ResourcePropSetResponse
 	err = json.Unmarshal(request, &req)
@@ -219,7 +219,7 @@ func (c *HttpServer) ResourcePropSet(request []byte) (response []byte, err error
 	return
 }
 
-func (c *HttpServer) ResourcePropGet(request []byte) (response []byte, err error) {
+func (c *Server) ResourcePropGet(request []byte) (response []byte, err error) {
 	var req nodeinterface.ResourcePropGetRequest
 	var resp nodeinterface.ResourcePropGetResponse
 	err = json.Unmarshal(request, &req)
@@ -236,7 +236,7 @@ func (c *HttpServer) ResourcePropGet(request []byte) (response []byte, err error
 	return
 }
 
-func (c *HttpServer) UserPropSet(request []byte) (response []byte, err error) {
+func (c *Server) UserPropSet(request []byte) (response []byte, err error) {
 	var req nodeinterface.UserPropSetRequest
 	var resp nodeinterface.UserPropSetResponse
 	err = json.Unmarshal(request, &req)
@@ -253,7 +253,7 @@ func (c *HttpServer) UserPropSet(request []byte) (response []byte, err error) {
 	return
 }
 
-func (c *HttpServer) UserPropGet(request []byte) (response []byte, err error) {
+func (c *Server) UserPropGet(request []byte) (response []byte, err error) {
 	var req nodeinterface.UserPropGetRequest
 	var resp nodeinterface.UserPropGetResponse
 	err = json.Unmarshal(request, &req)

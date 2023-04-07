@@ -1,4 +1,4 @@
-package httpserver
+package server
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
 )
 
-func (c *HttpServer) UnitTypeList(request []byte) (response []byte, err error) {
+func (c *Server) UnitTypeList(request []byte) (response []byte, err error) {
 	var req nodeinterface.UnitTypeListRequest
 	var resp nodeinterface.UnitTypeListResponse
 	req.Offset = 0
@@ -24,7 +24,7 @@ func (c *HttpServer) UnitTypeList(request []byte) (response []byte, err error) {
 	return
 }
 
-func (c *HttpServer) UnitTypeCategories(request []byte) (response []byte, err error) {
+func (c *Server) UnitTypeCategories(request []byte) (response []byte, err error) {
 	var req nodeinterface.UnitTypeCategoriesRequest
 	var resp nodeinterface.UnitTypeCategoriesResponse
 	err = json.Unmarshal(request, &req)
@@ -38,7 +38,7 @@ func (c *HttpServer) UnitTypeCategories(request []byte) (response []byte, err er
 	return
 }
 
-func (c *HttpServer) UnitTypeConfigMeta(request []byte) (response []byte, err error) {
+func (c *Server) UnitTypeConfigMeta(request []byte) (response []byte, err error) {
 	var req nodeinterface.UnitTypeConfigMetaRequest
 	var resp nodeinterface.UnitTypeConfigMetaResponse
 	err = json.Unmarshal(request, &req)

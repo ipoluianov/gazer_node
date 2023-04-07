@@ -1,4 +1,4 @@
-package httpserver
+package server
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
 )
 
-func (c *HttpServer) ServiceLookup(request []byte) (response []byte, err error) {
+func (c *Server) ServiceLookup(request []byte) (response []byte, err error) {
 	var req nodeinterface.ServiceLookupRequest
 	var resp nodeinterface.ServiceLookupResponse
 	err = json.Unmarshal(request, &req)
@@ -22,7 +22,7 @@ func (c *HttpServer) ServiceLookup(request []byte) (response []byte, err error) 
 	return
 }
 
-func (c *HttpServer) ServiceStatistics(request []byte) (response []byte, err error) {
+func (c *Server) ServiceStatistics(request []byte) (response []byte, err error) {
 	var req nodeinterface.ServiceStatisticsRequest
 	var resp nodeinterface.ServiceStatisticsResponse
 	err = json.Unmarshal(request, &req)
@@ -38,7 +38,7 @@ func (c *HttpServer) ServiceStatistics(request []byte) (response []byte, err err
 	return
 }
 
-func (c *HttpServer) ServiceApi(request []byte) (response []byte, err error) {
+func (c *Server) ServiceApi(request []byte) (response []byte, err error) {
 	var req nodeinterface.ServiceApiRequest
 	var resp nodeinterface.ServiceApiResponse
 	err = json.Unmarshal(request, &req)
@@ -54,7 +54,7 @@ func (c *HttpServer) ServiceApi(request []byte) (response []byte, err error) {
 	return
 }
 
-func (c *HttpServer) ServiceSetNodeName(request []byte) (response []byte, err error) {
+func (c *Server) ServiceSetNodeName(request []byte) (response []byte, err error) {
 	var req nodeinterface.ServiceSetNodeNameRequest
 	var resp nodeinterface.ServiceSetNodeNameResponse
 	err = json.Unmarshal(request, &req)
@@ -70,7 +70,7 @@ func (c *HttpServer) ServiceSetNodeName(request []byte) (response []byte, err er
 	return
 }
 
-func (c *HttpServer) ServiceNodeName(request []byte) (response []byte, err error) {
+func (c *Server) ServiceNodeName(request []byte) (response []byte, err error) {
 	var req nodeinterface.ServiceNodeNameRequest
 	var resp nodeinterface.ServiceNodeNameResponse
 	err = json.Unmarshal(request, &req)
@@ -83,7 +83,7 @@ func (c *HttpServer) ServiceNodeName(request []byte) (response []byte, err error
 	return
 }
 
-func (c *HttpServer) ServiceInfo(request []byte) (response []byte, err error) {
+func (c *Server) ServiceInfo(request []byte) (response []byte, err error) {
 	var req nodeinterface.ServiceInfoRequest
 	var resp nodeinterface.ServiceInfoResponse
 	err = json.Unmarshal(request, &req)
