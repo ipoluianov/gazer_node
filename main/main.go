@@ -1,4 +1,4 @@
-// Copyright 2018-2021 GazerCloud Authors. All rights reserved.
+// Copyright 2021-2023 Ivan Poluianov. All rights reserved.
 // Use of this source code is governed by a MIT license
 // that can be found in the LICENSE file.
 // The list of authors can be found in the AUTHORS file
@@ -6,8 +6,8 @@
 package main
 
 import (
-	"github.com/gazercloud/gazernode/app"
-	"github.com/gazercloud/gazernode/application"
+	"github.com/ipoluianov/gazer_node/app"
+	"github.com/ipoluianov/gazer_node/application"
 )
 
 func main() {

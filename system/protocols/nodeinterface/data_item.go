@@ -1,8 +1,8 @@
 package nodeinterface
 
 import (
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/system/history"
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/system/history"
 )
 
 type DataItemListRequest struct {

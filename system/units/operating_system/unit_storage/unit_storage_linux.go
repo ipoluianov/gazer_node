@@ -3,9 +3,9 @@ package unit_storage
 import (
 	"encoding/json"
 	"errors"
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/resources"
-	"github.com/gazercloud/gazernode/system/units/units_common"
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/resources"
+	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"golang.org/x/sys/unix"
 	"time"
 )

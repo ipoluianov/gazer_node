@@ -2,11 +2,12 @@ package logger
 
 import (
 	"fmt"
-	"github.com/gazercloud/gazernode/utilities"
 	"log"
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/ipoluianov/gazer_node/utilities"
 )
 
 var logsPath string

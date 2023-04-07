@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/gazercloud/gazernode/system/cloud"
 	"io"
 	"io/ioutil"
 	"mime/multipart"
@@ -13,6 +12,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/ipoluianov/gazer_node/system/cloud"
 )
 
 type TransportType string

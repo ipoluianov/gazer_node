@@ -2,10 +2,10 @@ package app
 
 import (
 	"fmt"
-	"github.com/gazercloud/gazernode/application"
-	"github.com/gazercloud/gazernode/cmd"
-	"github.com/gazercloud/gazernode/utilities/logger"
-	"github.com/gazercloud/gazernode/utilities/paths"
+	"github.com/ipoluianov/gazer_node/application"
+	"github.com/ipoluianov/gazer_node/cmd"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
+	"github.com/ipoluianov/gazer_node/utilities/paths"
 	"os"
 )
 

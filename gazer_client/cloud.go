@@ -2,7 +2,8 @@ package gazer_client
 
 import (
 	"encoding/json"
-	nodeinterface2 "github.com/gazercloud/gazernode/system/protocols/nodeinterface"
+
+	nodeinterface2 "github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
 )
 
 func (c *GazerNodeClient) CloudLogin(userName string, password string) error {

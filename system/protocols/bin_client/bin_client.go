@@ -4,13 +4,14 @@ import (
 	"crypto/tls"
 	"encoding/binary"
 	"encoding/json"
-	"github.com/gazercloud/gazernode/system/protocols/cloud_structures/protocol"
-	users2 "github.com/gazercloud/gazernode/system/protocols/users"
-	"github.com/gazercloud/gazernode/utilities"
-	"github.com/gazercloud/gazernode/utilities/logger"
 	"net"
 	"sync"
 	"time"
+
+	"github.com/ipoluianov/gazer_node/system/protocols/cloud_structures/protocol"
+	users2 "github.com/ipoluianov/gazer_node/system/protocols/users"
+	"github.com/ipoluianov/gazer_node/utilities"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
 
 type BinClient struct {

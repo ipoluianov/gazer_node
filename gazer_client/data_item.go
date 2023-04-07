@@ -5,11 +5,12 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/system/history"
-	nodeinterface2 "github.com/gazercloud/gazernode/system/protocols/nodeinterface"
 	"io/fs"
 	"io/ioutil"
+
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/system/history"
+	nodeinterface2 "github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
 )
 
 func (c *GazerNodeClient) Write(itemName string, value string) error {

@@ -6,11 +6,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/system/protocols/lookup"
-	"github.com/gazercloud/gazernode/system/protocols/nodeinterface"
-	"github.com/gazercloud/gazernode/system/units/windows/unit_process"
-	"github.com/gazercloud/gazernode/utilities/logger"
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/system/protocols/lookup"
+	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
+	"github.com/ipoluianov/gazer_node/system/units/operating_system/unit_process"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
 	"go.bug.st/serial"
 )
 

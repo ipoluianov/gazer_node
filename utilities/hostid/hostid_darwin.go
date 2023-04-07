@@ -2,8 +2,8 @@ package hostid
 
 import (
 	"errors"
-	"github.com/gazercloud/gazernode/utilities/logger"
 	"github.com/google/uuid"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
 	"time"
 )
 

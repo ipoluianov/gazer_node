@@ -3,15 +3,16 @@ package unit_process
 import (
 	"encoding/json"
 	"errors"
-	"github.com/gazercloud/gazernode/resources"
-	"github.com/gazercloud/gazernode/utilities/logger"
-	"github.com/gazercloud/gazernode/utilities/uom"
-	"golang.org/x/sys/windows"
 	"strconv"
 	"strings"
 	"syscall"
 	"time"
 	"unsafe"
+
+	"github.com/ipoluianov/gazer_node/resources"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
+	"github.com/ipoluianov/gazer_node/utilities/uom"
+	"golang.org/x/sys/windows"
 )
 
 var Image []byte

@@ -3,11 +3,12 @@ package application
 import (
 	"flag"
 	"fmt"
-	"github.com/gazercloud/gazernode/utilities/paths"
-	"github.com/kardianos/osext"
-	"github.com/kardianos/service"
 	"log"
 	"os"
+
+	"github.com/ipoluianov/gazer_node/utilities/paths"
+	"github.com/kardianos/osext"
+	"github.com/kardianos/service"
 )
 
 var Name string

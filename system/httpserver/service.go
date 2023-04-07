@@ -2,7 +2,8 @@ package httpserver
 
 import (
 	"encoding/json"
-	"github.com/gazercloud/gazernode/system/protocols/nodeinterface"
+
+	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
 )
 
 func (c *HttpServer) ServiceLookup(request []byte) (response []byte, err error) {

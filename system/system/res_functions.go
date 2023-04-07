@@ -1,8 +1,8 @@
 package system
 
 import (
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/system/protocols/nodeinterface"
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
 )
 
 func (c *System) ResAdd(name string, tp string, content []byte) (string, error) {

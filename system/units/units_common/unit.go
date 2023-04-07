@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/utilities/uom"
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/utilities/uom"
 )
 
 type Unit struct {

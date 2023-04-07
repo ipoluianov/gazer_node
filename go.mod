@@ -1,4 +1,4 @@
-module github.com/gazercloud/gazernode
+module github.com/ipoluianov/gazer_node
 
 go 1.16
 

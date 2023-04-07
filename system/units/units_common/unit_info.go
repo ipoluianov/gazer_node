@@ -1,6 +1,6 @@
 package units_common
 
-import "github.com/gazercloud/gazernode/common_interfaces"
+import "github.com/ipoluianov/gazer_node/common_interfaces"
 
 type UnitInfo struct {
 	Id             string                           `json:"id"`

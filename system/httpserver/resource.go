@@ -3,7 +3,7 @@ package httpserver
 import (
 	"encoding/json"
 
-	"github.com/gazercloud/gazernode/system/protocols/nodeinterface"
+	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
 )
 
 func (c *HttpServer) ResourceAdd(request []byte) (response []byte, err error) {

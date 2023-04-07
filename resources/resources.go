@@ -2,11 +2,11 @@ package resources
 
 import (
 	"bytes"
-	//"github.com/gazercloud/gazerui/canvas"
-	"golang.org/x/image/colornames"
 	"image"
 	"image/color"
 	"image/png"
+
+	"golang.org/x/image/colornames"
 )
 
 func ResImage(resData []byte) image.Image {

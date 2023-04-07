@@ -2,9 +2,9 @@ package productinfo
 
 import (
 	"bytes"
-	"github.com/gazercloud/gazernode/resources"
-	//"github.com/gazercloud/gazerui/canvas"
 	"image"
+
+	"github.com/ipoluianov/gazer_node/resources"
 )
 
 func Name() string {

@@ -13,11 +13,11 @@ import (
 
 	"encoding/pem"
 
-	"github.com/gazercloud/gazernode/common_interfaces"
-	"github.com/gazercloud/gazernode/system/history"
-	"github.com/gazercloud/gazernode/system/resources"
-	"github.com/gazercloud/gazernode/system/settings"
-	"github.com/gazercloud/gazernode/system/units/units_system"
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/system/history"
+	"github.com/ipoluianov/gazer_node/system/resources"
+	"github.com/ipoluianov/gazer_node/system/settings"
+	"github.com/ipoluianov/gazer_node/system/units/units_system"
 	"github.com/ipoluianov/xchg/xchg"
 )
 

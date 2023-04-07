@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/fatih/color"
-	"github.com/gazercloud/gazernode/gazer_client"
+	"github.com/ipoluianov/gazer_node/gazer_client"
 )
 
 func (c *Session) cmdDisconnect(p []string) error {

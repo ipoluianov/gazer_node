@@ -13,12 +13,12 @@ import (
 	"strings"
 	"time"
 
-	nodeinterface2 "github.com/gazercloud/gazernode/system/protocols/nodeinterface"
-	"github.com/gazercloud/gazernode/system/system"
-	"github.com/gazercloud/gazernode/utilities/logger"
-	"github.com/gazercloud/gazernode/utilities/packer"
-	"github.com/gazercloud/gazernode/web"
 	"github.com/gorilla/mux"
+	nodeinterface2 "github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
+	"github.com/ipoluianov/gazer_node/system/system"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
+	"github.com/ipoluianov/gazer_node/utilities/packer"
+	"github.com/ipoluianov/gazer_node/web"
 )
 
 type HttpServer struct {
