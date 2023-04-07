@@ -18,7 +18,6 @@ import (
 	"github.com/ipoluianov/gazer_node/system/system"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 	"github.com/ipoluianov/gazer_node/utilities/packer"
-	"github.com/ipoluianov/gazer_node/web"
 )
 
 type HttpServer struct {
@@ -273,11 +272,12 @@ func (c *HttpServer) contentTypeByExt(ext string) string {
 }
 
 func (c *HttpServer) processFile(w http.ResponseWriter, r *http.Request) {
-	c.processFileLocal(w, r)
+	w.WriteHeader(404)
+	//c.processFileLocal(w, r)
 	//c.file(w, r, r.URL.Path)
 }
 
-func (c *HttpServer) processFileLocal(w http.ResponseWriter, r *http.Request) {
+/*func (c *HttpServer) processFileLocal(w http.ResponseWriter, r *http.Request) {
 	var err error
 	var fileContent []byte
 	var writtenBytes int
@@ -319,7 +319,7 @@ func (c *HttpServer) processFileLocal(w http.ResponseWriter, r *http.Request) {
 		logger.Println("[HttpServer]", "[error]", "HttpServer processFile error: ", err)
 		w.WriteHeader(404)
 	}
-}
+}*/
 
 func (c *HttpServer) file(w http.ResponseWriter, r *http.Request, urlPath string) {
 	var err error
