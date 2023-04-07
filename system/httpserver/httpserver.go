@@ -22,8 +22,6 @@ type HttpServer struct {
 	r        *mux.Router
 	system   *system.System
 	rootPath string
-
-	stopping bool
 }
 
 func CurrentExePath() string {
