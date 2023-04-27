@@ -4,4 +4,4 @@
 
 [Name System](./name-system/index.md)
 
-[Premium Access](./name-system/index.md)
+[Premium Access](./premium/index.md)
