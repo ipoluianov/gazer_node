@@ -8,12 +8,11 @@ package main
 import (
 	"github.com/ipoluianov/gazer_node/app"
 	"github.com/ipoluianov/gazer_node/application"
-	imagegenerator "github.com/ipoluianov/gazer_node/utilities/image_generator"
 )
 
 func main() {
-	imagegenerator.Generate()
-	return
+	// imagegenerator.Generate()
+	// return
 
 	application.Name = "Gazer"
 	application.ServiceName = "Gazer"
