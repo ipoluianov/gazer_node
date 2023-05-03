@@ -54,8 +54,8 @@ func (c *Server) RequestJson(function string, requestText []byte, host string, f
 		result, err = c.ServiceLookup(requestText)
 	case nodeinterface.FuncServiceStatistics:
 		result, err = c.ServiceStatistics(requestText)
-	case nodeinterface.FuncServiceApi:
-		result, err = c.ServiceApi(requestText)
+	/*case nodeinterface.FuncServiceApi:
+	result, err = c.ServiceApi(requestText)*/
 	case nodeinterface.FuncServiceSetNodeName:
 		result, err = c.ServiceSetNodeName(requestText)
 	case nodeinterface.FuncServiceNodeName:

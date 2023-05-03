@@ -38,7 +38,7 @@ func (c *Server) ServiceStatistics(request []byte) (response []byte, err error) 
 	return
 }
 
-func (c *Server) ServiceApi(request []byte) (response []byte, err error) {
+/*func (c *Server) ServiceApi(request []byte) (response []byte, err error) {
 	var req nodeinterface.ServiceApiRequest
 	var resp nodeinterface.ServiceApiResponse
 	err = json.Unmarshal(request, &req)
@@ -52,7 +52,7 @@ func (c *Server) ServiceApi(request []byte) (response []byte, err error) {
 	}
 	response, err = json.MarshalIndent(resp, "", " ")
 	return
-}
+}*/
 
 func (c *Server) ServiceSetNodeName(request []byte) (response []byte, err error) {
 	var req nodeinterface.ServiceSetNodeNameRequest

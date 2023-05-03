@@ -1,5 +1,6 @@
 package productinfo
 
+/*
 import (
 	"bytes"
 	"image"
@@ -28,3 +29,4 @@ func Icon64() image.Image {
 	img, _, _ := image.Decode(bytes.NewBuffer(resources.R_files_mainicon64_png))
 	return img
 }
+*/

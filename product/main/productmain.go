@@ -1,5 +1,6 @@
 package main
 
+/*
 import (
 	"fmt"
 	"io/ioutil"
@@ -62,3 +63,4 @@ func makeSystem(outputFile string, productName string, productVersion string, ic
 		}
 	}
 }
+*/
