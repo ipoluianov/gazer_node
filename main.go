@@ -11,6 +11,9 @@ import (
 )
 
 func main() {
+	// imagegenerator.Generate()
+	// return
+
 	application.Name = "Gazer"
 	application.ServiceName = "Gazer"
 	application.ServiceDisplayName = "Gazer"
