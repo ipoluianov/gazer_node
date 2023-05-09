@@ -3,7 +3,6 @@ package app
 import (
 	"fmt"
 	"github.com/ipoluianov/gazer_node/application"
-	"github.com/ipoluianov/gazer_node/cmd"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 	"github.com/ipoluianov/gazer_node/utilities/paths"
 	"os"
@@ -12,12 +11,10 @@ import (
 func RunDesktop() {
 	logger.Init(paths.HomeFolder() + "/gazer/log_ui")
 	if len(os.Args) == 1 {
-		cmd.Console()
 		return
 	}
 
 	if len(os.Args) == 1 {
-		cmd.Console()
 		return
 	}
 
