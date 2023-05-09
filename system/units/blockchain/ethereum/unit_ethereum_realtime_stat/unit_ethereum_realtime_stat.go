@@ -151,30 +151,34 @@ func (c *UnitEthereumRealTimeStat) Tick() {
 			c.SetString(name, value, UOM)
 		}
 
-		if block.Header().Number.Uint64() != lastBlock {
-			lastBlock = block.Header().Number.Uint64()
-			fSet("blockNumber", fmt.Sprint(block.Header().Number.Uint64()), "")
-			fSet("transactionCount", fmt.Sprint(block.Transactions().Len()), "")
-			gasPriceAvg := float64(0)
-			gasPriceMin := float64(100000000000000)
-			gasPriceMax := float64(0)
-			value := float64(0)
-			for _, tr := range block.Body().Transactions {
-				gasPrice := float64(tr.GasPrice().Uint64())
-				gasPriceAvg += gasPrice
-				if gasPrice < gasPriceMin {
-					gasPriceMin = gasPrice
+		if block != nil && block.Header() != nil {
+			if block.Header().Number.Uint64() != lastBlock {
+				lastBlock = block.Header().Number.Uint64()
+				fSet("blockNumber", fmt.Sprint(block.Header().Number.Uint64()), "")
+				fSet("transactionCount", fmt.Sprint(block.Transactions().Len()), "")
+				if len(block.Body().Transactions) > 0 {
+					gasPriceAvg := float64(0)
+					gasPriceMin := float64(10000000000000000000)
+					gasPriceMax := float64(0)
+					value := float64(0)
+					for _, tr := range block.Body().Transactions {
+						gasPrice := float64(tr.GasPrice().Uint64())
+						gasPriceAvg += gasPrice
+						if gasPrice < gasPriceMin {
+							gasPriceMin = gasPrice
+						}
+						if gasPrice > gasPriceMax {
+							gasPriceMax = gasPrice
+						}
+						value += float64(tr.Value().Uint64())
+					}
+					gasPriceAvg = gasPriceAvg / float64(len(block.Body().Transactions))
+					fSet("gasPriceAvg", fmt.Sprint(math.Round(gasPriceAvg/1000000000)), "gwei")
+					fSet("gasPriceMin", fmt.Sprint(math.Round(gasPriceMin/1000000000)), "gwei")
+					fSet("gasPriceMax", fmt.Sprint(math.Round(gasPriceMax/1000000000)), "gwei")
+					fSet("totalValue", fmt.Sprint(math.Round(value/1000000000000000000)), "ETH")
 				}
-				if gasPrice > gasPriceMax {
-					gasPriceMax = gasPrice
-				}
-				value += float64(tr.Value().Uint64())
 			}
-			gasPriceAvg = gasPriceAvg / float64(len(block.Body().Transactions))
-			fSet("gasPriceAvg", fmt.Sprint(math.Round(gasPriceAvg/1000000000)), "gwei")
-			fSet("gasPriceMin", fmt.Sprint(math.Round(gasPriceMin/1000000000)), "gwei")
-			fSet("gasPriceMax", fmt.Sprint(math.Round(gasPriceMax/1000000000)), "gwei")
-			fSet("totalValue", fmt.Sprint(math.Round(value/1000000000000000000)), "ETH")
 		}
 
 		client.Close()
