@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
-	"github.com/ipoluianov/gazer_node/product/productinfo"
 	"github.com/ipoluianov/gazer_node/system/history"
 	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
@@ -366,7 +365,7 @@ func (c *System) GetStatistics() (common_interfaces.Statistics, error) {
 	return res, nil
 }
 
-func (c *System) GetApi() (nodeinterface.ServiceApiResponse, error) {
+/*func (c *System) GetApi() (nodeinterface.ServiceApiResponse, error) {
 	var res nodeinterface.ServiceApiResponse
 	res.Product = productinfo.Name()
 	res.Version = productinfo.Version()
@@ -374,7 +373,7 @@ func (c *System) GetApi() (nodeinterface.ServiceApiResponse, error) {
 	res.SupportedFunctions = nodeinterface.ApiFunctions()
 
 	return res, nil
-}
+}*/
 
 func (c *System) SetNodeName(name string) error {
 	c.nodeName = name
@@ -388,7 +387,7 @@ func (c *System) NodeName() string {
 func (c *System) GetInfo() (nodeinterface.ServiceInfoResponse, error) {
 	var res nodeinterface.ServiceInfoResponse
 	res.NodeName = c.NodeName()
-	res.Version = productinfo.Version()
-	res.BuildTime = productinfo.BuildTime()
+	res.Version = VERSION
+	res.BuildTime = BUILDTIME
 	return res, nil
 }

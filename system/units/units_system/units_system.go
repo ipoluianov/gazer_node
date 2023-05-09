@@ -10,6 +10,8 @@ import (
 	"github.com/ipoluianov/gazer_node/common_interfaces"
 	"github.com/ipoluianov/gazer_node/resources"
 	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
+	"github.com/ipoluianov/gazer_node/system/units/blockchain/ethereum/unit_ethereum_account_watcher"
+	"github.com/ipoluianov/gazer_node/system/units/blockchain/ethereum/unit_ethereum_realtime_stat"
 	"github.com/ipoluianov/gazer_node/system/units/databases/unit_postgreesql"
 	"github.com/ipoluianov/gazer_node/system/units/files/unit_filecontent"
 	"github.com/ipoluianov/gazer_node/system/units/files/unit_filesize"
@@ -134,6 +136,12 @@ func New(iDataStorage common_interfaces.IDataStorage) *UnitsSystem {
 
 	unitType = c.RegisterUnit("database_postgresql", "database", "PostgreSQL", unit_postgreesql.New, unit_postgreesql.Image, "PostgreSQL database query execute")
 	unitType.Help = "https://gazer.cloud/unit-types/databases/postgresql/"
+
+	unitType = c.RegisterUnit("blockchain_ethereum_realtime_stat", "blockchain", "ETH Stat", unit_ethereum_realtime_stat.New, unit_ethereum_realtime_stat.Image, "ETH realtime monitoring")
+	unitType.Help = ""
+
+	unitType = c.RegisterUnit("blockchain_ethereum_account_watcher", "blockchain", "ETH Balance", unit_ethereum_account_watcher.New, unit_ethereum_account_watcher.Image, "ETH Balance")
+	unitType.Help = ""
 
 	return &c
 }
