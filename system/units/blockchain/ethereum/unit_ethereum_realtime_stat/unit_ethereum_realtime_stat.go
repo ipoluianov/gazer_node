@@ -16,8 +16,7 @@ import (
 
 type UnitEthereumRealTimeStat struct {
 	units_common.Unit
-	addr              string
-	timeoutMs         int
+	rpcUrl            string
 	periodMs          int
 	receivedVariables map[string]string
 }
@@ -40,9 +39,8 @@ func init() {
 
 func (c *UnitEthereumRealTimeStat) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
-	meta.Add("addr", "Address", "localhost:445", "string", "", "", "")
-	meta.Add("period", "Period, ms", "5000", "num", "0", "999999", "0")
-	meta.Add("timeout", "Timeout, ms", "1000", "num", "0", "999999", "0")
+	meta.Add("rpcUrl", "RPC URL", "", "string", "", "", "")
+	meta.Add("period", "Period, ms", "5000", "num", "0", "3600000", "0")
 	return meta.Marshal()
 }
 
@@ -50,9 +48,8 @@ func (c *UnitEthereumRealTimeStat) InternalUnitStart() error {
 	var err error
 
 	type Config struct {
-		Addr    string  `json:"addr"`
-		Timeout float64 `json:"timeout"`
-		Period  float64 `json:"period"`
+		RpcUrl string  `json:"rpcUrl"`
+		Period float64 `json:"period"`
 	}
 
 	var config Config
@@ -63,21 +60,9 @@ func (c *UnitEthereumRealTimeStat) InternalUnitStart() error {
 		return err
 	}
 
-	c.addr = config.Addr
-	if c.addr == "" {
-		err = errors.New("wrong address")
-		c.SetString(ItemNameStatus, err.Error(), "error")
-		return err
-	}
-
-	c.timeoutMs = int(config.Timeout)
-	if c.timeoutMs < 100 {
-		err = errors.New("wrong timeout (<100)")
-		c.SetString(ItemNameStatus, err.Error(), "error")
-		return err
-	}
-	if c.timeoutMs > 10000 {
-		err = errors.New("wrong timeout (>10000)")
+	c.rpcUrl = config.RpcUrl
+	if c.rpcUrl == "" {
+		err = errors.New("wrong rpc url")
 		c.SetString(ItemNameStatus, err.Error(), "error")
 		return err
 	}
@@ -89,18 +74,13 @@ func (c *UnitEthereumRealTimeStat) InternalUnitStart() error {
 		return err
 	}
 
-	if c.periodMs < c.timeoutMs {
-		err = errors.New("wrong period (<timeout)")
-		c.SetString(ItemNameStatus, err.Error(), "error")
-		return err
-	}
 	if c.periodMs < 100 {
 		err = errors.New("wrong period (<100)")
 		c.SetString(ItemNameStatus, err.Error(), "error")
 		return err
 	}
-	if c.periodMs > 60000 {
-		err = errors.New("wrong period (>60000)")
+	if c.periodMs > 3600000 {
+		err = errors.New("wrong period (>3600000)")
 		c.SetString(ItemNameStatus, err.Error(), "error")
 		return err
 	}
@@ -137,7 +117,7 @@ func (c *UnitEthereumRealTimeStat) Tick() {
 		}
 		dtLastTime = time.Now().UTC()
 
-		client, err := ethclient.DialContext(context.Background(), c.addr)
+		client, err := ethclient.DialContext(context.Background(), c.rpcUrl)
 		if err != nil {
 			c.SetString(ItemNameStatus, err.Error(), "error")
 		}
