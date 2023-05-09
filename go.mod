@@ -3,11 +3,10 @@ module github.com/ipoluianov/gazer_node
 go 1.16
 
 require (
-	github.com/StackExchange/wmi v1.2.1 // indirect
 	github.com/cockroachdb/apd v1.1.0 // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/ethereum/go-ethereum v1.11.6
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
-	github.com/google/uuid v1.2.0
+	github.com/google/uuid v1.3.0
 	github.com/ipoluianov/xchg v0.2.8
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
 	github.com/jackc/pgx v3.6.2+incompatible
@@ -15,19 +14,15 @@ require (
 	github.com/kardianos/service v1.2.0
 	github.com/kbinani/win v0.3.0
 	github.com/lib/pq v1.10.2 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
-	github.com/prometheus/procfs v0.7.2
-	github.com/shirou/gopsutil v3.21.1+incompatible
+	github.com/prometheus/procfs v0.9.0
+	github.com/shirou/gopsutil v3.21.11+incompatible
 	github.com/shopspring/decimal v1.2.0 // indirect
 	github.com/stianeikeland/go-rpio/v4 v4.5.1
-	github.com/stretchr/testify v1.6.1 // indirect
 	github.com/tarm/serial v0.0.0-20180830185346-98f6abe2eb07
 	go.bug.st/serial v1.1.2
-	golang.org/x/crypto v0.0.0-20211209193657-4570a0811e8b // indirect
 	golang.org/x/image v0.0.0-20210220032944-ac19c3e999fb
-	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2
-	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c
-	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
+	golang.org/x/net v0.8.0
+	golang.org/x/sys v0.6.0
 )
 
 // replace github.com/ipoluianov/xchg => d:\src\github\xchg
