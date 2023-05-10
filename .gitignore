@@ -6,3 +6,4 @@ bin/
 .vscode/launch.json
 main/__debug_bin
 .DS_Store
+__debug_bin
