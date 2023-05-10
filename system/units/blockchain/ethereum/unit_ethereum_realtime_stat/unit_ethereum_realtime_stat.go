@@ -18,6 +18,7 @@ import (
 type UnitEthereumRealTimeStat struct {
 	units_common.Unit
 	rpcUrl            string
+	uom               string
 	periodMs          int
 	receivedVariables map[string]string
 }
@@ -41,6 +42,7 @@ func init() {
 func (c *UnitEthereumRealTimeStat) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	meta.Add("rpcUrl", "RPC URL", "", "string", "", "", "")
+	meta.Add("uom", "Currency", "ETH", "string", "", "", "")
 	meta.Add("period", "Period, ms", "5000", "num", "0", "3600000", "0")
 	return meta.Marshal()
 }
@@ -50,6 +52,7 @@ func (c *UnitEthereumRealTimeStat) InternalUnitStart() error {
 
 	type Config struct {
 		RpcUrl string  `json:"rpcUrl"`
+		UOM    string  `json:"uom"`
 		Period float64 `json:"period"`
 	}
 
@@ -67,6 +70,8 @@ func (c *UnitEthereumRealTimeStat) InternalUnitStart() error {
 		c.SetString(ItemNameStatus, err.Error(), uom.ERROR)
 		return err
 	}
+
+	c.uom = config.UOM
 
 	c.periodMs = int(config.Period)
 	if c.periodMs < 100 {
@@ -165,7 +170,7 @@ func (c *UnitEthereumRealTimeStat) Tick() {
 					fSet("gasPriceAvg", fmt.Sprint(math.Round(gasPriceAvg/1000000000)), "gwei")
 					fSet("gasPriceMin", fmt.Sprint(math.Round(gasPriceMin/1000000000)), "gwei")
 					fSet("gasPriceMax", fmt.Sprint(math.Round(gasPriceMax/1000000000)), "gwei")
-					fSet("totalValue", fmt.Sprint(math.Round(value/1000000000000000000)), "ETH")
+					fSet("totalValue", fmt.Sprint(math.Round(value/1000000000000000000)), c.uom)
 				}
 			}
 		}

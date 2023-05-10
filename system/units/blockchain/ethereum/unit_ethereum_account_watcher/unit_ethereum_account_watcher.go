@@ -18,6 +18,7 @@ import (
 type UnitEthereumAccountWatcher struct {
 	units_common.Unit
 	rpcUrl            string
+	uom               string
 	ethAddress        string
 	periodMs          int
 	receivedVariables map[string]string
@@ -42,7 +43,8 @@ func init() {
 func (c *UnitEthereumAccountWatcher) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	meta.Add("rpcUrl", "RPC URL", "", "string", "", "", "")
-	meta.Add("ethAddress", "ethAddress", "", "string", "", "", "")
+	meta.Add("uom", "Currency", "ETH", "string", "", "", "")
+	meta.Add("ethAddress", "ETH Address (0x...)", "", "string", "", "", "")
 	meta.Add("period", "Period, ms", "5000", "num", "0", "3600000", "0")
 	return meta.Marshal()
 }
@@ -52,6 +54,7 @@ func (c *UnitEthereumAccountWatcher) InternalUnitStart() error {
 
 	type Config struct {
 		RpcUrl     string  `json:"rpcUrl"`
+		UOM        string  `json:"uom"`
 		EthAddress string  `json:"ethAddress"`
 		Timeout    float64 `json:"timeout"`
 		Period     float64 `json:"period"`
@@ -71,6 +74,8 @@ func (c *UnitEthereumAccountWatcher) InternalUnitStart() error {
 		c.SetString(ItemNameStatus, err.Error(), "error")
 		return err
 	}
+
+	c.uom = config.UOM
 
 	c.ethAddress = config.EthAddress
 	if c.ethAddress == "" {
@@ -150,7 +155,7 @@ func (c *UnitEthereumAccountWatcher) Tick() {
 		}
 
 		fSet("address", fmt.Sprint(c.ethAddress), "")
-		fSet("balance", fmt.Sprint(float64(balance.Uint64())/1000000000000000000), "ETH")
+		fSet("balance", fmt.Sprint(float64(balance.Uint64())/1000000000000000000), c.uom)
 
 		c.SetString(ItemNameStatus, "ok", "")
 
