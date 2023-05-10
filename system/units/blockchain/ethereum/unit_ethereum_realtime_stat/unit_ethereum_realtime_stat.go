@@ -12,6 +12,7 @@ import (
 	"github.com/ipoluianov/gazer_node/common_interfaces"
 	"github.com/ipoluianov/gazer_node/resources"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
+	"github.com/ipoluianov/gazer_node/utilities/uom"
 )
 
 type UnitEthereumRealTimeStat struct {
@@ -56,32 +57,32 @@ func (c *UnitEthereumRealTimeStat) InternalUnitStart() error {
 	err = json.Unmarshal([]byte(c.GetConfig()), &config)
 	if err != nil {
 		err = errors.New("config error")
-		c.SetString(ItemNameStatus, err.Error(), "error")
+		c.SetString(ItemNameStatus, err.Error(), uom.ERROR)
 		return err
 	}
 
 	c.rpcUrl = config.RpcUrl
 	if c.rpcUrl == "" {
 		err = errors.New("wrong rpc url")
-		c.SetString(ItemNameStatus, err.Error(), "error")
+		c.SetString(ItemNameStatus, err.Error(), uom.ERROR)
 		return err
 	}
 
 	c.periodMs = int(config.Period)
 	if c.periodMs < 100 {
 		err = errors.New("wrong period")
-		c.SetString(ItemNameStatus, err.Error(), "error")
+		c.SetString(ItemNameStatus, err.Error(), uom.ERROR)
 		return err
 	}
 
 	if c.periodMs < 100 {
 		err = errors.New("wrong period (<100)")
-		c.SetString(ItemNameStatus, err.Error(), "error")
+		c.SetString(ItemNameStatus, err.Error(), uom.ERROR)
 		return err
 	}
 	if c.periodMs > 3600000 {
 		err = errors.New("wrong period (>3600000)")
-		c.SetString(ItemNameStatus, err.Error(), "error")
+		c.SetString(ItemNameStatus, err.Error(), uom.ERROR)
 		return err
 	}
 
@@ -89,7 +90,7 @@ func (c *UnitEthereumRealTimeStat) InternalUnitStart() error {
 
 	c.SetMainItem(ItemNameStatus)
 
-	c.SetString(ItemNameStatus, "", "")
+	c.SetString(ItemNameStatus, "", uom.NONE)
 	go c.Tick()
 	return nil
 }
@@ -100,7 +101,7 @@ func (c *UnitEthereumRealTimeStat) InternalUnitStop() {
 func (c *UnitEthereumRealTimeStat) Tick() {
 	// var err error
 	c.Started = true
-	dtLastTime := time.Now().UTC()
+	dtLastTime := time.Now().UTC().Add(-time.Duration(c.periodMs) * time.Millisecond)
 
 	lastBlock := uint64(0)
 
@@ -112,18 +113,26 @@ func (c *UnitEthereumRealTimeStat) Tick() {
 			time.Sleep(10 * time.Millisecond)
 		}
 		if c.Stopping {
-			c.SetString(ItemNameStatus, "stopped", "")
+			c.SetString(ItemNameStatus, "", uom.STOPPED)
 			break
 		}
 		dtLastTime = time.Now().UTC()
 
 		client, err := ethclient.DialContext(context.Background(), c.rpcUrl)
 		if err != nil {
-			c.SetString(ItemNameStatus, err.Error(), "error")
+			c.SetString(ItemNameStatus, err.Error(), uom.ERROR)
+			for vName, _ := range c.receivedVariables {
+				c.SetString(vName, "", uom.ERROR)
+			}
+			continue
 		}
 		block, err := client.BlockByNumber(context.Background(), nil)
 		if err != nil {
-			c.SetString(ItemNameStatus, err.Error(), "error")
+			c.SetString(ItemNameStatus, err.Error(), uom.ERROR)
+			for vName, _ := range c.receivedVariables {
+				c.SetString(vName, "", uom.ERROR)
+			}
+			continue
 		}
 
 		fSet := func(name string, value string, UOM string) {
@@ -161,13 +170,15 @@ func (c *UnitEthereumRealTimeStat) Tick() {
 			}
 		}
 
+		c.SetString(ItemNameStatus, "ok", uom.NONE)
+
 		client.Close()
 	}
 
 	for vName, _ := range c.receivedVariables {
-		c.SetString(vName, "", "stopped")
+		c.SetString(vName, uom.NONE, uom.STOPPED)
 	}
 
-	c.SetString(ItemNameStatus, "", "stopped")
+	c.SetString(ItemNameStatus, uom.NONE, uom.STOPPED)
 	c.Started = false
 }

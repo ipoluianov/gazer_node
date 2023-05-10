@@ -12,6 +12,7 @@ import (
 	"github.com/ipoluianov/gazer_node/common_interfaces"
 	"github.com/ipoluianov/gazer_node/resources"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
+	"github.com/ipoluianov/gazer_node/utilities/uom"
 )
 
 type UnitEthereumAccountWatcher struct {
@@ -111,7 +112,7 @@ func (c *UnitEthereumAccountWatcher) InternalUnitStop() {
 func (c *UnitEthereumAccountWatcher) Tick() {
 	// var err error
 	c.Started = true
-	dtLastTime := time.Now().UTC()
+	dtLastTime := time.Now().UTC().Add(-time.Duration(c.periodMs) * time.Millisecond)
 
 	for !c.Stopping {
 		for {
@@ -128,11 +129,19 @@ func (c *UnitEthereumAccountWatcher) Tick() {
 
 		client, err := ethclient.DialContext(context.Background(), c.rpcUrl)
 		if err != nil {
-			c.SetString(ItemNameStatus, err.Error(), "error")
+			c.SetString(ItemNameStatus, err.Error(), uom.ERROR)
+			for vName, _ := range c.receivedVariables {
+				c.SetString(vName, "", uom.ERROR)
+			}
+			continue
 		}
 		balance, err := client.BalanceAt(context.Background(), common.HexToAddress(c.ethAddress), nil)
 		if err != nil {
-			c.SetString(ItemNameStatus, err.Error(), "error")
+			c.SetString(ItemNameStatus, err.Error(), uom.ERROR)
+			for vName, _ := range c.receivedVariables {
+				c.SetString(vName, "", uom.ERROR)
+			}
+			continue
 		}
 
 		fSet := func(name string, value string, UOM string) {
@@ -143,13 +152,15 @@ func (c *UnitEthereumAccountWatcher) Tick() {
 		fSet("address", fmt.Sprint(c.ethAddress), "")
 		fSet("balance", fmt.Sprint(float64(balance.Uint64())/1000000000000000000), "ETH")
 
+		c.SetString(ItemNameStatus, "ok", "")
+
 		client.Close()
 	}
 
 	for vName, _ := range c.receivedVariables {
-		c.SetString(vName, "", "stopped")
+		c.SetString(vName, "", uom.STOPPED)
 	}
 
-	c.SetString(ItemNameStatus, "", "stopped")
+	c.SetString(ItemNameStatus, "", uom.STOPPED)
 	c.Started = false
 }
