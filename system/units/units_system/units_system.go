@@ -15,6 +15,8 @@ import (
 	"github.com/ipoluianov/gazer_node/system/units/databases/unit_postgreesql"
 	"github.com/ipoluianov/gazer_node/system/units/files/unit_filecontent"
 	"github.com/ipoluianov/gazer_node/system/units/files/unit_filesize"
+	unittxttable "github.com/ipoluianov/gazer_node/system/units/files/unit_txt_table"
+	unittxttablefolder "github.com/ipoluianov/gazer_node/system/units/files/unit_txt_table_folder"
 	"github.com/ipoluianov/gazer_node/system/units/general/unit_general_cgi"
 	"github.com/ipoluianov/gazer_node/system/units/general/unit_general_cgi_key_value"
 	"github.com/ipoluianov/gazer_node/system/units/general/unit_hhgttg"
@@ -111,6 +113,12 @@ func New(iDataStorage common_interfaces.IDataStorage) *UnitsSystem {
 	unitType = c.RegisterUnit("file_size", "file", "File Size", unit_filesize.New, unit_filesize.Image, "")
 	unitType.Help = "https://gazer.cloud/unit-types/files/file-size/"
 	unitType = c.RegisterUnit("file_content", "file", "File Content", unit_filecontent.New, unit_filecontent.Image, "")
+	unitType.Help = "https://gazer.cloud/unit-types/files/file-content/"
+
+	unitType = c.RegisterUnit("file_txt", "file", "File Text Table", unittxttable.New, unittxttable.Image, "")
+	unitType.Help = "https://gazer.cloud/unit-types/files/file-content/"
+
+	unitType = c.RegisterUnit("file_txt_folder", "file", "File Text Table Folder", unittxttablefolder.New, unittxttablefolder.Image, "")
 	unitType.Help = "https://gazer.cloud/unit-types/files/file-content/"
 
 	unitType = c.RegisterUnit("general_cgi", "general", "Console", unit_general_cgi.New, unit_general_cgi.Image, "")
