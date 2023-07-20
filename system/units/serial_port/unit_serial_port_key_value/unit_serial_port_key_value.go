@@ -185,7 +185,7 @@ func (c *UnitSerialPortKeyValue) Tick() {
 				c.SetString("status", err.Error(), "error")
 				c.SetError(err.Error())
 				c.LogError(err.Error())
-				for vName, _ := range c.receivedVariables {
+				for vName := range c.receivedVariables {
 					c.SetString(vName, "", "error")
 				}
 				for i := 0; i < 10; i++ {
@@ -211,7 +211,7 @@ func (c *UnitSerialPortKeyValue) Tick() {
 					c.serialPort.Close()
 					c.serialPort = nil
 					c.SetString("status", err.Error(), "error")
-					for vName, _ := range c.receivedVariables {
+					for vName := range c.receivedVariables {
 						c.SetString(vName, "", "error")
 					}
 				}
@@ -274,7 +274,7 @@ func (c *UnitSerialPortKeyValue) Tick() {
 		c.serialPort = nil
 	}
 
-	for vName, _ := range c.receivedVariables {
+	for vName := range c.receivedVariables {
 		c.SetString(vName, "", "stopped")
 	}
 
