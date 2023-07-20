@@ -154,7 +154,7 @@ func (c *UnitSerialPortKeyValue) InternalUnitStart() error {
 	c.serialConfig = &serial.Config{
 		Name:        c.port,
 		Baud:        int(config.Baud),
-		ReadTimeout: 10 * time.Millisecond,
+		ReadTimeout: 100 * time.Millisecond,
 		Size:        byte(config.DataSize),
 		Parity:      parity,
 		StopBits:    stopBits,
@@ -207,13 +207,14 @@ func (c *UnitSerialPortKeyValue) Tick() {
 			buffer := make([]byte, 32)
 			n, err := c.serialPort.Read(buffer)
 			if err != nil {
-				c.serialPort.Close()
-				c.serialPort = nil
-				c.SetString("status", err.Error(), "error")
-				for vName, _ := range c.receivedVariables {
-					c.SetString(vName, "", "error")
+				if !strings.Contains(strings.ToLower(err.Error()), "eof") {
+					c.serialPort.Close()
+					c.serialPort = nil
+					c.SetString("status", err.Error(), "error")
+					for vName, _ := range c.receivedVariables {
+						c.SetString(vName, "", "error")
+					}
 				}
-
 			} else {
 				if n > 0 {
 					c.inputBuffer = append(c.inputBuffer, buffer[:n]...)
