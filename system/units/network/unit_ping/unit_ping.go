@@ -43,6 +43,17 @@ func init() {
 	Image = resources.R_files_sensors_unit_network_ping_png
 }
 
+func Info() units_common.UnitMeta {
+	var info units_common.UnitMeta
+	info.TypeName = "Network.Ping.Regular.Alfa"
+	info.Category = "network"
+	info.DisplayName = "Ping"
+	info.Constructor = New
+	info.ImgBytes = nil
+	info.Description = ""
+	return info
+}
+
 func (c *UnitPing) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	pAddr := meta.Add("addr", "Address", "localhost", "string", "", "", "")

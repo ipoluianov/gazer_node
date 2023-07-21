@@ -39,6 +39,17 @@ func init() {
 	Image = resources.R_files_sensors_unit_network_json_requester_png
 }
 
+func Info() units_common.UnitMeta {
+	var info units_common.UnitMeta
+	info.TypeName = "Blockchain.Ethereum.LastBlock.Alfa"
+	info.Category = "blockchain"
+	info.DisplayName = "ETH Stat"
+	info.Constructor = New
+	info.ImgBytes = nil
+	info.Description = "ETH realtime monitoring"
+	return info
+}
+
 func (c *UnitEthereumRealTimeStat) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	meta.Add("rpcUrl", "RPC URL", "", "string", "", "", "")

@@ -33,6 +33,17 @@ func init() {
 	Image = resources.R_files_sensors_unit_file_file_content_png
 }
 
+func Info() units_common.UnitMeta {
+	var info units_common.UnitMeta
+	info.TypeName = "Files.TabTable.SingleFile.Alfa"
+	info.Category = "file"
+	info.DisplayName = "File Text Table"
+	info.Constructor = New
+	info.ImgBytes = nil
+	info.Description = ""
+	return info
+}
+
 func (c *UnitTxtTable) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	meta.Add("file_name", "File Name", "file.txt", "string", "", "", "")

@@ -27,6 +27,17 @@ func init() {
 	Image = resources.R_files_sensors_unit_general_hhgttg_png
 }
 
+func Info() units_common.UnitMeta {
+	var info units_common.UnitMeta
+	info.TypeName = "General.HHGTTG.42.Alfa"
+	info.Category = "general"
+	info.DisplayName = "HHGTTG"
+	info.Constructor = New
+	info.ImgBytes = nil
+	info.Description = ""
+	return info
+}
+
 func (c *UnitHHGTTG) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	return meta.Marshal()

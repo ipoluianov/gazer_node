@@ -37,6 +37,17 @@ func init() {
 	Image = resources.R_files_sensors_unit_network_tcp_connect_png
 }
 
+func Info() units_common.UnitMeta {
+	var info units_common.UnitMeta
+	info.TypeName = "Network.TCP.Connect.Alfa"
+	info.Category = "network"
+	info.DisplayName = "TCP Connect"
+	info.Constructor = New
+	info.ImgBytes = nil
+	info.Description = ""
+	return info
+}
+
 func (c *UnitTcpConnect) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	meta.Add("addr", "Address", "localhost:445", "string", "", "", "")

@@ -39,6 +39,17 @@ func init() {
 	Image = resources.R_files_sensors_unit_database_postgreesql_png
 }
 
+func Info() units_common.UnitMeta {
+	var info units_common.UnitMeta
+	info.TypeName = "Database.PostgreSQL.Query.Alfa"
+	info.Category = "database"
+	info.DisplayName = "PostgreSQL"
+	info.Constructor = New
+	info.ImgBytes = nil
+	info.Description = ""
+	return info
+}
+
 func (c *UnitPostgreSQL) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	meta.Add("addr", "address", "localhost:5432", "string", "", "", "")

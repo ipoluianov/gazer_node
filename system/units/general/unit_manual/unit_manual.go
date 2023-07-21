@@ -41,6 +41,17 @@ func init() {
 	Image = resources.R_files_sensors_unit_general_manual_items_png
 }
 
+func Info() units_common.UnitMeta {
+	var info units_common.UnitMeta
+	info.TypeName = "General.Manual.Items.Alfa"
+	info.Category = "general"
+	info.DisplayName = "Manual Items"
+	info.Constructor = New
+	info.ImgBytes = nil
+	info.Description = ""
+	return info
+}
+
 func (c *UnitManual) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	t1 := meta.Add("items", "Items", "", "table", "", "", "")

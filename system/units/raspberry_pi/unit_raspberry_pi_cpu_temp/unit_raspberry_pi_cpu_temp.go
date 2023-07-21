@@ -33,6 +33,17 @@ func init() {
 	Image = resources.R_files_sensors_unit_raspberry_pi_cpu_temrature_png
 }
 
+func Info() units_common.UnitMeta {
+	var info units_common.UnitMeta
+	info.TypeName = "RaspberryPi.CPU.Temperature.Alfa"
+	info.Category = "raspberry_pi"
+	info.DisplayName = "Raspberry PI CPU temperature"
+	info.Constructor = New
+	info.ImgBytes = nil
+	info.Description = ""
+	return info
+}
+
 func (c *UnitRaspberryPiCPUTemp) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	meta.Add("period", "Period, ms", "1000", "num", "0", "999999", "")

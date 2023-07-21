@@ -48,6 +48,17 @@ func init() {
 	Image = resources.R_files_sensors_unit_raspberry_pi_gpio_png
 }
 
+func Info() units_common.UnitMeta {
+	var info units_common.UnitMeta
+	info.TypeName = "RaspberryPi.GPIO.Control.Alfa"
+	info.Category = "raspberry_pi"
+	info.DisplayName = "Raspberry PI GPIO"
+	info.Constructor = New
+	info.ImgBytes = nil
+	info.Description = ""
+	return info
+}
+
 func (c *UnitRaspberryPiGPIO) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	meta.Add("period", "Period, ms", "1000", "num", "0", "999999", "")

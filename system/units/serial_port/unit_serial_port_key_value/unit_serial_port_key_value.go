@@ -48,6 +48,17 @@ func init() {
 	Image = resources.R_files_sensors_unit_serial_port_serial_port_key_value_png
 }
 
+func Info() units_common.UnitMeta {
+	var info units_common.UnitMeta
+	info.TypeName = "SerialPort.KeyValue.Watcher.Alfa"
+	info.Category = "serial_port"
+	info.DisplayName = "Serial Port Key=Value"
+	info.Constructor = New
+	info.ImgBytes = nil
+	info.Description = ""
+	return info
+}
+
 func (c *UnitSerialPortKeyValue) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	meta.Add("port", "Serial Port", "COM1", "string", "", "", "serial-ports")

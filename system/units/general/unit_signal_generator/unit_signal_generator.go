@@ -46,6 +46,17 @@ func init() {
 	Image = resources.R_files_sensors_unit_general_signal_generator_png
 }
 
+func Info() units_common.UnitMeta {
+	var info units_common.UnitMeta
+	info.TypeName = "General.Signal.Generator.Alfa"
+	info.Category = "general"
+	info.DisplayName = "Signal Generator"
+	info.Constructor = New
+	info.ImgBytes = nil
+	info.Description = ""
+	return info
+}
+
 func (c *UnitSignalGenerator) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	t1 := meta.Add("items", "Items", "", "table", "", "", "")

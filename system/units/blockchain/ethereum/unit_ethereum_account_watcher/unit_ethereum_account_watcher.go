@@ -30,6 +30,17 @@ func New() common_interfaces.IUnit {
 	return &c
 }
 
+func Info() units_common.UnitMeta {
+	var info units_common.UnitMeta
+	info.TypeName = "Blockchain.Ethereum.Balance.Alfa"
+	info.Category = "blockchain"
+	info.DisplayName = "ETH Balance"
+	info.Constructor = New
+	info.ImgBytes = nil
+	info.Description = "ETH Balance"
+	return info
+}
+
 const (
 	ItemNameStatus = "Status"
 )

@@ -37,6 +37,17 @@ func init() {
 	Image = resources.R_files_sensors_unit_general_console_png
 }
 
+func Info() units_common.UnitMeta {
+	var info units_common.UnitMeta
+	info.TypeName = "General.Console.SingleValue.Alfa"
+	info.Category = "general"
+	info.DisplayName = "Console"
+	info.Constructor = New
+	info.ImgBytes = nil
+	info.Description = ""
+	return info
+}
+
 func (c *UnitGeneralCGI) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	meta.Add("command", "Command", "", "string", "", "", "")

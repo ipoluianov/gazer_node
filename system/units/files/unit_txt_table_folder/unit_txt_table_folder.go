@@ -34,6 +34,17 @@ func init() {
 	Image = resources.R_files_sensors_unit_file_file_content_png
 }
 
+func Info() units_common.UnitMeta {
+	var info units_common.UnitMeta
+	info.TypeName = "Files.TabFile.Directory.Alfa"
+	info.Category = "file"
+	info.DisplayName = "File Text Table Folder"
+	info.Constructor = New
+	info.ImgBytes = nil
+	info.Description = ""
+	return info
+}
+
 func (c *UnitTxtTableFolder) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	meta.Add("directory", "DIrectory", "/", "string", "", "", "")

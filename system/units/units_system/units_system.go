@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"runtime"
+	"strings"
 	"sync"
 	"time"
 
@@ -22,7 +23,7 @@ import (
 	"github.com/ipoluianov/gazer_node/system/units/general/unit_hhgttg"
 	"github.com/ipoluianov/gazer_node/system/units/general/unit_manual"
 	"github.com/ipoluianov/gazer_node/system/units/general/unit_signal_generator"
-	"github.com/ipoluianov/gazer_node/system/units/network/unit_http_json_requester"
+	"github.com/ipoluianov/gazer_node/system/units/network/unit_http_rest_alfa"
 	"github.com/ipoluianov/gazer_node/system/units/network/unit_ping"
 	"github.com/ipoluianov/gazer_node/system/units/network/unit_ssl"
 	"github.com/ipoluianov/gazer_node/system/units/network/unit_tcp_connect"
@@ -53,27 +54,7 @@ var unitCategoriesNames map[string]string
 
 func init() {
 	unitCategoriesIcons = make(map[string][]byte)
-	unitCategoriesIcons["network"] = resources.R_files_sensors_category_network_png
-	unitCategoriesIcons["computer"] = resources.R_files_sensors_category_computer_png
-	unitCategoriesIcons["file"] = resources.R_files_sensors_category_file_png
-	unitCategoriesIcons["general"] = resources.R_files_sensors_category_general_png
-
-	unitCategoriesIcons["serial_port"] = resources.R_files_sensors_category_serial_port_png
-	unitCategoriesIcons["raspberry_pi"] = resources.R_files_sensors_category_raspberry_pi_png
-	unitCategoriesIcons["database"] = resources.R_files_sensors_category_database_png
-	unitCategoriesIcons["gazer"] = resources.R_files_sensors_category_gazer_png
-	unitCategoriesIcons[""] = resources.R_files_sensors_category_all_png
-
 	unitCategoriesNames = make(map[string]string)
-	unitCategoriesNames["network"] = "Network"
-	unitCategoriesNames["computer"] = "Computer"
-	unitCategoriesNames["file"] = "File"
-	unitCategoriesNames["general"] = "General"
-	unitCategoriesNames["serial_port"] = "Serial Port"
-	unitCategoriesNames["raspberry_pi"] = "RaspberryPI"
-	unitCategoriesNames["database"] = "Database"
-	unitCategoriesNames["gazer"] = "Gazer"
-	unitCategoriesNames[""] = "All"
 }
 
 func New(iDataStorage common_interfaces.IDataStorage) *UnitsSystem {
@@ -82,80 +63,94 @@ func New(iDataStorage common_interfaces.IDataStorage) *UnitsSystem {
 	c.unitTypesMap = make(map[string]*UnitType)
 	c.output = make(chan common_interfaces.UnitMessage)
 
-	var unitType *UnitType
+	c.RegUnitType(unit_ping.Info())
+	c.RegUnitType(unit_tcp_connect.Info())
+	c.RegUnitType(unit_http_rest_alfa.Info())
+	c.RegUnitType(unit_ssl.Info())
+	c.RegUnitType(unit_udp_fields.Info())
 
-	unitType = c.RegisterUnit("network_ping", "network", "Ping", unit_ping.New, unit_ping.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/network/ping/"
-	unitType = c.RegisterUnit("network_tcp_connect", "network", "TCP Connect", unit_tcp_connect.New, unit_tcp_connect.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/network/tcp-connect/"
+	c.RegUnitType(unit_system_memory.Info())
+	c.RegUnitType(unit_process.Info())
+	c.RegUnitType(unit_storage.Info())
+	c.RegUnitType(unit_network.Info())
 
-	unitType = c.RegisterUnit("network_http_json_requester", "network", "JSON Requester", unit_http_json_requester.New, unit_http_json_requester.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/network/json-requester/"
+	c.RegUnitType(unit_filesize.Info())
+	c.RegUnitType(unit_filecontent.Info())
+	c.RegUnitType(unittxttable.Info())
+	c.RegUnitType(unittxttablefolder.Info())
 
-	unitType = c.RegisterUnit("network_ssl", "network", "SSL", unit_ssl.New, unit_ssl.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/network/ssl/"
+	c.RegUnitType(unit_general_cgi.Info())
+	c.RegUnitType(unit_general_cgi_key_value.Info())
+	c.RegUnitType(unit_manual.Info())
+	c.RegUnitType(unit_hhgttg.Info())
+	c.RegUnitType(unit_signal_generator.Info())
 
-	unitType = c.RegisterUnit("network_udp_fields", "network", "UDP fields", unit_udp_fields.New, unit_udp_fields.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/network/ssl/"
-
-	unitType = c.RegisterUnit("computer_memory", "computer", "Memory", unit_system_memory.New, unit_system_memory.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/computer/memory/"
-	unitType = c.RegisterUnit("computer_process", "computer", "Process", unit_process.New, unit_process.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/computer/process/"
-	unitType = c.RegisterUnit("computer_storage", "computer", "Storage", unit_storage.New, unit_storage.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/computer/storage/"
-	unitType = c.RegisterUnit("computer_network", "computer", "Network", unit_network.New, unit_network.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/computer/network/"
-	/*unitType = c.RegisterUnit("computer_named_pipe_server", "computer", "Named Pipe Server", unit_system_named_pipe_server.New, unit_system_named_pipe_server.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/computer/memory/"
-	*/
-
-	unitType = c.RegisterUnit("file_size", "file", "File Size", unit_filesize.New, unit_filesize.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/files/file-size/"
-	unitType = c.RegisterUnit("file_content", "file", "File Content", unit_filecontent.New, unit_filecontent.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/files/file-content/"
-
-	unitType = c.RegisterUnit("file_txt", "file", "File Text Table", unittxttable.New, unittxttable.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/files/file-content/"
-
-	unitType = c.RegisterUnit("file_txt_folder", "file", "File Text Table Folder", unittxttablefolder.New, unittxttablefolder.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/files/file-content/"
-
-	unitType = c.RegisterUnit("general_cgi", "general", "Console", unit_general_cgi.New, unit_general_cgi.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/general/cgi/"
-	unitType = c.RegisterUnit("general_cgi_key_value", "general", "Console Key=Value", unit_general_cgi_key_value.New, unit_general_cgi_key_value.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/general/cgi-key-value/"
-	unitType = c.RegisterUnit("general_manual", "general", "Manual Items", unit_manual.New, unit_manual.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/general/manual-items/"
-	unitType = c.RegisterUnit("general_hhgttg", "general", "HHGTTG", unit_hhgttg.New, unit_hhgttg.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/general/hhgttg/"
-	unitType = c.RegisterUnit("general_signal_generator", "general", "Signal Generator", unit_signal_generator.New, unit_signal_generator.Image, "")
-	unitType.Help = "https://gazer.cloud/unit-types/general/signal-generator/"
-
-	unitType = c.RegisterUnit("serial_port_key_value", "serial_port", "Serial Port Key=Value", unit_serial_port_key_value.New, unit_serial_port_key_value.Image, "Key/value unit via Serial Port. Format: key=value<new_line>")
-	unitType.Help = "https://gazer.cloud/unit-types/serial-port/serial-port-key-value/"
+	c.RegUnitType(unit_serial_port_key_value.Info())
 
 	if runtime.GOOS == "linux" {
-		unitType = c.RegisterUnit("raspberry_pi_gpio", "raspberry_pi", "Raspberry PI GPIO", unit_raspberry_pi_gpio.New, unit_raspberry_pi_gpio.Image, "RaspberryPI GPIO")
-		unitType.Help = ""
-		unitType = c.RegisterUnit("raspberry_pi_cpu_temp", "raspberry_pi", "Raspberry PI CPU temperature", unit_raspberry_pi_cpu_temp.New, unit_raspberry_pi_cpu_temp.Image, "RaspberryPI CPU Temperature")
-		unitType.Help = "https://gazer.cloud/unit-types/raspberrypi/cpu-temperature/"
+		c.RegUnitType(unit_raspberry_pi_gpio.Info())
+		c.RegUnitType(unit_raspberry_pi_cpu_temp.Info())
 	}
 
-	unitType = c.RegisterUnit("database_postgresql", "database", "PostgreSQL", unit_postgreesql.New, unit_postgreesql.Image, "PostgreSQL database query execute")
-	unitType.Help = "https://gazer.cloud/unit-types/databases/postgresql/"
+	c.RegUnitType(unit_postgreesql.Info())
 
-	unitType = c.RegisterUnit("blockchain_ethereum_realtime_stat", "blockchain", "ETH Stat", unit_ethereum_realtime_stat.New, unit_ethereum_realtime_stat.Image, "ETH realtime monitoring")
-	unitType.Help = ""
+	c.RegUnitType(unit_ethereum_realtime_stat.Info())
+	c.RegUnitType(unit_ethereum_account_watcher.Info())
 
-	unitType = c.RegisterUnit("blockchain_ethereum_account_watcher", "blockchain", "ETH Balance", unit_ethereum_account_watcher.New, unit_ethereum_account_watcher.Image, "ETH Balance")
-	unitType.Help = ""
+	c.initCategories()
 
 	return &c
 }
 
 func (c *UnitsSystem) OutputChannel() chan common_interfaces.UnitMessage {
 	return c.output
+}
+
+func CategoryOfUnit(unitType string) string {
+	parts := strings.FieldsFunc(unitType, func(r rune) bool {
+		return r == '.'
+	})
+	if len(parts) == 4 {
+		return parts[0]
+	}
+	return "Unknown"
+}
+
+func NameOfUnit(unitType string) string {
+	parts := strings.FieldsFunc(unitType, func(r rune) bool {
+		return r == '.'
+	})
+	if len(parts) == 4 {
+		return parts[1] + " " + parts[2]
+	}
+	return "Unknown"
+}
+
+func (c *UnitsSystem) initCategories() {
+	unitCategoriesIcons = make(map[string][]byte)
+	unitCategoriesNames = make(map[string]string)
+	for _, value := range c.unitTypesMap {
+		unitCategoriesNames[CategoryOfUnit(value.TypeCode)] = CategoryOfUnit(value.TypeCode)
+		unitCategoriesIcons[CategoryOfUnit(value.TypeCode)] = resources.R_files_sensors_category_general_png
+	}
+}
+
+func (c *UnitsSystem) RegUnitType(info units_common.UnitMeta) *UnitType {
+	var sType UnitType
+	sType.TypeCode = info.TypeName
+	sType.Category = info.Category
+	sType.DisplayName = NameOfUnit(info.TypeName)
+	sType.Constructor = info.Constructor
+	sType.Picture = info.ImgBytes
+
+	if sType.Picture == nil {
+		sType.Picture = unit_system_memory.Image
+	}
+
+	sType.Description = info.Description
+	c.unitTypes = append(c.unitTypes, &sType)
+	c.unitTypesMap[info.TypeName] = &sType
+	return &sType
 }
 
 func (c *UnitsSystem) RegisterUnit(typeName string, category string, displayName string, constructor func() common_interfaces.IUnit, imgBytes []byte, description string) *UnitType {

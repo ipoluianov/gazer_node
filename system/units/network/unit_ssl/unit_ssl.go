@@ -41,6 +41,17 @@ func init() {
 	Image = resources.R_files_sensors_unit_network_ssl_png
 }
 
+func Info() units_common.UnitMeta {
+	var info units_common.UnitMeta
+	info.TypeName = "Network.SSL.Expires.Alfa"
+	info.Category = "network"
+	info.DisplayName = "SSL"
+	info.Constructor = New
+	info.ImgBytes = nil
+	info.Description = ""
+	return info
+}
+
 func (c *UnitSSL) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	meta.Add("domain", "Domain", "example.com", "string", "", "", "")

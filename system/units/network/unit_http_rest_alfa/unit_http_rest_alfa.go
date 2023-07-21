@@ -1,4 +1,4 @@
-package unit_http_json_requester
+package unit_http_rest_alfa
 
 import (
 	"crypto/tls"
@@ -15,7 +15,7 @@ import (
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 )
 
-type UnitHttpJsonRequester struct {
+type UnitHttpRestAlfa struct {
 	units_common.Unit
 	addr              string
 	timeoutMs         int
@@ -24,7 +24,7 @@ type UnitHttpJsonRequester struct {
 }
 
 func New() common_interfaces.IUnit {
-	var c UnitHttpJsonRequester
+	var c UnitHttpRestAlfa
 	c.receivedVariables = make(map[string]string)
 	return &c
 }
@@ -39,7 +39,18 @@ func init() {
 	Image = resources.R_files_sensors_unit_network_json_requester_png
 }
 
-func (c *UnitHttpJsonRequester) GetConfigMeta() string {
+func Info() units_common.UnitMeta {
+	var info units_common.UnitMeta
+	info.TypeName = "Network.Http.Rest.Alfa"
+	info.Category = "network"
+	info.DisplayName = "REST Alfa"
+	info.Constructor = New
+	info.ImgBytes = nil
+	info.Description = ""
+	return info
+}
+
+func (c *UnitHttpRestAlfa) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	meta.Add("addr", "Address", "localhost:445", "string", "", "", "")
 	meta.Add("period", "Period, ms", "1000", "num", "0", "999999", "0")
@@ -47,7 +58,7 @@ func (c *UnitHttpJsonRequester) GetConfigMeta() string {
 	return meta.Marshal()
 }
 
-func (c *UnitHttpJsonRequester) InternalUnitStart() error {
+func (c *UnitHttpRestAlfa) InternalUnitStart() error {
 	var err error
 
 	type Config struct {
@@ -115,10 +126,10 @@ func (c *UnitHttpJsonRequester) InternalUnitStart() error {
 	return nil
 }
 
-func (c *UnitHttpJsonRequester) InternalUnitStop() {
+func (c *UnitHttpRestAlfa) InternalUnitStop() {
 }
 
-func (c *UnitHttpJsonRequester) Tick() {
+func (c *UnitHttpRestAlfa) Tick() {
 	var err error
 	c.Started = true
 	dtLastTime := time.Now().UTC()
@@ -166,7 +177,7 @@ func (c *UnitHttpJsonRequester) Tick() {
 	c.Started = false
 }
 
-func (c *UnitHttpJsonRequester) HttpCall(url string) (responseString string, err error) {
+func (c *UnitHttpRestAlfa) HttpCall(url string) (responseString string, err error) {
 	var client *http.Client
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{},

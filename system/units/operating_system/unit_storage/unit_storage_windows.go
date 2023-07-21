@@ -22,6 +22,17 @@ func init() {
 	Image = resources.R_files_sensors_unit_computer_storage_png
 }
 
+func Info() units_common.UnitMeta {
+	var info units_common.UnitMeta
+	info.TypeName = "Computer.Storage.Watcher.Alfa"
+	info.Category = "computer"
+	info.DisplayName = "Storage"
+	info.Constructor = New
+	info.ImgBytes = nil
+	info.Description = ""
+	return info
+}
+
 var (
 	modpsapi    = windows.NewLazySystemDLL("psapi.dll")
 	modkernel32 = windows.NewLazySystemDLL("kernel32.dll")

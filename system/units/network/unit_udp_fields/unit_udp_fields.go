@@ -39,6 +39,17 @@ func init() {
 	Image = resources.R_files_sensors_unit_network_tcp_connect_png
 }
 
+func Info() units_common.UnitMeta {
+	var info units_common.UnitMeta
+	info.TypeName = "Network.UDP.Fields.Alfa"
+	info.Category = "network"
+	info.DisplayName = "UDP fields"
+	info.Constructor = New
+	info.ImgBytes = nil
+	info.Description = ""
+	return info
+}
+
 func (c *UnitUdpFields) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	meta.Add("port", "UDP Port", "7401", "num", "1", "65535", "0")
