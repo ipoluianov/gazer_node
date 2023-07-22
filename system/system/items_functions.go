@@ -18,7 +18,7 @@ func (c *System) SetItemByNameOld(name string, value string, UOM string, dt time
 		return nil
 	}
 
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	if i, ok := c.itemsByName[name]; ok {
 		item = i
 	} else {
@@ -30,7 +30,7 @@ func (c *System) SetItemByNameOld(name string, value string, UOM string, dt time
 		c.items = append(c.items, item)
 		c.nextItemId++
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 
 	var itemValue common_interfaces.ItemValue
 	itemValue.Value = value
@@ -45,13 +45,13 @@ func (c *System) SetAllItemsByUnitName(unitName string, value string, UOM string
 		return nil
 	}
 
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	for _, i := range c.items {
 		if strings.HasPrefix(i.Name, unitName+"/") {
 			items = append(items, i)
 		}
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 
 	for _, i := range items {
 		var itemValue common_interfaces.ItemValue
@@ -72,13 +72,13 @@ func (c *System) SetItem(itemId uint64, value common_interfaces.ItemValue, count
 	if counter > 10 {
 		return errors.New("recursion detected")
 	}
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	if i, ok := c.itemsById[itemId]; ok {
 		item = i
 		value.Value = item.PostprocessingValue(value.Value)
 		item.Value = value
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 	if item == nil {
 		logger.Println("set item error: ", itemId, "=", value.Value)
 		return errors.New("item not found")
@@ -107,7 +107,7 @@ func (c *System) SetItem(itemId uint64, value common_interfaces.ItemValue, count
 }
 
 func (c *System) DataItemPropSet(itemName string, props []nodeinterface.PropItem) error {
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	if item, ok := c.itemsByName[itemName]; ok {
 		for _, prop := range props {
 			item.Properties[prop.PropName] = &common_interfaces.ItemProperty{
@@ -117,15 +117,16 @@ func (c *System) DataItemPropSet(itemName string, props []nodeinterface.PropItem
 		}
 		c.applyItemsProperties()
 	} else {
-		c.mtx.Unlock()
+		c.mtxSystem.Unlock()
 		return errors.New("item not found")
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 	c.SaveConfig()
 	return nil
 }
 
 func (c *System) applyItemsProperties() {
+	// Need to be synced
 	for _, item := range c.items {
 		for _, prop := range item.Properties {
 			if prop.Name == "source" {
@@ -169,7 +170,7 @@ func (c *System) applyItemsProperties() {
 func (c *System) DataItemPropGet(itemName string) ([]nodeinterface.PropItem, error) {
 	result := make([]nodeinterface.PropItem, 0)
 
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	if item, ok := c.itemsByName[itemName]; ok {
 		for _, prop := range item.Properties {
 			result = append(result, nodeinterface.PropItem{
@@ -192,10 +193,10 @@ func (c *System) DataItemPropGet(itemName string) ([]nodeinterface.PropItem, err
 			}
 		}
 	} else {
-		c.mtx.Unlock()
+		c.mtxSystem.Unlock()
 		return nil, errors.New("item not found")
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 	return result, nil
 }
 
@@ -204,7 +205,7 @@ type ItemWatcher struct {
 }
 
 func (c *System) AddToWatch(unitId string, itemName string) {
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	watcher, ok := c.itemWatchers[itemName]
 	if !ok {
 		watcher = &ItemWatcher{
@@ -213,11 +214,11 @@ func (c *System) AddToWatch(unitId string, itemName string) {
 		c.itemWatchers[itemName] = watcher
 	}
 	watcher.UnitIDs[unitId] = true
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 }
 
 func (c *System) RemoveFromWatch(unitId string, itemName string) {
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	watcher, ok := c.itemWatchers[itemName]
 	if ok {
 		delete(watcher.UnitIDs, unitId)
@@ -225,31 +226,31 @@ func (c *System) RemoveFromWatch(unitId string, itemName string) {
 	if len(watcher.UnitIDs) == 0 {
 		delete(c.itemWatchers, itemName)
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 }
 
 func (c *System) SetProperty(itemName string, propName string, propValue string) {
 	item, err := c.TouchItem(itemName)
 	if err == nil {
-		c.mtx.Lock()
+		c.mtxSystem.Lock()
 		item.SetProperty(propName, propValue)
-		c.mtx.Unlock()
+		c.mtxSystem.Unlock()
 	}
 }
 
 func (c *System) SetPropertyIfDoesntExist(itemName string, propName string, propValue string) {
 	item, err := c.TouchItem(itemName)
 	if err == nil {
-		c.mtx.Lock()
+		c.mtxSystem.Lock()
 		item.SetPropertyIfDoesntExist(propName, propValue)
-		c.mtx.Unlock()
+		c.mtxSystem.Unlock()
 	}
 }
 
 func (c *System) TouchItem(name string) (*common_interfaces.Item, error) {
 	var item *common_interfaces.Item
 	fullName := name
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	var ok bool
 	if item, ok = c.itemsByName[fullName]; !ok {
 		item = common_interfaces.NewItem()
@@ -260,19 +261,19 @@ func (c *System) TouchItem(name string) (*common_interfaces.Item, error) {
 		c.items = append(c.items, item)
 		c.nextItemId++
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 	return item, nil
 }
 
 func (c *System) GetItem(name string) (common_interfaces.Item, error) {
 	var item common_interfaces.Item
 	var found bool
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	if i, ok := c.itemsByName[name]; ok {
 		item = *i
 		found = true
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 
 	if !found {
 		return item, errors.New("no item found")
@@ -284,7 +285,7 @@ func (c *System) GetItem(name string) (common_interfaces.Item, error) {
 func (c *System) RemoveItems(itemsNames []string) error {
 	var err error
 
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	newItems := make([]*common_interfaces.Item, 0)
 	itemsForRemove := make([]*common_interfaces.Item, 0)
 
@@ -307,7 +308,7 @@ func (c *System) RemoveItems(itemsNames []string) error {
 		delete(c.itemsById, item.Id)
 		c.history.RemoveItem(item.Id)
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 
 	//c.publicChannels.RemoveItems(nil, itemsNames)
 
@@ -322,17 +323,17 @@ func (c *System) RemoveItems(itemsNames []string) error {
 
 func (c *System) GetItems() []common_interfaces.Item {
 	var items []common_interfaces.Item
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	items = make([]common_interfaces.Item, len(c.items))
 	for index, item := range c.items {
 		items[index] = *item
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 	return items
 }
 
 func (c *System) RenameItems(oldPrefix string, newPrefix string) {
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	for _, item := range c.items {
 		if strings.HasPrefix(item.Name, oldPrefix) {
 			delete(c.itemsByName, item.Name)
@@ -340,15 +341,15 @@ func (c *System) RenameItems(oldPrefix string, newPrefix string) {
 			c.itemsByName[item.Name] = item
 		}
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 
 	//c.publicChannels.RenameItems(oldPrefix, newPrefix)
 }
 
 func (c *System) ReadHistory(name string, dtBegin int64, dtEnd int64) (*history.ReadResult, error) {
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	item, ok := c.itemsByName[name]
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 	if ok {
 		return c.history.Read(item.Id, dtBegin, dtEnd), nil
 	}

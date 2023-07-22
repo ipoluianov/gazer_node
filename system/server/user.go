@@ -42,7 +42,7 @@ import (
 	return
 }*/
 
-func (c *Server) SessionRemove(request []byte) (response []byte, err error) {
+/*func (c *Server) SessionRemove(request []byte) (response []byte, err error) {
 	var req nodeinterface.SessionRemoveRequest
 	var resp nodeinterface.SessionRemoveResponse
 	err = json.Unmarshal(request, &req)
@@ -57,7 +57,7 @@ func (c *Server) SessionRemove(request []byte) (response []byte, err error) {
 
 	response, err = json.MarshalIndent(resp, "", " ")
 	return
-}
+}*/
 
 func (c *Server) SessionList(request []byte) (response []byte, err error) {
 	var req nodeinterface.SessionListRequest

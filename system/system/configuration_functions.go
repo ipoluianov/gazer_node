@@ -23,8 +23,8 @@ type Config struct {
 }
 
 func (c *System) SaveConfig() error {
-	c.mtx.Lock()
-	defer c.mtx.Unlock()
+	c.mtxSystem.Lock()
+	defer c.mtxSystem.Unlock()
 
 	var conf Config
 	conf.Name = c.nodeName
@@ -142,9 +142,9 @@ func (c *System) LoadConfig() error {
 			}
 		}
 
-		c.mtx.Lock()
+		c.mtxSystem.Lock()
 		c.applyItemsProperties()
-		c.mtx.Unlock()
+		c.mtxSystem.Unlock()
 
 		if c.nextItemId < realMaxItemId+1 {
 			c.nextItemId = realMaxItemId + 1

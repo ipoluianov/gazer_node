@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
 	"github.com/ipoluianov/gazer_node/utilities/uom"
 )
 
@@ -175,7 +176,9 @@ func (c *Unit) Start() error {
 }
 
 func (c *Unit) Stop() {
+	logger.Println("Unit Stop", c.Id())
 	if !c.Started {
+		logger.Println("Unit Stop - unit is not started", c.Id())
 		return
 	}
 	c.LogInfo("stopping ...")
@@ -186,12 +189,16 @@ func (c *Unit) Stop() {
 
 	c.SetStringService("status", "stopping", "")
 	c.Stopping = true
+	logger.Println("Unit Stop - stopping - waiting", c.Id())
 	for c.Started {
 		time.Sleep(100 * time.Millisecond)
 	}
-	c.SetStringService("status", "stopped", "")
+	logger.Println("Unit Stop - stopping - waiting is ok", c.Id())
+	logger.Println("Unit Stop - stopping", c.Id())
+	logger.Println("Unit Stop - stopping - InternalDeInitItems", c.Id())
 	c.iUnit.InternalDeInitItems()
 	c.LogInfo("stopped")
+	logger.Println("Unit Stop - complete", c.Id())
 }
 
 func (c *Unit) IsStarted() bool {

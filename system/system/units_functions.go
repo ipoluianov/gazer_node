@@ -3,7 +3,6 @@ package system
 import (
 	"fmt"
 	"net"
-	"strconv"
 	"strings"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
@@ -54,25 +53,8 @@ func (c *System) UnitCategories() nodeinterface.UnitTypeCategoriesResponse {
 
 func (c *System) AddUnit(unitName string, unitType string, config string, fromCloud bool) (string, error) {
 	logger.Println("System - AddUnit - ", unitName, unitType)
-	unitId := ""
-	c.mtx.Lock()
-	maxUnitId := uint64(0)
-	for _, u := range c.unitsSystem.Units() {
-		uId := u.Id
-		if len(uId) > 1 && uId[0] == 'u' {
-			uIdInt, uIdParseError := strconv.ParseUint(uId[1:], 10, 64)
-			if uIdParseError == nil {
-				if uIdInt > maxUnitId {
-					maxUnitId = uIdInt
-				}
-			}
-		}
-	}
-	maxUnitId++
-	unitId = "u" + strconv.FormatUint(maxUnitId, 10)
-	c.mtx.Unlock()
 
-	unit, err := c.unitsSystem.AddUnit(unitType, unitId, unitName, config, fromCloud)
+	unit, err := c.unitsSystem.AddUnit(unitType, "", unitName, config, fromCloud)
 	if err != nil {
 		return "", err
 	}
@@ -84,7 +66,7 @@ func (c *System) AddUnit(unitName string, unitType string, config string, fromCl
 	if err != nil {
 		return "", err
 	}
-	return unitId, err
+	return unit.Id(), err
 }
 
 func (c *System) GetUnitState(unitId string) (nodeinterface.UnitStateResponse, error) {
@@ -93,7 +75,7 @@ func (c *System) GetUnitState(unitId string) (nodeinterface.UnitStateResponse, e
 		return nodeinterface.UnitStateResponse{UnitId: unitId, UOM: "error"}, err
 	}
 	unitState.UnitId = unitId
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	if item, ok := c.itemsByName[unitState.MainItem]; ok {
 		unitState.Value = item.Value.Value
 		unitState.UOM = item.Value.UOM
@@ -111,7 +93,7 @@ func (c *System) GetUnitState(unitId string) (nodeinterface.UnitStateResponse, e
 		}
 	}
 
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 
 	return unitState, err
 }
@@ -125,14 +107,14 @@ func (c *System) GetUnitStateAll() (nodeinterface.UnitStateAllResponse, error) {
 		return result, err
 	}
 
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	for i := range result.Items {
 		if item, ok := c.itemsByName[result.Items[i].MainItem]; ok {
 			result.Items[i].Value = item.Value.Value
 			result.Items[i].UOM = item.Value.UOM
 		}
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 
 	return result, err
 }
@@ -192,7 +174,7 @@ func (c *System) GetUnitValues(unitName string) []common_interfaces.ItemGetUnitI
 	var items []common_interfaces.ItemGetUnitItems
 	items = make([]common_interfaces.ItemGetUnitItems, 0)
 
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 
 	for _, item := range c.items {
 		if strings.HasPrefix(item.Name, unitName+"/") {
@@ -207,20 +189,20 @@ func (c *System) GetUnitValues(unitName string) []common_interfaces.ItemGetUnitI
 			items = append(items, i)
 		}
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 
 	return items
 }
 
 func (c *System) RemoveItemsOfUnit(unitId string) error {
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	itemsToRemove := make([]string, 0)
 	for _, item := range c.items {
 		if strings.HasPrefix(item.Name, unitId+"/") {
 			itemsToRemove = append(itemsToRemove, item.Name)
 		}
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 
 	_ = c.RemoveItems(itemsToRemove)
 
@@ -231,7 +213,7 @@ func (c *System) GetItemsValues(reqItems []string) []common_interfaces.ItemState
 	var items []common_interfaces.ItemStateInfo
 	items = make([]common_interfaces.ItemStateInfo, 0)
 
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	for _, itemName := range reqItems {
 		if item, ok := c.itemsByName[itemName]; ok {
 			var i common_interfaces.ItemStateInfo
@@ -240,27 +222,26 @@ func (c *System) GetItemsValues(reqItems []string) []common_interfaces.ItemState
 			i.Value = item.Value.Value
 			i.DT = item.Value.DT
 			i.UOM = item.Value.UOM
-
-			{
-				unitId := ""
-				unitName := ""
-				posOfSlash := strings.Index(i.Name, "/")
-				if posOfSlash > 0 {
-					var err error
-					unitId = i.Name[:posOfSlash]
-					unitName, err = c.unitsSystem.GetUnitDisplayName(unitId)
-					if err != nil {
-						unitName = ""
-					} else {
-						i.DisplayName = strings.Replace(i.Name, unitId+"/", unitName+"/", 1)
-					}
-				}
-			}
-
 			items = append(items, i)
 		}
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
+
+	for index, item := range items {
+		unitId := ""
+		unitName := ""
+		posOfSlash := strings.Index(item.Name, "/")
+		if posOfSlash > 0 {
+			var err error
+			unitId = item.Name[:posOfSlash]
+			unitName, err = c.unitsSystem.GetUnitDisplayName(unitId)
+			if err != nil {
+				unitName = ""
+			} else {
+				items[index].DisplayName = strings.Replace(item.Name, unitId+"/", unitName+"/", 1)
+			}
+		}
+	}
 
 	return items
 }
@@ -269,7 +250,7 @@ func (c *System) GetAllItems() []common_interfaces.ItemGetUnitItems {
 	var items []common_interfaces.ItemGetUnitItems
 	items = make([]common_interfaces.ItemGetUnitItems, 0)
 
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 
 	for _, item := range c.items {
 		var i common_interfaces.ItemGetUnitItems
@@ -282,7 +263,7 @@ func (c *System) GetAllItems() []common_interfaces.ItemGetUnitItems {
 		//i.CloudChannels = c.publicChannels.GetChannelsWithItem(item.Name)
 		items = append(items, i)
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 
 	return items
 }
@@ -340,7 +321,7 @@ func (c *System) Lookup(entity string) (lookup.Result, error) {
 		result.AddColumn("id", "ID", false)
 		result.AddColumn("name", "Name", true)
 		result.AddColumn("display_name", "Name", false)
-		c.mtx.Lock()
+		c.mtxSystem.Lock()
 		for _, proc := range c.items {
 			if strings.Contains(proc.Name, "/.service/") {
 				continue
@@ -361,7 +342,7 @@ func (c *System) Lookup(entity string) (lookup.Result, error) {
 			}
 			result.AddRow3(fmt.Sprint(proc.Id), proc.Name, itemDisplayName)
 		}
-		c.mtx.Unlock()
+		c.mtxSystem.Unlock()
 	}
 	if entity == "serial-port-parity" {
 		result.AddColumn("name", "Parity", false)

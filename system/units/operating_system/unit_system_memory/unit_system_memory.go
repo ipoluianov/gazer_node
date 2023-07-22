@@ -24,7 +24,7 @@ func Info() units_common.UnitMeta {
 	var info units_common.UnitMeta
 	info.TypeName = "Computer.System.Memory.Alfa"
 	info.Category = "computer"
-	info.DisplayName = "Memory"
+	info.DisplayName = "System Memory"
 	info.Constructor = New
 	info.ImgBytes = Image
 	info.Description = ""

@@ -46,25 +46,34 @@ type UserSession struct {
 	return userName, err
 }*/
 
-func (c *System) RemoveSession(sessionToken string) error {
+/*func (c *System) RemoveSession(sessionToken string) error {
 	var err error
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	if _, ok := c.sessions[sessionToken]; ok {
 		delete(c.sessions, sessionToken)
 	} else {
 		err = errors.New("wrong session token")
 	}
-	c.saveSessions()
 
-	c.mtx.Unlock()
+	bs, err := json.MarshalIndent(c.sessions, "", " ")
+	if err == nil {
+		err = ioutil.WriteFile(c.ss.ServerDataPath()+"/sessions.json", bs, 0666)
+		if err != nil {
+			logger.Println("saveSessions error", err)
+		}
+	} else {
+		logger.Println("saveSessions (marshal) error", err)
+	}
+
+	c.mtxSystem.Unlock()
 
 	return err
-}
+}*/
 
 func (c *System) SessionList(userName string) (nodeinterface.SessionListResponse, error) {
 	var result nodeinterface.SessionListResponse
 	var err error
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	for _, s := range c.sessions {
 		if s.UserName == userName {
 			var item nodeinterface.SessionListResponseItem
@@ -74,7 +83,7 @@ func (c *System) SessionList(userName string) (nodeinterface.SessionListResponse
 			result.Items = append(result.Items, item)
 		}
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 
 	sort.Slice(result.Items, func(i, j int) bool {
 		return result.Items[i].SessionOpenTime < result.Items[j].SessionOpenTime
@@ -116,18 +125,6 @@ func (c *System) SessionList(userName string) (nodeinterface.SessionListResponse
 	return result, err
 }*/
 
-func (c *System) saveSessions() {
-	bs, err := json.MarshalIndent(c.sessions, "", " ")
-	if err == nil {
-		err = ioutil.WriteFile(c.ss.ServerDataPath()+"/sessions.json", bs, 0666)
-		if err != nil {
-			logger.Println("saveSessions error", err)
-		}
-	} else {
-		logger.Println("saveSessions (marshal) error", err)
-	}
-}
-
 func (c *System) loadSessions() {
 	//logger.Println("System loadSessions begin")
 	configString, err := ioutil.ReadFile(c.ss.ServerDataPath() + "/sessions.json")
@@ -146,19 +143,19 @@ func (c *System) loadSessions() {
 
 func (c *System) UserList() (nodeinterface.UserListResponse, error) {
 	var result nodeinterface.UserListResponse
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	result.Items = make([]string, 0)
 	for _, u := range c.users {
 		result.Items = append(result.Items, u.Name)
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 	return result, nil
 }
 
 func (c *System) UserAdd(name string, password string) (nodeinterface.UserAddResponse, error) {
 	var err error
 	var result nodeinterface.UserAddResponse
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	if _, ok := c.userByName[name]; !ok {
 		var us common_interfaces.User
 		us.Name = name
@@ -169,7 +166,7 @@ func (c *System) UserAdd(name string, password string) (nodeinterface.UserAddRes
 	} else {
 		err = errors.New("user exists already")
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 
 	c.SaveConfig()
 
@@ -179,13 +176,13 @@ func (c *System) UserAdd(name string, password string) (nodeinterface.UserAddRes
 func (c *System) UserSetPassword(name string, password string) (nodeinterface.UserSetPasswordResponse, error) {
 	var err error
 	var result nodeinterface.UserSetPasswordResponse
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	if u, ok := c.userByName[name]; ok {
 		u.PasswordHash = c.hashPassword(password)
 	} else {
 		err = errors.New("no user found")
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 
 	c.SaveConfig()
 
@@ -207,7 +204,7 @@ func (c *System) UserRemove(name string) (nodeinterface.UserRemoveResponse, erro
 	var err error
 	var found bool
 	var result nodeinterface.UserRemoveResponse
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	for index, u := range c.users {
 		if u.Name == name {
 			c.users = append(c.users[:index], c.users[index+1:]...)
@@ -219,7 +216,7 @@ func (c *System) UserRemove(name string) (nodeinterface.UserRemoveResponse, erro
 	if !found {
 		err = errors.New("no user found")
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 
 	c.SaveConfig()
 
@@ -228,7 +225,7 @@ func (c *System) UserRemove(name string) (nodeinterface.UserRemoveResponse, erro
 
 func (c *System) UserPropSet(userName string, props []nodeinterface.PropItem) error {
 	logger.Println("UserPropSet", userName)
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	if user, ok := c.userByName[userName]; ok {
 		for _, prop := range props {
 			user.Properties[prop.PropName] = &common_interfaces.ItemProperty{
@@ -237,10 +234,10 @@ func (c *System) UserPropSet(userName string, props []nodeinterface.PropItem) er
 			}
 		}
 	} else {
-		c.mtx.Unlock()
+		c.mtxSystem.Unlock()
 		return errors.New("user not found")
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 	c.SaveConfig()
 	return nil
 }
@@ -248,7 +245,7 @@ func (c *System) UserPropSet(userName string, props []nodeinterface.PropItem) er
 func (c *System) UserPropGet(userName string) ([]nodeinterface.PropItem, error) {
 	result := make([]nodeinterface.PropItem, 0)
 
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	if user, ok := c.userByName[userName]; ok {
 		for _, prop := range user.Properties {
 			result = append(result, nodeinterface.PropItem{
@@ -257,9 +254,9 @@ func (c *System) UserPropGet(userName string) ([]nodeinterface.PropItem, error) 
 			})
 		}
 	} else {
-		c.mtx.Unlock()
+		c.mtxSystem.Unlock()
 		return nil, errors.New("user not found")
 	}
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 	return result, nil
 }

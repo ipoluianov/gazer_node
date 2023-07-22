@@ -57,7 +57,7 @@ type System struct {
 
 	maintenanceLastValuesDT time.Time
 
-	mtx sync.Mutex
+	mtxSystem sync.Mutex
 }
 
 func RSAPrivateKeyFromHex(privateKey64 string) (privateKey *rsa.PrivateKey, err error) {
@@ -185,7 +185,7 @@ func (c *System) Stop() {
 	c.history.Stop()
 	c.xchgPoint.Stop()
 	c.SaveConfig()
-	c.saveSessions()
+	//c.saveSessions()
 
 	for i := 0; i < 10; i++ {
 		time.Sleep(100 * time.Millisecond)
@@ -220,9 +220,9 @@ func (c *System) processUnitMessages(unitChannel chan common_interfaces.UnitMess
 }
 
 func (c *System) RegApiCall() {
-	c.mtx.Lock()
+	c.mtxSystem.Lock()
 	c.apiCallsCount++
-	c.mtx.Unlock()
+	c.mtxSystem.Unlock()
 }
 
 func (c *System) thMaintenance() {

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"runtime"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -110,7 +111,7 @@ func CategoryOfUnit(unitType string) string {
 	parts := strings.FieldsFunc(unitType, func(r rune) bool {
 		return r == '.'
 	})
-	if len(parts) == 4 {
+	if len(parts) > 0 {
 		return parts[0]
 	}
 	return "Unknown"
@@ -120,8 +121,15 @@ func NameOfUnit(unitType string) string {
 	parts := strings.FieldsFunc(unitType, func(r rune) bool {
 		return r == '.'
 	})
-	if len(parts) == 4 {
-		return parts[1] + " " + parts[2]
+	if len(parts) > 2 {
+		result := ""
+		for i := 1; i < len(parts)-1; i++ {
+			if len(result) > 0 {
+				result += " "
+			}
+			result += parts[i]
+		}
+		return result
 	}
 	return "Unknown"
 }
@@ -139,7 +147,10 @@ func (c *UnitsSystem) RegUnitType(info units_common.UnitMeta) *UnitType {
 	var sType UnitType
 	sType.TypeCode = info.TypeName
 	sType.Category = info.Category
-	sType.DisplayName = NameOfUnit(info.TypeName)
+	sType.DisplayName = info.DisplayName
+	if len(sType.DisplayName) == 0 {
+		sType.DisplayName = NameOfUnit(info.TypeName)
+	}
 	sType.Constructor = info.Constructor
 	sType.Picture = info.ImgBytes
 
@@ -287,6 +298,24 @@ func (c *UnitsSystem) AddUnit(unitType string, unitId string, displayName string
 	var unit common_interfaces.IUnit
 	nameIsExists := false
 	c.mtx.Lock()
+	if len(unitId) == 0 {
+		maxUnitId := uint64(0)
+
+		for _, u := range c.units { // 123
+			uId := u.Id()
+			if len(uId) > 1 && uId[0] == 'u' {
+				uIdInt, uIdParseError := strconv.ParseUint(uId[1:], 10, 64)
+				if uIdParseError == nil {
+					if uIdInt > maxUnitId {
+						maxUnitId = uIdInt
+					}
+				}
+			}
+		}
+		maxUnitId++
+		unitId = "u" + strconv.FormatUint(maxUnitId, 10)
+	}
+
 	for _, s := range c.units {
 		if s.DisplayName() == displayName {
 			nameIsExists = true
@@ -446,21 +475,28 @@ func (c *UnitsSystem) RemoveUnits(units []string) error {
 			if deletedUnit.Id() == unitToRemove {
 				logger.Println("UnitsSystem RemoveUnits unit", deletedUnit.Id())
 				idsOfDeletedUnits = append(idsOfDeletedUnits, deletedUnit.Id())
+				logger.Println("UnitsSystem RemoveUnits stopping unit", deletedUnit.Id())
 				deletedUnit.Stop()
+				logger.Println("UnitsSystem RemoveUnits disposing unit", deletedUnit.Id())
 				deletedUnit.Dispose()
+				logger.Println("UnitsSystem RemoveUnits unit is disposed", deletedUnit.Id())
 				c.units = append(c.units[:unitIndex], c.units[unitIndex+1:]...)
 				break
 			}
 		}
 	}
 
+	logger.Println("UnitsSystem RemoveUnits removed")
+
 	c.mtx.Unlock()
 
+	logger.Println("UnitsSystem RemoveUnits deleting items")
 	for _, idOfDeletedUnit := range idsOfDeletedUnits {
 		c.output <- &common_interfaces.UnitMessageRemoteItemsOfUnit{
 			UnitId: idOfDeletedUnit,
 		}
 	}
+	logger.Println("UnitsSystem RemoveUnits items is deleted")
 
 	return nil
 }

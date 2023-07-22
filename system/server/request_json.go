@@ -104,10 +104,10 @@ func (c *Server) RequestJson(function string, requestText []byte, host string, f
 		result, err = c.SessionOpen(requestText, host)
 	case nodeinterface.FuncSessionActivate:
 		result, err = c.SessionActivate(requestText)*/
-	case nodeinterface.FuncSessionRemove:
+	/*case nodeinterface.FuncSessionRemove:
 		result, err = c.SessionRemove(requestText)
 	case nodeinterface.FuncSessionList:
-		result, err = c.SessionList(requestText)
+		result, err = c.SessionList(requestText)*/
 
 	case nodeinterface.FuncUserList:
 		result, err = c.UserList(requestText)
