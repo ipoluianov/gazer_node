@@ -1,10 +1,14 @@
 package unit_network
 
 import (
+	_ "embed"
 	"net"
 
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 )
+
+//go:embed "image.png"
+var Image []byte
 
 func Info() units_common.UnitMeta {
 	var info units_common.UnitMeta
@@ -12,7 +16,7 @@ func Info() units_common.UnitMeta {
 	info.Category = "computer"
 	info.DisplayName = "Network"
 	info.Constructor = New
-	info.ImgBytes = nil
+	info.ImgBytes = Image
 	info.Description = ""
 	return info
 }

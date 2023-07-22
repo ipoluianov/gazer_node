@@ -2,6 +2,7 @@ package unit_ethereum_realtime_stat
 
 import (
 	"context"
+	_ "embed"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -10,7 +11,6 @@ import (
 
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ipoluianov/gazer_node/common_interfaces"
-	"github.com/ipoluianov/gazer_node/resources"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"github.com/ipoluianov/gazer_node/utilities/uom"
 )
@@ -33,11 +33,8 @@ const (
 	ItemNameStatus = "Status"
 )
 
+//go:embed "image.png"
 var Image []byte
-
-func init() {
-	Image = resources.R_files_sensors_unit_network_json_requester_png
-}
 
 func Info() units_common.UnitMeta {
 	var info units_common.UnitMeta
@@ -45,7 +42,7 @@ func Info() units_common.UnitMeta {
 	info.Category = "blockchain"
 	info.DisplayName = "ETH Stat"
 	info.Constructor = New
-	info.ImgBytes = nil
+	info.ImgBytes = Image
 	info.Description = "ETH realtime monitoring"
 	return info
 }

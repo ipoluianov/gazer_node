@@ -1,6 +1,8 @@
 package unit_process
 
 import (
+	_ "embed"
+
 	"github.com/ipoluianov/gazer_node/common_interfaces"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 )
@@ -17,6 +19,9 @@ type UnitSystemProcess struct {
 	actualProcessName string
 }
 
+//go:embed "image.png"
+var Image []byte
+
 func New() common_interfaces.IUnit {
 	var c UnitSystemProcess
 	return &c
@@ -28,7 +33,7 @@ func Info() units_common.UnitMeta {
 	info.Category = "computer"
 	info.DisplayName = "Process"
 	info.Constructor = New
-	info.ImgBytes = nil
+	info.ImgBytes = Image
 	info.Description = ""
 	return info
 }

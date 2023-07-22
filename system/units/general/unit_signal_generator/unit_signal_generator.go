@@ -1,6 +1,7 @@
 package unit_signal_generator
 
 import (
+	_ "embed"
 	"encoding/json"
 	"errors"
 	"math"
@@ -8,7 +9,6 @@ import (
 	"time"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
-	"github.com/ipoluianov/gazer_node/resources"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 )
 
@@ -40,11 +40,8 @@ const (
 	ItemNameStatus = "Status"
 )
 
+//go:embed "image.png"
 var Image []byte
-
-func init() {
-	Image = resources.R_files_sensors_unit_general_signal_generator_png
-}
 
 func Info() units_common.UnitMeta {
 	var info units_common.UnitMeta
@@ -52,7 +49,7 @@ func Info() units_common.UnitMeta {
 	info.Category = "general"
 	info.DisplayName = "Signal Generator"
 	info.Constructor = New
-	info.ImgBytes = nil
+	info.ImgBytes = Image
 	info.Description = ""
 	return info
 }

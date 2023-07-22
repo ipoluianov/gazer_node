@@ -1,10 +1,10 @@
 package unit_system_memory
 
 import (
+	_ "embed"
 	"time"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
-	"github.com/ipoluianov/gazer_node/resources"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 	"github.com/ipoluianov/gazer_node/utilities/uom"
@@ -17,11 +17,8 @@ type UnitSystemMemory struct {
 	totalIsSet bool
 }
 
+//go:embed "image.png"
 var Image []byte
-
-func init() {
-	Image = resources.R_files_sensors_unit_computer_memory_png
-}
 
 func Info() units_common.UnitMeta {
 	var info units_common.UnitMeta
@@ -29,7 +26,7 @@ func Info() units_common.UnitMeta {
 	info.Category = "computer"
 	info.DisplayName = "Memory"
 	info.Constructor = New
-	info.ImgBytes = nil
+	info.ImgBytes = Image
 	info.Description = ""
 	return info
 }

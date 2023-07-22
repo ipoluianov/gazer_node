@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
-	"github.com/ipoluianov/gazer_node/resources"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"github.com/kbinani/win"
 )
@@ -14,12 +13,6 @@ type UnitNetwork struct {
 	units_common.Unit
 
 	addressesOfInterfaces map[int]string
-}
-
-var Image []byte
-
-func init() {
-	Image = resources.R_files_sensors_unit_computer_network_png
 }
 
 func New() common_interfaces.IUnit {

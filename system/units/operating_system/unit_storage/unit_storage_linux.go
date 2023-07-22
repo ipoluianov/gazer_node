@@ -1,6 +1,7 @@
 package unit_storage
 
 import (
+	_ "embed"
 	"encoding/json"
 	"errors"
 	"github.com/ipoluianov/gazer_node/common_interfaces"
@@ -17,11 +18,8 @@ type UnitStorage struct {
 	periodMs int
 }
 
+//go:embed "image.png"
 var Image []byte
-
-func init() {
-	Image = resources.R_files_sensors_unit_computer_storage_png
-}
 
 func Info() units_common.UnitMeta {
 	var info units_common.UnitMeta
@@ -29,7 +27,7 @@ func Info() units_common.UnitMeta {
 	info.Category = "computer"
 	info.DisplayName = "Storage"
 	info.Constructor = New
-	info.ImgBytes = nil
+	info.ImgBytes = Image
 	info.Description = ""
 	return info
 }

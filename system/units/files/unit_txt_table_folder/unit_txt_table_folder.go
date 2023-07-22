@@ -1,6 +1,7 @@
 package unittxttablefolder
 
 import (
+	_ "embed"
 	"encoding/json"
 	"errors"
 	"os"
@@ -9,7 +10,6 @@ import (
 	"time"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
-	"github.com/ipoluianov/gazer_node/resources"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 )
 
@@ -28,11 +28,8 @@ const (
 	ItemNameResult = "result"
 )
 
+//go:embed "image.png"
 var Image []byte
-
-func init() {
-	Image = resources.R_files_sensors_unit_file_file_content_png
-}
 
 func Info() units_common.UnitMeta {
 	var info units_common.UnitMeta
@@ -40,7 +37,7 @@ func Info() units_common.UnitMeta {
 	info.Category = "file"
 	info.DisplayName = "File Text Table Folder"
 	info.Constructor = New
-	info.ImgBytes = nil
+	info.ImgBytes = Image
 	info.Description = ""
 	return info
 }

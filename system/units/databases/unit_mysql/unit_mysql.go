@@ -1,12 +1,12 @@
 package unit_mysql
 
 import (
+	_ "embed"
 	"encoding/json"
 	"errors"
 	"fmt"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
-	"github.com/ipoluianov/gazer_node/resources"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"github.com/jackc/pgx"
 
@@ -33,11 +33,8 @@ const (
 	ItemNameResult = "Result"
 )
 
+//go:embed "image.png"
 var Image []byte
-
-func init() {
-	Image = resources.R_files_sensors_unit_database_mysql_png
-}
 
 func (c *UnitMySQL) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")

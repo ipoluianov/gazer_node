@@ -192,6 +192,8 @@ func (c *UnitsSystem) UnitCategories() nodeinterface.UnitTypeCategoriesResponse 
 	unitCategoryInfoAll.DisplayName = "All"
 	if imgBytes, ok := unitCategoriesIcons[catAllName]; ok {
 		unitCategoryInfoAll.Image = imgBytes
+	} else {
+		unitCategoryInfoAll.Image = resources.R_files_sensors_category_general_png
 	}
 	result.Items = append(result.Items, unitCategoryInfoAll)
 	addedCats[catAllName] = true

@@ -1,6 +1,7 @@
 package unit_raspberry_pi_cpu_temp
 
 import (
+	_ "embed"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
@@ -9,7 +10,6 @@ import (
 	"time"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
-	"github.com/ipoluianov/gazer_node/resources"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 )
 
@@ -27,11 +27,8 @@ const (
 	ItemNameResult = "Temperature"
 )
 
+//go:embed "image.png"
 var Image []byte
-
-func init() {
-	Image = resources.R_files_sensors_unit_raspberry_pi_cpu_temrature_png
-}
 
 func Info() units_common.UnitMeta {
 	var info units_common.UnitMeta

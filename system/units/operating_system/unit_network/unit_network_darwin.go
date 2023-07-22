@@ -11,12 +11,6 @@ type UnitNetwork struct {
 	addressesOfInterfaces map[int]string
 }
 
-var Image []byte
-
-func init() {
-	Image = resources.R_files_sensors_unit_computer_network_png
-}
-
 func New() common_interfaces.IUnit {
 	var c UnitNetwork
 	return &c

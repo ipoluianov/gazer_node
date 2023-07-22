@@ -9,17 +9,10 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/ipoluianov/gazer_node/resources"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 	"github.com/ipoluianov/gazer_node/utilities/uom"
 	"golang.org/x/sys/windows"
 )
-
-var Image []byte
-
-func init() {
-	Image = resources.R_files_sensors_unit_comruter_process_png
-}
 
 func (c *UnitSystemProcess) InternalUnitStart() error {
 	var err error
