@@ -65,7 +65,6 @@ func (c *UnitSystemMemory) Tick() {
 			c.SetStringForAll("panic", "error")
 		}
 	}()
-	dtBegin := time.Now()
 	c.Started = true
 	for !c.Stopping {
 		for i := 0; i < 10; i++ {
@@ -87,10 +86,6 @@ func (c *UnitSystemMemory) Tick() {
 		c.SetUInt64("Available", v.Available/1048576, uom.MB)
 		c.SetUInt64("Used", v.Used/1048576, uom.MB)
 		c.SetFloat64("UsedPercent", percents, "%", 1)
-
-		if time.Now().Sub(dtBegin).Seconds() > 5 {
-			//panic("This is panic!")
-		}
 	}
 
 	time.Sleep(1 * time.Millisecond)
