@@ -12,30 +12,30 @@ import (
 	"github.com/ipoluianov/gazer_node/common_interfaces"
 	"github.com/ipoluianov/gazer_node/resources"
 	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
-	"github.com/ipoluianov/gazer_node/system/units/blockchain/ethereum/unit_ethereum_account_watcher"
-	"github.com/ipoluianov/gazer_node/system/units/blockchain/ethereum/unit_ethereum_realtime_stat"
-	"github.com/ipoluianov/gazer_node/system/units/databases/unit_postgreesql"
-	"github.com/ipoluianov/gazer_node/system/units/files/unit_filecontent"
-	"github.com/ipoluianov/gazer_node/system/units/files/unit_filesize"
-	unittxttable "github.com/ipoluianov/gazer_node/system/units/files/unit_txt_table"
-	unittxttablefolder "github.com/ipoluianov/gazer_node/system/units/files/unit_txt_table_folder"
-	"github.com/ipoluianov/gazer_node/system/units/general/unit_general_cgi"
-	"github.com/ipoluianov/gazer_node/system/units/general/unit_general_cgi_key_value"
-	"github.com/ipoluianov/gazer_node/system/units/general/unit_hhgttg"
-	"github.com/ipoluianov/gazer_node/system/units/general/unit_manual"
-	"github.com/ipoluianov/gazer_node/system/units/general/unit_signal_generator"
-	"github.com/ipoluianov/gazer_node/system/units/network/unit_http_rest_alfa"
-	"github.com/ipoluianov/gazer_node/system/units/network/unit_ping"
-	"github.com/ipoluianov/gazer_node/system/units/network/unit_ssl"
-	"github.com/ipoluianov/gazer_node/system/units/network/unit_tcp_connect"
-	"github.com/ipoluianov/gazer_node/system/units/network/unit_udp_fields"
-	"github.com/ipoluianov/gazer_node/system/units/operating_system/unit_network"
-	"github.com/ipoluianov/gazer_node/system/units/operating_system/unit_process"
-	"github.com/ipoluianov/gazer_node/system/units/operating_system/unit_storage"
-	"github.com/ipoluianov/gazer_node/system/units/operating_system/unit_system_memory"
-	"github.com/ipoluianov/gazer_node/system/units/raspberry_pi/unit_raspberry_pi_cpu_temp"
-	"github.com/ipoluianov/gazer_node/system/units/raspberry_pi/unit_raspberry_pi_gpio"
-	"github.com/ipoluianov/gazer_node/system/units/serial_port/unit_serial_port_key_value"
+	"github.com/ipoluianov/gazer_node/system/units/blockchain_ethereum_balance_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/blockchain_ethereum_lastblock_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/computer_network_adapters_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/computer_process_watcher_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/computer_storage_watcher_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/computer_system_memory_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/database_postgresql_query_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/files_file_content_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/files_file_size_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/files_tabtable_directory_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/files_tabtable_singlefile_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/general_console_keyvalue_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/general_console_singlevalue_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/general_hhgttg_42_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/general_manual_items_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/general_signal_generator_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/network_http_rest_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/network_ping_regular_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/network_ssl_expires_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/network_tcp_connect_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/network_udp_fields_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/raspberrypi_cpu_temperature_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/raspberrypi_gpio_control_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/serialport_keyvalue_watcher_alfa"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
@@ -64,39 +64,39 @@ func New(iDataStorage common_interfaces.IDataStorage) *UnitsSystem {
 	c.unitTypesMap = make(map[string]*UnitType)
 	c.output = make(chan common_interfaces.UnitMessage)
 
-	c.RegUnitType(unit_ping.Info())
-	c.RegUnitType(unit_tcp_connect.Info())
-	c.RegUnitType(unit_http_rest_alfa.Info())
-	c.RegUnitType(unit_ssl.Info())
-	c.RegUnitType(unit_udp_fields.Info())
+	c.RegUnitType(network_ping_regular_alfa.Info())
+	c.RegUnitType(network_tcp_connect_alfa.Info())
+	c.RegUnitType(network_http_rest_alfa.Info())
+	c.RegUnitType(network_ssl_expires_alfa.Info())
+	c.RegUnitType(network_udp_fields_alfa.Info())
 
-	c.RegUnitType(unit_system_memory.Info())
-	c.RegUnitType(unit_process.Info())
-	c.RegUnitType(unit_storage.Info())
-	c.RegUnitType(unit_network.Info())
+	c.RegUnitType(computer_system_memory_alfa.Info())
+	c.RegUnitType(computer_process_watcher_alfa.Info())
+	c.RegUnitType(computer_storage_watcher_alfa.Info())
+	c.RegUnitType(computer_network_adapters_alfa.Info())
 
-	c.RegUnitType(unit_filesize.Info())
-	c.RegUnitType(unit_filecontent.Info())
-	c.RegUnitType(unittxttable.Info())
-	c.RegUnitType(unittxttablefolder.Info())
+	c.RegUnitType(files_file_size_alfa.Info())
+	c.RegUnitType(files_file_content_alfa.Info())
+	c.RegUnitType(files_tabtable_singlefile_alfa.Info())
+	c.RegUnitType(files_tabtable_directory_alfa.Info())
 
-	c.RegUnitType(unit_general_cgi.Info())
-	c.RegUnitType(unit_general_cgi_key_value.Info())
-	c.RegUnitType(unit_manual.Info())
-	c.RegUnitType(unit_hhgttg.Info())
-	c.RegUnitType(unit_signal_generator.Info())
+	c.RegUnitType(general_console_singlevalue_alfa.Info())
+	c.RegUnitType(general_console_keyvalue_alfa.Info())
+	c.RegUnitType(general_manual_items_alfa.Info())
+	c.RegUnitType(general_hhgttg_42_alfa.Info())
+	c.RegUnitType(general_signal_generator_alfa.Info())
 
-	c.RegUnitType(unit_serial_port_key_value.Info())
+	c.RegUnitType(serialport_keyvalue_watcher_alfa.Info())
 
 	if runtime.GOOS == "linux" {
-		c.RegUnitType(unit_raspberry_pi_gpio.Info())
-		c.RegUnitType(unit_raspberry_pi_cpu_temp.Info())
+		c.RegUnitType(raspberrypi_gpio_control_alfa.Info())
+		c.RegUnitType(raspberrypi_cpu_temperature_alfa.Info())
 	}
 
-	c.RegUnitType(unit_postgreesql.Info())
+	c.RegUnitType(database_postgresql_query_alfa.Info())
 
-	c.RegUnitType(unit_ethereum_realtime_stat.Info())
-	c.RegUnitType(unit_ethereum_account_watcher.Info())
+	c.RegUnitType(blockchain_ethereum_lastblock_alfa.Info())
+	c.RegUnitType(blockchain_ethereum_balance_alfa.Info())
 
 	c.initCategories()
 
@@ -155,7 +155,7 @@ func (c *UnitsSystem) RegUnitType(info units_common.UnitMeta) *UnitType {
 	sType.Picture = info.ImgBytes
 
 	if sType.Picture == nil {
-		sType.Picture = unit_system_memory.Image
+		sType.Picture = computer_system_memory_alfa.Image
 	}
 
 	sType.Description = info.Description

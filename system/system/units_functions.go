@@ -8,7 +8,7 @@ import (
 	"github.com/ipoluianov/gazer_node/common_interfaces"
 	"github.com/ipoluianov/gazer_node/system/protocols/lookup"
 	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
-	"github.com/ipoluianov/gazer_node/system/units/operating_system/unit_process"
+	"github.com/ipoluianov/gazer_node/system/units/computer_process_watcher_alfa"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 	"go.bug.st/serial"
 )
@@ -299,7 +299,7 @@ func (c *System) Lookup(entity string) (lookup.Result, error) {
 		result.KeyColumn = "name"
 		result.AddColumn("name", "Process Name", false)
 		result.AddColumn("id", "Process Id", false)
-		processes := unit_process.GetProcesses()
+		processes := computer_process_watcher_alfa.GetProcesses()
 		for _, proc := range processes {
 			result.AddRow2(proc.Name+"#"+fmt.Sprint(proc.Id), fmt.Sprint(proc.Id))
 		}

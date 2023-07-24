@@ -7,9 +7,17 @@ import (
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
 
+var errorCounter = 0
+
 func (c *Server) RequestJson(function string, requestText []byte, host string, fromCloud bool) ([]byte, error) {
 	var err error
 	var result []byte
+
+	if errorCounter > 1 {
+		errorCounter = 0
+		return nil, errors.New("special error")
+	}
+	errorCounter++
 
 	c.system.RegApiCall()
 
