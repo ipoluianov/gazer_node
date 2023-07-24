@@ -36,7 +36,7 @@ type System struct {
 
 	unitsSystem *units_system.UnitsSystem
 
-	unitsChannels []chan *common_interfaces.UnitMessage
+	//unitsChannels []chan *common_interfaces.UnitMessage
 
 	//cloudConnection *cloud.Connection
 	xchgPoint *XchgServer
@@ -91,7 +91,7 @@ func NewSystem(ss *settings.Settings) *System {
 	if err != nil {
 		shaMaster := sha256.Sum256([]byte(time.Now().String()))
 		masterKey = []byte(base32.StdEncoding.EncodeToString(shaMaster[:30]))
-		ioutil.WriteFile(ss.ServerDataPath()+"/masterkey.txt", masterKey, 666)
+		ioutil.WriteFile(ss.ServerDataPath()+"/masterkey.txt", masterKey, 0666)
 	}
 
 	c.currentMasterKey = string(masterKey)
@@ -101,13 +101,13 @@ func NewSystem(ss *settings.Settings) *System {
 	if err != nil {
 		privateKey, _ := xchg.GenerateRSAKey()
 		privateKeyPEM = RSAPrivateKeyToPem(privateKey)
-		ioutil.WriteFile(ss.ServerDataPath()+"/private_key.pem", []byte(privateKeyPEM), 666)
+		ioutil.WriteFile(ss.ServerDataPath()+"/private_key.pem", []byte(privateKeyPEM), 0666)
 	}
 
 	privateKey, _ := RSAPrivateKeyFromPem(privateKeyPEM)
 	publicKeyBS := xchg.RSAPublicKeyToDer(&privateKey.PublicKey)
 	address := xchg.AddressForPublicKeyBS(publicKeyBS)
-	ioutil.WriteFile(ss.ServerDataPath()+"/address.txt", []byte(address), 666)
+	ioutil.WriteFile(ss.ServerDataPath()+"/address.txt", []byte(address), 0666)
 
 	c.xchgPoint = NewXchgServer(privateKey, c.currentMasterKey)
 
@@ -199,12 +199,14 @@ func (c *System) Stop() {
 
 func (c *System) processUnitMessages(unitChannel chan common_interfaces.UnitMessage) {
 	for msg := range unitChannel {
-		switch msg.(type) {
+		switch v := msg.(type) {
 		case *common_interfaces.UnitMessageItemValue:
-			msgItemValue := msg.(*common_interfaces.UnitMessageItemValue)
+			msgItemValue := v
+			//msgItemValue := msg.(*common_interfaces.UnitMessageItemValue)
 			c.SetItemByNameOld(msgItemValue.ItemName, msgItemValue.Value, msgItemValue.UOM, time.Now(), false)
 		case *common_interfaces.UnitMessageSetProperty:
-			msgSetProperty := msg.(*common_interfaces.UnitMessageSetProperty)
+			msgSetProperty := v
+			//msgSetProperty := msg.(*common_interfaces.UnitMessageSetProperty)
 			c.SetPropertyIfDoesntExist(msgSetProperty.ItemName, msgSetProperty.PropName, msgSetProperty.PropValue)
 		case *common_interfaces.UnitMessageItemTouch:
 			msgItemTouch := msg.(*common_interfaces.UnitMessageItemTouch)
@@ -243,7 +245,7 @@ func (c *System) thMaintenance() {
 }
 
 func (c *System) maintenanceLastValues() {
-	if time.Now().Sub(c.maintenanceLastValuesDT) > 10*time.Second {
+	if time.Since(c.maintenanceLastValuesDT) > 10*time.Second {
 		c.maintenanceLastValuesDT = time.Now()
 		c.WriteLastValues(c.items)
 		c.RemoveOldLastValuesFiles()

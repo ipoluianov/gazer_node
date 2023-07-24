@@ -2,12 +2,9 @@ package system
 
 import (
 	"crypto"
-	"crypto/sha256"
 	"encoding/base64"
-	"encoding/hex"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"sort"
 
@@ -194,11 +191,11 @@ func (c *System) hashPassword(password string) string {
 	return base64.StdEncoding.EncodeToString(s.Sum([]byte(password)))
 }
 
-func (c *System) hashSession(sessionData string) string {
+/*func (c *System) hashSession(sessionData string) string {
 	sum := sha256.Sum256([]byte(sessionData))
 	hexStr := hex.EncodeToString(sum[0:10])
 	return fmt.Sprint(hexStr)
-}
+}*/
 
 func (c *System) UserRemove(name string) (nodeinterface.UserRemoveResponse, error) {
 	var err error
