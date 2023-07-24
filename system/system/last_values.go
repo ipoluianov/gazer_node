@@ -14,7 +14,7 @@ import (
 
 func (c *System) WriteLastValues(items []*common_interfaces.Item) {
 	c.mtxSystem.Lock()
-	bs, err := json.MarshalIndent(items, "", " ")
+	bs, _ := json.MarshalIndent(items, "", " ")
 	c.mtxSystem.Unlock()
 
 	dir := c.ss.ServerDataPath() + "/last_values/"
