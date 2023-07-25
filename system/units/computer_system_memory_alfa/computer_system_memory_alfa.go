@@ -45,6 +45,8 @@ func (c *UnitSystemMemory) InternalUnitStart() error {
 
 	c.SetString("UsedPercent", "", "")
 
+	c.totalIsSet = false
+
 	go c.Tick()
 	return nil
 }
@@ -95,4 +97,5 @@ func (c *UnitSystemMemory) Tick() {
 	c.SetString("UsedPercent", "", "stopped")
 
 	c.Started = false
+	c.totalIsSet = false
 }

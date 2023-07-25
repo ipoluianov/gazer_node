@@ -13,11 +13,11 @@ func (c *Server) RequestJson(function string, requestText []byte, host string, f
 	var err error
 	var result []byte
 
-	if errorCounter > 1 {
+	/*if errorCounter > 1 {
 		errorCounter = 0
 		return nil, errors.New("special error")
 	}
-	errorCounter++
+	errorCounter++*/
 
 	c.system.RegApiCall()
 
