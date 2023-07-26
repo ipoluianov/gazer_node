@@ -4,10 +4,10 @@ import (
 	_ "embed"
 	"encoding/json"
 	"errors"
-	"github.com/ipoluianov/gazer_node/common_interfaces"
-	"github.com/ipoluianov/gazer_node/resources"
-	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"time"
+
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/system/units/units_common"
 )
 
 type UnitRaspberryPiGPIO struct {

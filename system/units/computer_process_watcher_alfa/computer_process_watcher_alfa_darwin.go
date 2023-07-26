@@ -17,7 +17,6 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/ipoluianov/gazer_node/resources"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
 

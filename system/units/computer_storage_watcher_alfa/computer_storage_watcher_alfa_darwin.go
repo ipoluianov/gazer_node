@@ -2,8 +2,8 @@ package computer_storage_watcher_alfa
 
 import (
 	_ "embed"
+
 	"github.com/ipoluianov/gazer_node/common_interfaces"
-	"github.com/ipoluianov/gazer_node/resources"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 )
 
