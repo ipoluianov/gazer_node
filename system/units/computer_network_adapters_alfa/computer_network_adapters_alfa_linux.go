@@ -2,7 +2,6 @@ package computer_network_adapters_alfa
 
 import (
 	"github.com/ipoluianov/gazer_node/common_interfaces"
-	"github.com/ipoluianov/gazer_node/resources"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 	"io/ioutil"

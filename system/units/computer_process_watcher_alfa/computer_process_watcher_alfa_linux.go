@@ -3,7 +3,6 @@ package computer_process_watcher_alfa
 import (
 	"encoding/json"
 	"errors"
-	"github.com/ipoluianov/gazer_node/resources"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 	"github.com/prometheus/procfs"
 	"strconv"
