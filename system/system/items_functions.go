@@ -390,5 +390,6 @@ func (c *System) GetInfo() (nodeinterface.ServiceInfoResponse, error) {
 	res.NodeName = c.NodeName()
 	res.Version = VERSION
 	res.BuildTime = BUILDTIME
+	res.GuestKey = c.currentGuestKey
 	return res, nil
 }

@@ -30,20 +30,6 @@ const (
 	FuncDataItemPropSet      = "data_item_prop_set"
 	FuncDataItemPropGet      = "data_item_prop_get"
 
-	// *** Cloud ***
-	FuncCloudLogin               = "cloud_login"
-	FuncCloudLogout              = "cloud_logout"
-	FuncCloudState               = "cloud_state"
-	FuncCloudNodes               = "cloud_nodes"
-	FuncCloudAddNode             = "cloud_add_node"
-	FuncCloudUpdateNode          = "cloud_update_node"
-	FuncCloudRemoveNode          = "cloud_remove_node"
-	FuncCloudGetSettings         = "cloud_get_settings"
-	FuncCloudSetSettings         = "cloud_set_settings"
-	FuncCloudAccountInfo         = "cloud_account_info"
-	FuncCloudSetCurrentNodeId    = "cloud_set_current_node_id"
-	FuncCloudGetSettingsProfiles = "cloud_get_settings_profiles"
-
 	// *** Service ***
 	FuncServiceLookup      = "service_lookup"
 	FuncServiceStatistics  = "service_statistics"
@@ -61,19 +47,6 @@ const (
 	FuncResourceList      = "resource_list"
 	FuncResourcePropSet   = "resource_prop_set"
 	FuncResourcePropGet   = "resource_prop_get"
-
-	// *** User ***
-	FuncSessionOpen     = "session_open"
-	FuncSessionActivate = "session_activate"
-	FuncSessionRemove   = "session_remove"
-	FuncSessionList     = "session_list"
-
-	FuncUserList        = "user_list"
-	FuncUserAdd         = "user_add"
-	FuncUserSetPassword = "user_set_password"
-	FuncUserRemove      = "user_remove"
-	FuncUserPropSet     = "user_prop_set"
-	FuncUserPropGet     = "user_prop_get"
 )
 
 func ApiFunctions() []string {
@@ -104,19 +77,6 @@ func ApiFunctions() []string {
 	res = append(res, FuncDataItemPropSet)
 	res = append(res, FuncDataItemPropGet)
 
-	res = append(res, FuncCloudLogin)
-	res = append(res, FuncCloudLogout)
-	res = append(res, FuncCloudState)
-	res = append(res, FuncCloudNodes)
-	res = append(res, FuncCloudAddNode)
-	res = append(res, FuncCloudUpdateNode)
-	res = append(res, FuncCloudRemoveNode)
-	res = append(res, FuncCloudGetSettings)
-	res = append(res, FuncCloudSetSettings)
-	res = append(res, FuncCloudAccountInfo)
-	res = append(res, FuncCloudSetCurrentNodeId)
-	res = append(res, FuncCloudGetSettingsProfiles)
-
 	res = append(res, FuncServiceLookup)
 	res = append(res, FuncServiceStatistics)
 	res = append(res, FuncServiceApi)
@@ -129,76 +89,6 @@ func ApiFunctions() []string {
 	res = append(res, FuncResourceGet)
 	res = append(res, FuncResourceRemove)
 	res = append(res, FuncResourceList)
-
-	res = append(res, FuncSessionOpen)
-	res = append(res, FuncSessionActivate)
-	res = append(res, FuncSessionRemove)
-	res = append(res, FuncSessionList)
-
-	res = append(res, FuncUserList)
-	res = append(res, FuncUserAdd)
-	res = append(res, FuncUserSetPassword)
-	res = append(res, FuncUserRemove)
-
-	return res
-}
-
-type ApiRole struct {
-	Code      string   `json:"code"`
-	Name      string   `json:"name"`
-	Functions []string `json:"functions"`
-}
-
-func ApiRoles() []ApiRole {
-	res := make([]ApiRole, 0)
-
-	res = append(res, ApiRole{
-		Code: "access_administrator",
-		Name: "Access Administrator",
-		Functions: []string{
-			FuncUserList,
-			FuncUserAdd,
-			FuncUserSetPassword,
-			FuncUserRemove,
-			FuncSessionRemove,
-			FuncSessionList,
-		},
-	})
-
-	res = append(res, ApiRole{
-		Code: "resource_administrator",
-		Name: "Resource Administrator",
-		Functions: []string{
-			FuncResourceAdd,
-			FuncResourceSet,
-			FuncResourceRemove,
-		},
-	})
-
-	res = append(res, ApiRole{
-		Code: "read_only",
-		Name: "ReadOnly",
-		Functions: []string{
-			FuncUnitTypeList,
-			FuncUnitTypeCategories,
-			FuncUnitTypeConfigMeta,
-			FuncUnitState,
-			FuncUnitStateAll,
-			FuncUnitItemsValues,
-			FuncUnitList,
-			FuncDataItemList,
-			FuncDataItemListAll,
-			FuncDataItemHistory,
-			FuncDataItemHistoryChart,
-			FuncServiceLookup,
-			FuncServiceStatistics,
-			FuncServiceNodeName,
-			FuncResourceGet,
-			FuncResourceList,
-			FuncSessionOpen,
-			FuncSessionActivate,
-		},
-	})
 
 	return res
 }

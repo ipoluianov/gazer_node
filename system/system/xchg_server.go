@@ -14,12 +14,14 @@ import (
 type XchgServer struct {
 	serverConnection *xchg.Peer
 	masterKey        string
+	guestKey         string
 	requester        common_interfaces.Requester
 }
 
-func NewXchgServer(privateKey *rsa.PrivateKey, masterKey string) *XchgServer {
+func NewXchgServer(privateKey *rsa.PrivateKey, masterKey string, guestKey string) *XchgServer {
 	var c XchgServer
 	c.masterKey = masterKey
+	c.guestKey = guestKey
 	c.serverConnection = xchg.NewPeer(privateKey)
 	c.serverConnection.SetProcessor(&c)
 	serverAddress := xchg.AddressForPublicKey(&privateKey.PublicKey)
@@ -49,11 +51,15 @@ func (c *XchgServer) ServerProcessorAuth(authData []byte) (err error) {
 	if string(authData) == c.masterKey {
 		return nil
 	}
+	if string(authData) == c.guestKey {
+		return nil
+	}
 	return errors.New(xchg.ERR_XCHG_ACCESS_DENIED)
 }
 
-func (c *XchgServer) ServerProcessorCall(function string, parameter []byte) (response []byte, err error) {
-	response, err = c.requester.RequestJson(function, parameter, "", false)
+func (c *XchgServer) ServerProcessorCall(authData []byte, function string, parameter []byte) (response []byte, err error) {
+	isGuest := string(authData) == c.guestKey
+	response, err = c.requester.RequestJson(function, parameter, "", false, isGuest)
 	fmt.Println("ServerProcessorCall", function, len(parameter), len(response), err)
 	return
 }

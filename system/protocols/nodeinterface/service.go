@@ -52,4 +52,5 @@ type ServiceInfoResponse struct {
 	NodeName  string `json:"node_name"`
 	Version   string `json:"version"`
 	BuildTime string `json:"build_time"`
+	GuestKey  string `json:"guest_key"`
 }

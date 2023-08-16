@@ -8,7 +8,8 @@ import (
 )
 
 type Server struct {
-	system *system.System
+	system      *system.System
+	guestAccess map[string]bool
 }
 
 func CurrentExePath() string {
@@ -19,6 +20,7 @@ func CurrentExePath() string {
 func NewServer(sys *system.System) *Server {
 	var c Server
 	c.system = sys
+	c.initApiAccess()
 	return &c
 }
 

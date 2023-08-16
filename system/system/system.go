@@ -2,12 +2,11 @@ package system
 
 import (
 	"crypto/rsa"
-	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base32"
 	"encoding/hex"
 	"errors"
-	"io/ioutil"
+	"os"
 	"sync"
 	"time"
 
@@ -18,6 +17,7 @@ import (
 	"github.com/ipoluianov/gazer_node/system/resources"
 	"github.com/ipoluianov/gazer_node/system/settings"
 	"github.com/ipoluianov/gazer_node/system/units/units_system"
+	"github.com/ipoluianov/gazer_node/utilities"
 	"github.com/ipoluianov/xchg/xchg"
 )
 
@@ -26,6 +26,7 @@ type System struct {
 	ss       *settings.Settings
 
 	currentMasterKey string
+	currentGuestKey  string
 
 	items       []*common_interfaces.Item
 	itemsByName map[string]*common_interfaces.Item
@@ -87,29 +88,40 @@ func NewSystem(ss *settings.Settings) *System {
 	c.itemsByName = make(map[string]*common_interfaces.Item)
 	c.itemsById = make(map[uint64]*common_interfaces.Item)
 
-	masterKey, err := ioutil.ReadFile(ss.ServerDataPath() + "/masterkey.txt")
+	// Master Key
+	masterKey, err := os.ReadFile(ss.ServerDataPath() + "/masterkey.txt")
 	if err != nil {
-		shaMaster := sha256.Sum256([]byte(time.Now().String()))
-		masterKey = []byte(base32.StdEncoding.EncodeToString(shaMaster[:30]))
-		ioutil.WriteFile(ss.ServerDataPath()+"/masterkey.txt", masterKey, 0666)
+		masterKey = utilities.GenerateRandomBytesWithSHA(30)
+		masterKey = []byte(base32.StdEncoding.EncodeToString(masterKey))
+		os.WriteFile(ss.ServerDataPath()+"/masterkey.txt", masterKey, 0666)
 	}
-
 	c.currentMasterKey = string(masterKey)
 
-	privateKeyPEMBS, err := ioutil.ReadFile(ss.ServerDataPath() + "/private_key.pem")
+	// Guest Key
+	guestKey, err := os.ReadFile(ss.ServerDataPath() + "/guestkey.txt")
+	if err != nil {
+		guestKey = utilities.GenerateRandomBytesWithSHA(20)
+		guestKey = []byte(base32.StdEncoding.EncodeToString(guestKey))
+		os.WriteFile(ss.ServerDataPath()+"/guestkey.txt", guestKey, 0666)
+	}
+	c.currentGuestKey = string(guestKey)
+
+	// Private Key
+	privateKeyPEMBS, err := os.ReadFile(ss.ServerDataPath() + "/private_key.pem")
 	privateKeyPEM := string(privateKeyPEMBS)
 	if err != nil {
 		privateKey, _ := xchg.GenerateRSAKey()
 		privateKeyPEM = RSAPrivateKeyToPem(privateKey)
-		ioutil.WriteFile(ss.ServerDataPath()+"/private_key.pem", []byte(privateKeyPEM), 0666)
+		os.WriteFile(ss.ServerDataPath()+"/private_key.pem", []byte(privateKeyPEM), 0666)
 	}
 
+	// Address
 	privateKey, _ := RSAPrivateKeyFromPem(privateKeyPEM)
 	publicKeyBS := xchg.RSAPublicKeyToDer(&privateKey.PublicKey)
 	address := xchg.AddressForPublicKeyBS(publicKeyBS)
-	ioutil.WriteFile(ss.ServerDataPath()+"/address.txt", []byte(address), 0666)
+	os.WriteFile(ss.ServerDataPath()+"/address.txt", []byte(address), 0666)
 
-	c.xchgPoint = NewXchgServer(privateKey, c.currentMasterKey)
+	c.xchgPoint = NewXchgServer(privateKey, c.currentMasterKey, c.currentGuestKey)
 
 	c.unitsSystem = units_system.New(&c)
 	go c.processUnitMessages(c.unitsSystem.OutputChannel())
