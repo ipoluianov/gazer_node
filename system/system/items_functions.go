@@ -391,5 +391,6 @@ func (c *System) GetInfo() (nodeinterface.ServiceInfoResponse, error) {
 	res.Version = VERSION
 	res.BuildTime = BUILDTIME
 	res.GuestKey = c.currentGuestKey
+	res.Time = strconv.FormatInt(time.Now().UnixNano(), 10)
 	return res, nil
 }
