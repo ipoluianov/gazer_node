@@ -151,7 +151,7 @@ func (c *Server) initApiAccess() {
 	c.guestAccess[nodeinterface.FuncDataItemHistoryChart] = true
 	c.guestAccess[nodeinterface.FuncDataItemPropGet] = true
 
-	c.guestAccess[nodeinterface.FuncServiceLookup] = true
+	//c.guestAccess[nodeinterface.FuncServiceLookup] = true
 	c.guestAccess[nodeinterface.FuncServiceStatistics] = true
 	c.guestAccess[nodeinterface.FuncServiceApi] = true
 	c.guestAccess[nodeinterface.FuncServiceNodeName] = true
