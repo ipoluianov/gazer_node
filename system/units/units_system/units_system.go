@@ -21,6 +21,7 @@ import (
 	"github.com/ipoluianov/gazer_node/system/units/database_postgresql_query_alfa"
 	"github.com/ipoluianov/gazer_node/system/units/files_file_content_alfa"
 	"github.com/ipoluianov/gazer_node/system/units/files_file_size_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/files_file_tail_alfa"
 	"github.com/ipoluianov/gazer_node/system/units/files_tabtable_directory_alfa"
 	"github.com/ipoluianov/gazer_node/system/units/files_tabtable_singlefile_alfa"
 	"github.com/ipoluianov/gazer_node/system/units/general_console_keyvalue_alfa"
@@ -77,6 +78,7 @@ func New(iDataStorage common_interfaces.IDataStorage) *UnitsSystem {
 
 	c.RegUnitType(files_file_size_alfa.Info())
 	c.RegUnitType(files_file_content_alfa.Info())
+	c.RegUnitType(files_file_tail_alfa.Info())
 	c.RegUnitType(files_tabtable_singlefile_alfa.Info())
 	c.RegUnitType(files_tabtable_directory_alfa.Info())
 

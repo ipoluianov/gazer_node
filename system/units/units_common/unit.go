@@ -358,35 +358,5 @@ func (c *Unit) SetFloat64(name string, value float64, UOM string, precision int)
 	c.SetString(name, strconv.FormatFloat(value, 'f', precision, 64), UOM)
 }
 
-/*func (c *Unit) GetValue(name string) string {
-	item, err := c.iDataStorage.GetItem(name)
-	if err != nil {
-		return ""
-	}
-	return item.Value.Value
-}
-
-func (c *Unit) GetItem(name string) (common_interfaces.ItemValue, error) {
-	item, err := c.iDataStorage.GetItem(name)
-	if err != nil {
-		return common_interfaces.ItemValue{}, err
-	}
-	return item.Value, nil
-}*/
-
-/*func (c *Unit) GetItemsOfUnit(unitId string) ([]common_interfaces.ItemGetUnitItems, error) {
-	return c.iDataStorage.GetUnitValues(unitId), nil
-}
-
-func (c *Unit) AddToWatch(itemName string) {
-	c.iDataStorage.AddToWatch(c.Id(), itemName)
-	c.watchItems[itemName] = true
-}
-
-func (c *Unit) RemoveFromWatch(itemName string) {
-	c.iDataStorage.RemoveFromWatch(c.Id(), itemName)
-	delete(c.watchItems, itemName)
-}*/
-
 func (c *Unit) ItemChanged(itemName string, value common_interfaces.ItemValue) {
 }

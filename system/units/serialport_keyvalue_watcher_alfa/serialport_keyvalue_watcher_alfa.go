@@ -118,19 +118,6 @@ func (c *UnitSerialPortKeyValue) InternalUnitStart() error {
 
 	c.items = make(map[string]*ConfigItem)
 
-	/*for _, item := range config.Items {
-		c.items[item.Name] = item
-		c.TouchItem(item.Name)
-		c.AddToWatch(c.Id() + "/" + item.Name)
-		if item.IsControl {
-			c.IDataStorage().SetProperty(c.Id()+"/"+item.Name, "view", "control-01")
-		} else {
-			c.IDataStorage().SetProperty(c.Id()+"/"+item.Name, "view", "")
-		}
-	}
-
-	c.IDataStorage().SetProperty(c.Id()+"/status", "view", "table-01")*/
-
 	parity := serial.ParityNone
 	if config.Parity == "none" {
 		parity = serial.ParityNone

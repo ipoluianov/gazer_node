@@ -66,7 +66,8 @@ func (c *System) SetAllItemsByUnitName(unitName string, value string, UOM string
 
 func (c *System) SetItem(itemId uint64, value common_interfaces.ItemValue, counter int, external bool) error {
 	var item *common_interfaces.Item
-	var watchersUnits []string
+
+	needToWriteHistory := true
 
 	counter++
 	if counter > 10 {
@@ -77,6 +78,11 @@ func (c *System) SetItem(itemId uint64, value common_interfaces.ItemValue, count
 		item = i
 		value.Value = item.PostprocessingValue(value.Value)
 		item.Value = value
+		if prop, ok := item.Properties["history_disabled"]; ok {
+			if prop.Value == "true" {
+				needToWriteHistory = false
+			}
+		}
 	}
 	c.mtxSystem.Unlock()
 	if item == nil {
@@ -84,20 +90,8 @@ func (c *System) SetItem(itemId uint64, value common_interfaces.ItemValue, count
 		return errors.New("item not found")
 	}
 
-	if watcher, ok := c.itemWatchers[item.Name]; ok {
-		watchersUnits = make([]string, 0)
-		for watcherUnitId := range watcher.UnitIDs {
-			watchersUnits = append(watchersUnits, watcherUnitId)
-		}
-	}
-
-	c.history.Write(item.Id, value)
-
-	if external {
-		for _, unitId := range watchersUnits {
-			logger.Println("SendToWatcher", unitId, value.Value)
-			c.unitsSystem.SendToWatcher(unitId, item.Name, item.Value)
-		}
+	if needToWriteHistory {
+		c.history.Write(item.Id, value)
 	}
 
 	for _, itemDest := range item.TranslateToItems {
@@ -202,31 +196,6 @@ func (c *System) DataItemPropGet(itemName string) ([]nodeinterface.PropItem, err
 
 type ItemWatcher struct {
 	UnitIDs map[string]bool
-}
-
-func (c *System) AddToWatch(unitId string, itemName string) {
-	c.mtxSystem.Lock()
-	watcher, ok := c.itemWatchers[itemName]
-	if !ok {
-		watcher = &ItemWatcher{
-			UnitIDs: make(map[string]bool),
-		}
-		c.itemWatchers[itemName] = watcher
-	}
-	watcher.UnitIDs[unitId] = true
-	c.mtxSystem.Unlock()
-}
-
-func (c *System) RemoveFromWatch(unitId string, itemName string) {
-	c.mtxSystem.Lock()
-	watcher, ok := c.itemWatchers[itemName]
-	if ok {
-		delete(watcher.UnitIDs, unitId)
-	}
-	if len(watcher.UnitIDs) == 0 {
-		delete(c.itemWatchers, itemName)
-	}
-	c.mtxSystem.Unlock()
 }
 
 func (c *System) SetProperty(itemName string, propName string, propValue string) {

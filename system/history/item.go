@@ -34,6 +34,12 @@ func NewItem(id uint64, ss *settings.Settings) *Item {
 	return &c
 }
 
+func (c *Item) SetHistoryDepth(days int) {
+	c.mtx.Lock()
+	c.historyDepthDays = days
+	c.mtx.Unlock()
+}
+
 func (c *Item) Write(value common_interfaces.ItemValue) {
 	c.mtx.Lock()
 	c.data = append(c.data, &value)

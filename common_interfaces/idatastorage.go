@@ -14,9 +14,4 @@ type IDataStorage interface {
 	RemoveItemsOfUnit(unitId string) error
 	SetProperty(itemName string, propName string, propValue string)
 	SetPropertyIfDoesntExist(itemName string, propName string, propValue string)
-
-	//Exec(function string, request []byte, host string) ([]byte, error)
-
-	AddToWatch(unitId string, itemName string)
-	RemoveFromWatch(unitId string, itemName string)
 }
