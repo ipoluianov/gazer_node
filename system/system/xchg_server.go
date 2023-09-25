@@ -2,12 +2,10 @@ package system
 
 import (
 	"crypto/rsa"
-	"crypto/x509"
-	"encoding/hex"
 	"errors"
-	"fmt"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
 	"github.com/ipoluianov/xchg/xchg"
 )
 
@@ -22,16 +20,15 @@ func NewXchgServer(privateKey *rsa.PrivateKey, masterKey string, guestKey string
 	var c XchgServer
 	c.masterKey = masterKey
 	c.guestKey = guestKey
-	c.serverConnection = xchg.NewPeer(privateKey)
+	c.serverConnection = xchg.NewPeer(privateKey, &logger.NodeDefaultLogger)
 	c.serverConnection.SetProcessor(&c)
 	serverAddress := xchg.AddressForPublicKey(&privateKey.PublicKey)
 
-	bs, _ := x509.MarshalPKIXPublicKey(&privateKey.PublicKey)
-	hh := hex.EncodeToString(bs)
-	fmt.Println(hh)
+	//bs, _ := x509.MarshalPKIXPublicKey(&privateKey.PublicKey)
+	//hh := hex.EncodeToString(bs)
+	//fmt.Println(hh)
 
-	fmt.Println(privateKey.PublicKey.N)
-	fmt.Println(serverAddress)
+	logger.Println("Node Address:", serverAddress)
 	return &c
 }
 

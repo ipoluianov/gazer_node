@@ -3,9 +3,7 @@ package system
 import (
 	"crypto"
 	"encoding/base64"
-	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"sort"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
@@ -121,22 +119,6 @@ func (c *System) SessionList(userName string) (nodeinterface.SessionListResponse
 	c.mtx.Unlock()
 	return result, err
 }*/
-
-func (c *System) loadSessions() {
-	//logger.Println("System loadSessions begin")
-	configString, err := ioutil.ReadFile(c.ss.ServerDataPath() + "/sessions.json")
-	if err == nil {
-		err = json.Unmarshal(configString, &c.sessions)
-		if err != nil {
-			logger.Println("loadSessions (unmarshal) error ", err)
-		}
-	} else {
-		logger.Println("loadSessions error ", err)
-	}
-	//logger.Println("System loadSessions")
-	//logger.Println(c.sessions)
-	//logger.Println("System loadSessions end")
-}
 
 func (c *System) UserList() (nodeinterface.UserListResponse, error) {
 	var result nodeinterface.UserListResponse

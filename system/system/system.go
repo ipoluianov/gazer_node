@@ -176,7 +176,6 @@ func (c *System) Start() {
 	c.stopped = false
 
 	c.LoadConfig()
-	c.loadSessions()
 
 	items := c.ReadLastValues()
 	for _, item := range items {

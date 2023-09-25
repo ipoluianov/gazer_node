@@ -1,10 +1,11 @@
 package settings
 
 import (
-	"fmt"
 	"os/user"
 	"path/filepath"
 	"strings"
+
+	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
 
 type Settings struct {
@@ -29,7 +30,7 @@ func (c *Settings) SetServerDataPath(path string) {
 	}
 
 	c.serverDataPath = path
-	fmt.Println("Server Path:", c.serverDataPath)
+	logger.Println("Server Path:", c.serverDataPath)
 }
 
 func (c *Settings) ServerDataPath() string {

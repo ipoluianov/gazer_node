@@ -81,6 +81,15 @@ func Println(v ...interface{}) {
 	fmt.Println(v...)
 }
 
+type NodeLogger struct {
+}
+
+var NodeDefaultLogger NodeLogger
+
+func (c *NodeLogger) Println(v ...interface{}) {
+	Println(v...)
+}
+
 func Error(v ...interface{}) {
 	CheckLogFile()
 	if loggerObject != nil {

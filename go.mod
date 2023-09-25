@@ -26,3 +26,5 @@ require (
 )
 
 // replace github.com/ipoluianov/xchg => d:\src\github\xchg
+replace github.com/ipoluianov/xchg => /Users/rb/Documents/GitHub/xchg
+
