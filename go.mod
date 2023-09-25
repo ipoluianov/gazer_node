@@ -7,7 +7,7 @@ require (
 	github.com/ethereum/go-ethereum v1.11.6
 	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/google/uuid v1.3.0
-	github.com/ipoluianov/xchg v0.2.16
+	github.com/ipoluianov/xchg v0.2.17
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
 	github.com/jackc/pgx v3.6.2+incompatible
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
@@ -26,5 +26,4 @@ require (
 )
 
 // replace github.com/ipoluianov/xchg => d:\src\github\xchg
-replace github.com/ipoluianov/xchg => /Users/rb/Documents/GitHub/xchg
-
+// replace github.com/ipoluianov/xchg => /Users/rb/Documents/GitHub/xchg
