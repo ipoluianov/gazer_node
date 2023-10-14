@@ -283,6 +283,14 @@ func (c *Unit) SetStringForAll(value string, UOM string) {
 	}
 }
 
+func (c *Unit) ItemFullName(name string) string {
+	fullName := c.Id()
+	if len(name) > 0 {
+		fullName = c.Id() + "/" + name
+	}
+	return fullName
+}
+
 func (c *Unit) SetString(name string, value string, UOM string) {
 	fullName := c.Id()
 	if len(name) > 0 {
@@ -358,5 +366,5 @@ func (c *Unit) SetFloat64(name string, value float64, UOM string, precision int)
 	c.SetString(name, strconv.FormatFloat(value, 'f', precision, 64), UOM)
 }
 
-func (c *Unit) ItemChanged(itemName string, value common_interfaces.ItemValue) {
+func (c *Unit) ItemChanged(itemId uint64, itemName string, value common_interfaces.ItemValue) {
 }

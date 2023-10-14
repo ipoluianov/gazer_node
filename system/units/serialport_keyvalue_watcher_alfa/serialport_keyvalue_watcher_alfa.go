@@ -279,7 +279,7 @@ func (c *UnitSerialPortKeyValue) Tick() {
 	c.Started = false
 }
 
-func (c *UnitSerialPortKeyValue) ItemChanged(itemName string, value common_interfaces.ItemValue) {
+func (c *UnitSerialPortKeyValue) ItemChanged(itemId uint64, itemName string, value common_interfaces.ItemValue) {
 	if c.serialPort == nil {
 		return
 	}

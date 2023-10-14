@@ -49,7 +49,7 @@ type IUnit interface {
 
 	InternalUnitStart() error
 	InternalUnitStop()
-	ItemChanged(itemName string, value ItemValue)
+	ItemChanged(itemId uint64, itemName string, value ItemValue)
 
 	InternalInitItems()
 	InternalDeInitItems()

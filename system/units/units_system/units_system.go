@@ -109,6 +109,17 @@ func (c *UnitsSystem) OutputChannel() chan common_interfaces.UnitMessage {
 	return c.output
 }
 
+func (c *UnitsSystem) ItemChanged(itemId uint64, itemName string, value common_interfaces.ItemValue) {
+	c.mtx.Lock()
+	units := make([]common_interfaces.IUnit, len(c.units))
+	copy(units, c.units)
+	c.mtx.Unlock()
+
+	for _, u := range units {
+		u.ItemChanged(itemId, itemName, value)
+	}
+}
+
 func CategoryOfUnit(unitType string) string {
 	parts := strings.FieldsFunc(unitType, func(r rune) bool {
 		return r == '.'
@@ -592,7 +603,7 @@ func (c *UnitsSystem) SetConfig(unitId string, name string, config string, fromC
 	return nil
 }
 
-func (c *UnitsSystem) SendToWatcher(unitId string, itemName string, value common_interfaces.ItemValue) {
+/*func (c *UnitsSystem) SendToWatcher(unitId string, itemName string, value common_interfaces.ItemValue) {
 	var targetUnit common_interfaces.IUnit
 
 	c.mtx.Lock()
@@ -608,7 +619,7 @@ func (c *UnitsSystem) SendToWatcher(unitId string, itemName string, value common
 		targetUnit.ItemChanged(itemName, value)
 	}
 
-}
+}*/
 
 func (c *UnitsSystem) UnitPropSet(unitId string, props []nodeinterface.PropItem) error {
 	var err error

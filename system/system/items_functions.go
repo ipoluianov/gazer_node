@@ -36,7 +36,12 @@ func (c *System) SetItemByNameOld(name string, value string, UOM string, dt time
 	itemValue.Value = value
 	itemValue.DT = dt.UnixNano() / 1000
 	itemValue.UOM = UOM
-	return c.SetItem(item.Id, itemValue, 0, external)
+	err := c.SetItem(item.Id, itemValue, 0, external)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (c *System) SetAllItemsByUnitName(unitName string, value string, UOM string, dt time.Time, external bool) error {
@@ -97,6 +102,11 @@ func (c *System) SetItem(itemId uint64, value common_interfaces.ItemValue, count
 	for _, itemDest := range item.TranslateToItems {
 		c.SetItem(itemDest.Id, value, counter, true)
 	}
+
+	if external {
+		c.unitsSystem.ItemChanged(item.Id, item.Name, value)
+	}
+
 	return nil
 }
 

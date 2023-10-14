@@ -4,25 +4,27 @@ import (
 	_ "embed"
 	"encoding/json"
 	"errors"
-	"io/ioutil"
+	"os"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
 
 type UnitFileContent struct {
 	units_common.Unit
-	fileName  string
-	periodMs  int
-	trim      bool
-	parse     bool
-	scale     float64
-	offset    float64
-	uom       string
-	precision int
+	fileName    string
+	periodMs    int
+	allowChange bool
+	trim        bool
+	parse       bool
+	scale       float64
+	offset      float64
+	uom         string
+	precision   int
 }
 
 func New() common_interfaces.IUnit {
@@ -52,8 +54,9 @@ func (c *UnitFileContent) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
 	meta.Add("file_name", "File Name", "file.txt", "string", "", "", "")
 	meta.Add("period", "Period, ms", "1000", "num", "0", "999999", "0")
-	meta.Add("trim", "Trim", "true", "bool", "", "", "")
-	meta.Add("parse", "Parse", "true", "bool", "", "", "")
+	meta.Add("allow_change", "Allow Change", "false", "bool", "", "", "")
+	meta.Add("trim", "Trim", "false", "bool", "", "", "")
+	meta.Add("parse", "Parse", "false", "bool", "", "", "")
 	meta.Add("scale", "Scale", "1", "num", "-999999999", "99999999", "6")
 	meta.Add("offset", "Offset", "0", "num", "-999999999", "99999999", "6")
 	meta.Add("uom", "UOM", "", "string", "", "", "")
@@ -67,14 +70,15 @@ func (c *UnitFileContent) InternalUnitStart() error {
 	c.SetMainItem(ItemNameContent)
 
 	type Config struct {
-		FileName   string  `json:"file_name"`
-		Period     float64 `json:"period"`
-		Trim       bool    `json:"trim"`
-		ParseFloat bool    `json:"parse"`
-		Scale      float64 `json:"scale"`
-		Offset     float64 `json:"offset"`
-		UOM        string  `json:"uom"`
-		Precision  float64 `json:"precision"`
+		FileName    string  `json:"file_name"`
+		Period      float64 `json:"period"`
+		AllowChange bool    `json:"allow_change"`
+		Trim        bool    `json:"trim"`
+		ParseFloat  bool    `json:"parse"`
+		Scale       float64 `json:"scale"`
+		Offset      float64 `json:"offset"`
+		UOM         string  `json:"uom"`
+		Precision   float64 `json:"precision"`
 	}
 
 	var config Config
@@ -111,6 +115,7 @@ func (c *UnitFileContent) InternalUnitStart() error {
 	c.scale = config.Scale
 	c.offset = config.Offset
 	c.uom = config.UOM
+	c.allowChange = config.AllowChange
 
 	go c.Tick()
 	return nil
@@ -134,7 +139,7 @@ func (c *UnitFileContent) Tick() {
 		}
 		dtOperationTime = time.Now().UTC()
 
-		content, err := ioutil.ReadFile(c.fileName)
+		content, err := os.ReadFile(c.fileName)
 
 		if len(content) > 1024 {
 			err = errors.New("too much data")
@@ -168,4 +173,17 @@ func (c *UnitFileContent) Tick() {
 	}
 	c.SetString(ItemNameContent, "", "stopped")
 	c.Started = false
+}
+
+func (c *UnitFileContent) ItemChanged(itemId uint64, itemName string, value common_interfaces.ItemValue) {
+	if c.allowChange {
+		if c.ItemFullName(ItemNameContent) == itemName {
+			err := os.WriteFile(c.fileName, []byte(value.Value), 0666)
+			if err != nil {
+				logger.Println("UnitFileContent::ItemChanged error:", err, "itemName:", itemName, "value:", value.Value)
+			} else {
+				logger.Println("UnitFileContent::ItemChanged success", "itemName:", itemName, "value:", value.Value)
+			}
+		}
+	}
 }
