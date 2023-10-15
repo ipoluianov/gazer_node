@@ -33,7 +33,9 @@ func New() common_interfaces.IUnit {
 }
 
 const (
-	ItemNameContent = "Content"
+	ItemNameContent     = "Content"
+	ItemNameReadResult  = "ReadResult"
+	ItemNameWriteResult = "WriteResult"
 )
 
 //go:embed "image.png"
@@ -166,9 +168,11 @@ func (c *UnitFileContent) Tick() {
 		if err == nil {
 			c.SetString(ItemNameContent, contentStr, c.uom)
 			c.SetError("")
+			c.SetString(ItemNameReadResult, "Success", "")
 		} else {
 			c.SetString(ItemNameContent, string(content), "error")
 			c.SetError(err.Error())
+			c.SetString(ItemNameReadResult, err.Error(), "error")
 		}
 	}
 	c.SetString(ItemNameContent, "", "stopped")
@@ -180,8 +184,10 @@ func (c *UnitFileContent) ItemChanged(itemId uint64, itemName string, value comm
 		if c.ItemFullName(ItemNameContent) == itemName {
 			err := os.WriteFile(c.fileName, []byte(value.Value), 0666)
 			if err != nil {
+				c.SetString(ItemNameWriteResult, err.Error(), "error")
 				logger.Println("UnitFileContent::ItemChanged error:", err, "itemName:", itemName, "value:", value.Value)
 			} else {
+				c.SetString(ItemNameWriteResult, "Success", "")
 				logger.Println("UnitFileContent::ItemChanged success", "itemName:", itemName, "value:", value.Value)
 			}
 		}
