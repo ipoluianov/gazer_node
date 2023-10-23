@@ -81,6 +81,8 @@ func (c *Server) RequestJson(function string, requestText []byte, host string, f
 			// *** Resource ***
 		case nodeinterface.FuncResourceAdd:
 			result, err = c.ResourceAdd(requestText)
+		case nodeinterface.FuncResourceSetByPath:
+			result, err = c.ResourceSetByPath(requestText)
 		case nodeinterface.FuncResourceSet:
 			result, err = c.ResourceSet(requestText)
 		case nodeinterface.FuncResourceGet:

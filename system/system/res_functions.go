@@ -9,6 +9,10 @@ func (c *System) ResAdd(name string, tp string, content []byte) (string, error) 
 	return c.resources.Add(name, tp, content)
 }
 
+func (c *System) ResSetByPath(name string, tp string, content []byte) (string, error) {
+	return c.resources.SetByPath(name, tp, content)
+}
+
 func (c *System) ResSet(id string, suffix string, offset int64, content []byte) error {
 	return c.resources.Set(id, suffix, offset, content)
 }

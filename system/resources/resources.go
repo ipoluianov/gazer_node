@@ -321,6 +321,10 @@ func (c *Resources) GetIdByPath(path string) (id string, err error) {
 	searchingIndex := 0
 	searchingParentFolderId := ""
 
+	if len(parts) == 0 {
+		return "", errors.New("wrong path")
+	}
+
 	for {
 		found := false
 		for _, info := range infos {
@@ -343,9 +347,17 @@ func (c *Resources) GetIdByPath(path string) (id string, err error) {
 func (c *Resources) GetByPath(path string, offset int64, size int64) (nodeinterface.ResourceGetResponse, error) {
 	id, err := c.GetIdByPath(path)
 	if err != nil {
-		return nodeinterface.ResourceGetResponse{}, err
+		return nodeinterface.ResourceGetResponse{}, nil
 	}
 	return c.Get(id, offset, size)
+}
+
+func (c *Resources) SetByPath(path string, tp string, content []byte) (string, error) {
+	id, err := c.GetIdByPath(path)
+	if err != nil {
+		return c.Add(path, tp, content)
+	}
+	return id, c.Set(id, "", 0, content)
 }
 
 func SplitWithoutEmpty(req string, sep rune) []string {

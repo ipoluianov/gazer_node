@@ -23,6 +23,23 @@ func (c *Server) ResourceAdd(request []byte) (response []byte, err error) {
 	return
 }
 
+func (c *Server) ResourceSetByPath(request []byte) (response []byte, err error) {
+	var req nodeinterface.ResourceSetByPathRequest
+	var resp nodeinterface.ResourceSetByPathResponse
+	err = json.Unmarshal(request, &req)
+	if err != nil {
+		return
+	}
+
+	resp.Id, err = c.system.ResSetByPath(req.Path, req.Type, req.Content)
+	if err != nil {
+		return
+	}
+
+	response, err = json.MarshalIndent(resp, "", " ")
+	return
+}
+
 func (c *Server) ResourceSet(request []byte) (response []byte, err error) {
 	var req nodeinterface.ResourceSetRequest
 	var resp nodeinterface.ResourceSetResponse

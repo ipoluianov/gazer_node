@@ -40,6 +40,7 @@ const (
 
 	// *** Resource ***
 	FuncResourceAdd       = "resource_add"
+	FuncResourceSetByPath = "resource_set_by_path"
 	FuncResourceSet       = "resource_set"
 	FuncResourceGet       = "resource_get"
 	FuncResourceGetByPath = "resource_get_by_path"
@@ -85,6 +86,7 @@ func ApiFunctions() []string {
 	res = append(res, FuncServiceInfo)
 
 	res = append(res, FuncResourceAdd)
+	res = append(res, FuncResourceSetByPath)
 	res = append(res, FuncResourceSet)
 	res = append(res, FuncResourceGet)
 	res = append(res, FuncResourceRemove)

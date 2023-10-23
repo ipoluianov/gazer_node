@@ -14,6 +14,16 @@ type ResourceAddResponse struct {
 	Id string `json:"id"`
 }
 
+type ResourceSetByPathRequest struct {
+	Path    string `json:"path"`
+	Type    string `json:"type"`
+	Content []byte `json:"content"`
+}
+
+type ResourceSetByPathResponse struct {
+	Id string `json:"id"`
+}
+
 type ResourceSetRequest struct {
 	Id      string `json:"id"`
 	Suffix  string `json:"suffix"`
