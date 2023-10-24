@@ -45,15 +45,15 @@ func (c *Resources) Rename(id string, props []nodeinterface.PropItem) error {
 
 	var bs []byte
 
-	bs, err = ioutil.ReadFile(dir + "/" + id + ".info")
+	bs, err = os.ReadFile(dir + "/" + id + ".info")
 	if err != nil {
-		return errors.New("no resource found")
+		return errors.New("ERR_NO_RESOURCE")
 	}
 
 	var info common_interfaces.ResourcesItemInfo
 	err = json.Unmarshal(bs, &info)
 	if err != nil {
-		return errors.New("no resource found")
+		return errors.New("ERR_NO_RESOURCE")
 	}
 
 	if info.Properties == nil {
@@ -78,7 +78,7 @@ func (c *Resources) Rename(id string, props []nodeinterface.PropItem) error {
 	}
 
 	bs, _ = json.MarshalIndent(info, "", " ")
-	err = ioutil.WriteFile(dir+"/"+id+".info", bs, 0666)
+	err = os.WriteFile(dir+"/"+id+".info", bs, 0666)
 	if err != nil {
 		return err
 	}
@@ -96,9 +96,9 @@ func (c *Resources) Remove(id string) error {
 
 	dir := c.dir()
 
-	_, err = ioutil.ReadFile(dir + "/" + id + ".info")
+	_, err = os.ReadFile(dir + "/" + id + ".info")
 	if err != nil {
-		return errors.New("no resource found")
+		return errors.New("ERR_NO_RESOURCE")
 	}
 
 	err = os.Remove(dir + "/" + id + ".info")
@@ -152,12 +152,12 @@ func (c *Resources) Add(name string, tp string, content []byte) (string, error) 
 		Value: name,
 	})
 	bs, _ := json.MarshalIndent(info, "", " ")
-	err = ioutil.WriteFile(filePathInfo, bs, 0666)
+	err = os.WriteFile(filePathInfo, bs, 0666)
 	if err != nil {
 		return "", err
 	}
 
-	err = ioutil.WriteFile(filePathContent, content, 0666)
+	err = os.WriteFile(filePathContent, content, 0666)
 	if err != nil {
 		return "", err
 	}
@@ -206,15 +206,15 @@ func (c *Resources) Set(id string, suffix string, offset int64, content []byte) 
 
 	dir := c.dir()
 
-	bs, err = ioutil.ReadFile(dir + "/" + id + ".info")
+	bs, err = os.ReadFile(dir + "/" + id + ".info")
 	if err != nil {
-		return errors.New("no resource found")
+		return errors.New("ERR_NO_RESOURCE")
 	}
 
 	var info common_interfaces.ResourcesItemInfo
 	err = json.Unmarshal(bs, &info)
 	if err != nil {
-		return errors.New("no resource found")
+		return errors.New("ERR_NO_RESOURCE")
 	}
 
 	if info.Properties == nil {
@@ -222,7 +222,7 @@ func (c *Resources) Set(id string, suffix string, offset int64, content []byte) 
 	}
 
 	bs, _ = json.MarshalIndent(info, "", " ")
-	err = ioutil.WriteFile(dir+"/"+id+".info", bs, 0666)
+	err = os.WriteFile(dir+"/"+id+".info", bs, 0666)
 	if err != nil {
 		return err
 	}
@@ -258,20 +258,20 @@ func (c *Resources) Get(id string, offset int64, size int64) (nodeinterface.Reso
 
 	dir := c.dir()
 
-	bs, err = ioutil.ReadFile(dir + "/" + id + ".info")
+	bs, err = os.ReadFile(dir + "/" + id + ".info")
 	if err != nil {
-		return nodeinterface.ResourceGetResponse{}, errors.New("no resource found")
+		return nodeinterface.ResourceGetResponse{}, errors.New("ERR_NO_RESOURCE")
 	}
 
 	var info common_interfaces.ResourcesItemInfo
 	err = json.Unmarshal(bs, &info)
 	if err != nil {
-		return nodeinterface.ResourceGetResponse{}, errors.New("no resource info found")
+		return nodeinterface.ResourceGetResponse{}, errors.New("ERR_NO_RESOURCE")
 	}
 
-	bs, err = ioutil.ReadFile(dir + "/" + id + ".content")
+	bs, err = os.ReadFile(dir + "/" + id + ".content")
 	if err != nil {
-		return nodeinterface.ResourceGetResponse{}, errors.New("no resource found")
+		return nodeinterface.ResourceGetResponse{}, errors.New("ERR_NO_RESOURCE")
 	}
 
 	result := nodeinterface.ResourceGetResponse{}
@@ -300,7 +300,7 @@ func (c *Resources) GetAllInfos() []common_interfaces.ResourcesItemInfo {
 	for _, file := range files {
 		if strings.HasSuffix(file.Name(), ".info") {
 			var bs []byte
-			bs, err = ioutil.ReadFile(c.dir() + "/" + file.Name())
+			bs, err = os.ReadFile(c.dir() + "/" + file.Name())
 			if err == nil {
 				var info common_interfaces.ResourcesItemInfo
 				err = json.Unmarshal(bs, &info)
@@ -322,7 +322,7 @@ func (c *Resources) GetIdByPath(path string) (id string, err error) {
 	searchingParentFolderId := ""
 
 	if len(parts) == 0 {
-		return "", errors.New("wrong path")
+		return "", errors.New("ERR_NO_RESOURCE")
 	}
 
 	for {
@@ -336,7 +336,7 @@ func (c *Resources) GetIdByPath(path string) (id string, err error) {
 			}
 		}
 		if !found {
-			return "", errors.New("not found")
+			return "", errors.New("ERR_NO_RESOURCE")
 		}
 		if searchingIndex == len(parts) {
 			return searchingParentFolderId, nil
@@ -347,7 +347,7 @@ func (c *Resources) GetIdByPath(path string) (id string, err error) {
 func (c *Resources) GetByPath(path string, offset int64, size int64) (nodeinterface.ResourceGetResponse, error) {
 	id, err := c.GetIdByPath(path)
 	if err != nil {
-		return nodeinterface.ResourceGetResponse{}, nil
+		return nodeinterface.ResourceGetResponse{}, errors.New("ERR_NO_RESOURCE")
 	}
 	return c.Get(id, offset, size)
 }
@@ -381,7 +381,7 @@ func (c *Resources) List(tp string, filter string, offset int, maxCount int) com
 	for _, file := range files {
 		if strings.HasSuffix(file.Name(), ".info") {
 			var bs []byte
-			bs, err = ioutil.ReadFile(c.dir() + "/" + file.Name())
+			bs, err = os.ReadFile(c.dir() + "/" + file.Name())
 			if err == nil {
 				var info common_interfaces.ResourcesItemInfo
 				err = json.Unmarshal(bs, &info)
@@ -420,13 +420,13 @@ func (c *Resources) PropSet(resourceId string, props []nodeinterface.PropItem) e
 
 	bs, err = ioutil.ReadFile(dir + "/" + resourceId + ".info")
 	if err != nil {
-		return errors.New("no resource found")
+		return errors.New("ERR_NO_RESOURCE")
 	}
 
 	var info common_interfaces.ResourcesItemInfo
 	err = json.Unmarshal(bs, &info)
 	if err != nil {
-		return errors.New("no resource found")
+		return errors.New("ERR_NO_RESOURCE")
 	}
 
 	if info.Properties == nil {
@@ -451,7 +451,7 @@ func (c *Resources) PropSet(resourceId string, props []nodeinterface.PropItem) e
 	}
 
 	bs, _ = json.MarshalIndent(info, "", " ")
-	err = ioutil.WriteFile(dir+"/"+resourceId+".info", bs, 0666)
+	err = os.WriteFile(dir+"/"+resourceId+".info", bs, 0666)
 	if err != nil {
 		return err
 	}
@@ -467,15 +467,15 @@ func (c *Resources) PropGet(resourceId string) ([]nodeinterface.PropItem, error)
 
 	dir := c.dir()
 
-	bs, err = ioutil.ReadFile(dir + "/" + resourceId + ".info")
+	bs, err = os.ReadFile(dir + "/" + resourceId + ".info")
 	if err != nil {
-		return make([]nodeinterface.PropItem, 0), errors.New("no resource found")
+		return make([]nodeinterface.PropItem, 0), errors.New("ERR_NO_RESOURCE")
 	}
 
 	var info common_interfaces.ResourcesItemInfo
 	err = json.Unmarshal(bs, &info)
 	if err != nil {
-		return make([]nodeinterface.PropItem, 0), errors.New("no resource info found")
+		return make([]nodeinterface.PropItem, 0), errors.New("ERR_NO_RESOURCE")
 	}
 
 	if info.Properties == nil {
