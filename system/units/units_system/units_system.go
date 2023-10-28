@@ -30,6 +30,7 @@ import (
 	"github.com/ipoluianov/gazer_node/system/units/general_manual_items_alfa"
 	"github.com/ipoluianov/gazer_node/system/units/general_signal_generator_alfa"
 	"github.com/ipoluianov/gazer_node/system/units/network_http_rest_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/network_ping_range_alfa"
 	"github.com/ipoluianov/gazer_node/system/units/network_ping_regular_alfa"
 	"github.com/ipoluianov/gazer_node/system/units/network_ssl_expires_alfa"
 	"github.com/ipoluianov/gazer_node/system/units/network_tcp_connect_alfa"
@@ -66,6 +67,7 @@ func New(iDataStorage common_interfaces.IDataStorage) *UnitsSystem {
 	c.output = make(chan common_interfaces.UnitMessage)
 
 	c.RegUnitType(network_ping_regular_alfa.Info())
+	c.RegUnitType(network_ping_range_alfa.Info())
 	c.RegUnitType(network_tcp_connect_alfa.Info())
 	c.RegUnitType(network_http_rest_alfa.Info())
 	c.RegUnitType(network_ssl_expires_alfa.Info())
