@@ -10,7 +10,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/iunit"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"github.com/ipoluianov/gazer_node/utilities/uom"
 )
@@ -24,7 +24,7 @@ type UnitEthereumAccountWatcher struct {
 	receivedVariables map[string]string
 }
 
-func New() common_interfaces.IUnit {
+func New() iunit.IUnit {
 	var c UnitEthereumAccountWatcher
 	c.receivedVariables = make(map[string]string)
 	return &c

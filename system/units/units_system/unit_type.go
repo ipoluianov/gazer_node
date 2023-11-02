@@ -1,8 +1,6 @@
 package units_system
 
-import (
-	"github.com/ipoluianov/gazer_node/common_interfaces"
-)
+import "github.com/ipoluianov/gazer_node/iunit"
 
 type UnitType struct {
 	TypeCode    string `json:"type_code"`
@@ -13,5 +11,5 @@ type UnitType struct {
 	Picture     []byte `json:"picture"`
 	ConfigMeta  string `json:"config_meta"`
 
-	Constructor func() common_interfaces.IUnit
+	Constructor func() iunit.IUnit
 }

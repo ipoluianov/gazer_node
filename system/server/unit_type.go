@@ -3,7 +3,7 @@ package server
 import (
 	"encoding/json"
 
-	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
+	"github.com/ipoluianov/gazer_node/protocols/nodeinterface"
 )
 
 func (c *Server) UnitTypeList(request []byte) (response []byte, err error) {

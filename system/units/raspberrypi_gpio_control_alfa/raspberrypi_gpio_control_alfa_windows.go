@@ -6,7 +6,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/iunit"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 )
 
@@ -28,7 +28,7 @@ type Config struct {
 	Pins   []*ConfigItem `json:"pins"`
 }
 
-func New() common_interfaces.IUnit {
+func New() iunit.IUnit {
 	var c UnitRaspberryPiGPIO
 	return &c
 }

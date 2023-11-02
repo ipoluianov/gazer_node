@@ -9,7 +9,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/iunit"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"github.com/ipoluianov/gazer_node/utilities"
 	"github.com/ipoluianov/gazer_node/utilities/gazerping"
@@ -25,7 +25,7 @@ type UnitPing struct {
 	frameSize int
 }
 
-func New() common_interfaces.IUnit {
+func New() iunit.IUnit {
 	var c UnitPing
 	return &c
 }

@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/iunit"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 	"github.com/tarm/serial"
@@ -34,7 +35,7 @@ type UnitSerialPortKeyValue struct {
 	receivedVariables map[string]string
 }
 
-func New() common_interfaces.IUnit {
+func New() iunit.IUnit {
 	var c UnitSerialPortKeyValue
 	c.inputBuffer = make([]byte, 0)
 	c.receivedVariables = make(map[string]string)

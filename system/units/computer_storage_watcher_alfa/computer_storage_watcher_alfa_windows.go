@@ -6,7 +6,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/iunit"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"github.com/ipoluianov/gazer_node/utilities/uom"
 	"golang.org/x/sys/windows"
@@ -43,7 +43,7 @@ var getGuiResources = moduser32.NewProc("GetGuiResources")
 
 var getLogicalDrivesHandle = modkernel32.NewProc("GetLogicalDrives")
 
-func New() common_interfaces.IUnit {
+func New() iunit.IUnit {
 	var c UnitStorage
 	return &c
 }

@@ -7,7 +7,7 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/iunit"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
@@ -22,7 +22,7 @@ type UnitGeneralCGI struct {
 	CutSpecChars bool
 }
 
-func New() common_interfaces.IUnit {
+func New() iunit.IUnit {
 	var c UnitGeneralCGI
 	return &c
 }

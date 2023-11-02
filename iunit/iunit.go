@@ -1,4 +1,9 @@
-package common_interfaces
+package iunit
+
+import (
+	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/protocols/nodeinterface"
+)
 
 type UnitMessage interface{}
 
@@ -49,13 +54,15 @@ type IUnit interface {
 
 	InternalUnitStart() error
 	InternalUnitStop()
-	ItemChanged(itemId uint64, itemName string, value ItemValue)
+	ItemChanged(itemId uint64, itemName string, value common_interfaces.ItemValue)
 
 	InternalInitItems()
 	InternalDeInitItems()
 
-	PropSet(props []ItemProperty)
-	PropGet() []ItemProperty
+	PropSet(props []common_interfaces.ItemProperty)
+	PropGet() []common_interfaces.ItemProperty
 	Prop(name string) string
 	PropSetIfNotExists(name string, value string)
+
+	SetNode(inode nodeinterface.INode)
 }

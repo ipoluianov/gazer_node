@@ -4,7 +4,7 @@ import (
 	_ "embed"
 	"time"
 
-	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/iunit"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 	"github.com/ipoluianov/gazer_node/utilities/uom"
@@ -31,7 +31,7 @@ func Info() units_common.UnitMeta {
 	return info
 }
 
-func New() common_interfaces.IUnit {
+func New() iunit.IUnit {
 	var c UnitSystemMemory
 	return &c
 }

@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/iunit"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
@@ -27,7 +28,7 @@ type UnitFileContent struct {
 	precision   int
 }
 
-func New() common_interfaces.IUnit {
+func New() iunit.IUnit {
 	var c UnitFileContent
 	return &c
 }

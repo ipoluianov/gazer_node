@@ -13,6 +13,7 @@ import (
 	"encoding/pem"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/iunit"
 	"github.com/ipoluianov/gazer_node/system/history"
 	"github.com/ipoluianov/gazer_node/system/resources"
 	"github.com/ipoluianov/gazer_node/system/settings"
@@ -124,6 +125,7 @@ func NewSystem(ss *settings.Settings) *System {
 	c.xchgPoint = NewXchgServer(privateKey, c.currentMasterKey, c.currentGuestKey)
 
 	c.unitsSystem = units_system.New(&c)
+	c.unitsSystem.SetNode(&c)
 	go c.processUnitMessages(c.unitsSystem.OutputChannel())
 
 	c.history = history.NewHistory(c.ss)
@@ -208,25 +210,25 @@ func (c *System) Stop() {
 	c.WriteLastValues(c.items)
 }
 
-func (c *System) processUnitMessages(unitChannel chan common_interfaces.UnitMessage) {
+func (c *System) processUnitMessages(unitChannel chan iunit.UnitMessage) {
 	for msg := range unitChannel {
 		switch v := msg.(type) {
-		case *common_interfaces.UnitMessageItemValue:
+		case *iunit.UnitMessageItemValue:
 			msgItemValue := v
 			//msgItemValue := msg.(*common_interfaces.UnitMessageItemValue)
 			c.SetItemByNameOld(msgItemValue.ItemName, msgItemValue.Value, msgItemValue.UOM, time.Now(), false)
-		case *common_interfaces.UnitMessageSetProperty:
+		case *iunit.UnitMessageSetProperty:
 			msgSetProperty := v
 			//msgSetProperty := msg.(*common_interfaces.UnitMessageSetProperty)
 			c.SetPropertyIfDoesntExist(msgSetProperty.ItemName, msgSetProperty.PropName, msgSetProperty.PropValue)
-		case *common_interfaces.UnitMessageItemTouch:
-			msgItemTouch := msg.(*common_interfaces.UnitMessageItemTouch)
+		case *iunit.UnitMessageItemTouch:
+			msgItemTouch := msg.(*iunit.UnitMessageItemTouch)
 			c.TouchItem(msgItemTouch.ItemName)
-		case *common_interfaces.UnitMessageRemoteItemsOfUnit:
-			msgRemoteItemsOfUnit := msg.(*common_interfaces.UnitMessageRemoteItemsOfUnit)
+		case *iunit.UnitMessageRemoteItemsOfUnit:
+			msgRemoteItemsOfUnit := msg.(*iunit.UnitMessageRemoteItemsOfUnit)
 			c.RemoveItemsOfUnit(msgRemoteItemsOfUnit.UnitId)
-		case *common_interfaces.UnitMessageSetAllItemsByUnitName:
-			msgSetAllItemsByUnitName := msg.(*common_interfaces.UnitMessageSetAllItemsByUnitName)
+		case *iunit.UnitMessageSetAllItemsByUnitName:
+			msgSetAllItemsByUnitName := msg.(*iunit.UnitMessageSetAllItemsByUnitName)
 			c.SetAllItemsByUnitName(msgSetAllItemsByUnitName.UnitId, msgSetAllItemsByUnitName.Value, msgSetAllItemsByUnitName.UOM, time.Now(), false)
 		}
 	}

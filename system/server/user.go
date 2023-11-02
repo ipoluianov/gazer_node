@@ -3,7 +3,7 @@ package server
 import (
 	"encoding/json"
 
-	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
+	"github.com/ipoluianov/gazer_node/protocols/nodeinterface"
 )
 
 /*func (c *HttpServer) SessionOpen(request []byte, host string) (response []byte, err error) {

@@ -1,14 +1,15 @@
 package computer_network_adapters_alfa
 
 import (
-	"github.com/ipoluianov/gazer_node/common_interfaces"
-	"github.com/ipoluianov/gazer_node/system/units/units_common"
-	"github.com/ipoluianov/gazer_node/utilities/logger"
 	"io/ioutil"
 	"net"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/ipoluianov/gazer_node/iunit"
+	"github.com/ipoluianov/gazer_node/system/units/units_common"
+	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
 
 type UnitNetwork struct {
@@ -17,7 +18,7 @@ type UnitNetwork struct {
 	addressesOfInterfaces map[int]string
 }
 
-func New() common_interfaces.IUnit {
+func New() iunit.IUnit {
 	var c UnitNetwork
 	c.addressesOfInterfaces = make(map[int]string)
 	return &c

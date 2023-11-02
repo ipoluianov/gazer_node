@@ -1,12 +1,12 @@
 package units_common
 
-import "github.com/ipoluianov/gazer_node/common_interfaces"
+import "github.com/ipoluianov/gazer_node/iunit"
 
 type UnitMeta struct {
 	TypeName    string
 	Category    string
 	DisplayName string
-	Constructor func() common_interfaces.IUnit
+	Constructor func() iunit.IUnit
 	ImgBytes    []byte
 	Description string
 }

@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/iunit"
+	"github.com/ipoluianov/gazer_node/protocols/nodeinterface"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 	"github.com/ipoluianov/gazer_node/utilities/uom"
 )
@@ -19,7 +21,7 @@ type Unit struct {
 	unitType        string
 	unitDisplayName string
 	config          string
-	iUnit           common_interfaces.IUnit
+	iUnit           iunit.IUnit
 	//iDataStorage    common_interfaces.IDataStorage
 	lastError   string
 	lastErrorDT time.Time
@@ -35,19 +37,29 @@ type Unit struct {
 
 	watchItems map[string]bool
 
-	output chan common_interfaces.UnitMessage
+	output chan iunit.UnitMessage
+
+	inode nodeinterface.INode
 }
 
 func (c *Unit) Init() {
 	c.Properties = make(map[string]common_interfaces.ItemProperty)
-	c.output = make(chan common_interfaces.UnitMessage)
+	c.output = make(chan iunit.UnitMessage)
 }
 
 func (c *Unit) Dispose() {
 	close(c.output)
 }
 
-func (c *Unit) OutputChannel() chan common_interfaces.UnitMessage {
+func (c *Unit) SetNode(inode nodeinterface.INode) {
+	c.inode = inode
+}
+
+func (c *Unit) Node() nodeinterface.INode {
+	return c.inode
+}
+
+func (c *Unit) OutputChannel() chan iunit.UnitMessage {
 	return c.output
 }
 
@@ -98,7 +110,7 @@ func (c *Unit) SetId(id string) {
 	c.unitId = id
 }
 
-func (c *Unit) SetIUnit(iUnit common_interfaces.IUnit) {
+func (c *Unit) SetIUnit(iUnit iunit.IUnit) {
 	c.iUnit = iUnit
 }
 
@@ -216,7 +228,7 @@ const (
 
 func (c *Unit) SetStringService(name string, value string, UOM string) {
 	fullName := c.Id() + "/" + UnitServicePrefix + name
-	c.output <- &common_interfaces.UnitMessageItemValue{
+	c.output <- &iunit.UnitMessageItemValue{
 		ItemName: fullName,
 		Value:    value,
 		UOM:      UOM,
@@ -233,7 +245,7 @@ func (c *Unit) LogInfo(value string) {
 	if c.lastInfo != value || time.Now().UTC().Sub(c.lastInfoDT) > 5*time.Second {
 		fullName := c.Id() + "/" + UnitServicePrefix + "log"
 		//c.iDataStorage.SetItemByName(fullName, value, "", dt, false)
-		c.output <- &common_interfaces.UnitMessageItemValue{
+		c.output <- &iunit.UnitMessageItemValue{
 			ItemName: fullName,
 			Value:    value,
 			UOM:      "",
@@ -253,7 +265,7 @@ func (c *Unit) LogError(value string) {
 
 	if c.lastError != value || time.Now().UTC().Sub(c.lastErrorDT) > 5*time.Second {
 		fullName := c.Id() + "/" + UnitServicePrefix + "log"
-		c.output <- &common_interfaces.UnitMessageItemValue{
+		c.output <- &iunit.UnitMessageItemValue{
 			ItemName: fullName,
 			Value:    value,
 			UOM:      "error",
@@ -266,7 +278,7 @@ func (c *Unit) LogError(value string) {
 
 func (c *Unit) SetError(value string) {
 	fullName := c.Id() + "/" + UnitServicePrefix + ItemNameError
-	c.output <- &common_interfaces.UnitMessageItemValue{
+	c.output <- &iunit.UnitMessageItemValue{
 		ItemName: fullName,
 		Value:    value,
 		UOM:      "",
@@ -276,7 +288,7 @@ func (c *Unit) SetError(value string) {
 func (c *Unit) SetStringForAll(value string, UOM string) {
 	//fullName := c.Id()
 	//c.iDataStorage.SetAllItemsByUnitName(fullName, value, UOM, time.Now().UTC(), false)
-	c.output <- &common_interfaces.UnitMessageSetAllItemsByUnitName{
+	c.output <- &iunit.UnitMessageSetAllItemsByUnitName{
 		UnitId: c.Id(),
 		Value:  value,
 		UOM:    UOM,
@@ -296,7 +308,7 @@ func (c *Unit) SetString(name string, value string, UOM string) {
 	if len(name) > 0 {
 		fullName = c.Id() + "/" + name
 	}
-	c.output <- &common_interfaces.UnitMessageItemValue{
+	c.output <- &iunit.UnitMessageItemValue{
 		ItemName: fullName,
 		Value:    value,
 		UOM:      UOM,
@@ -304,7 +316,7 @@ func (c *Unit) SetString(name string, value string, UOM string) {
 }
 
 func (c *Unit) SetPropertyIfDoesntExist(itemName string, propName string, propValue string) {
-	c.output <- &common_interfaces.UnitMessageSetProperty{
+	c.output <- &iunit.UnitMessageSetProperty{
 		ItemName:  c.Id() + "/" + itemName,
 		PropName:  propName,
 		PropValue: propValue,
@@ -317,7 +329,7 @@ func (c *Unit) TouchItem(name string) {
 		fullName = c.Id() + "/" + name
 	}
 	//c.iDataStorage.TouchItem(fullName)
-	c.output <- &common_interfaces.UnitMessageItemTouch{
+	c.output <- &iunit.UnitMessageItemTouch{
 		ItemName: fullName,
 	}
 }

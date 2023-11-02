@@ -4,10 +4,11 @@ import (
 	_ "embed"
 	"encoding/json"
 	"errors"
-	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"time"
+
+	"github.com/ipoluianov/gazer_node/iunit"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"golang.org/x/sys/unix"
-	"time"
 )
 
 type UnitStorage struct {
@@ -31,7 +32,7 @@ func Info() units_common.UnitMeta {
 	return info
 }
 
-func New() common_interfaces.IUnit {
+func New() iunit.IUnit {
 	var c UnitStorage
 	return &c
 }

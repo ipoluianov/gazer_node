@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/iunit"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 )
 
@@ -23,7 +23,7 @@ type UnitHttpRestAlfa struct {
 	receivedVariables map[string]string
 }
 
-func New() common_interfaces.IUnit {
+func New() iunit.IUnit {
 	var c UnitHttpRestAlfa
 	c.receivedVariables = make(map[string]string)
 	return &c

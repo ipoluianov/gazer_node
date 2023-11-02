@@ -4,7 +4,7 @@ import (
 	_ "embed"
 	"time"
 
-	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/iunit"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 )
 
@@ -12,7 +12,7 @@ type UnitHHGTTG struct {
 	units_common.Unit
 }
 
-func New() common_interfaces.IUnit {
+func New() iunit.IUnit {
 	var c UnitHHGTTG
 	return &c
 }

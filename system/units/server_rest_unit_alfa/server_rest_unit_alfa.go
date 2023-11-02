@@ -5,11 +5,12 @@ import (
 	_ "embed"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"math"
 	"net/http"
 	"time"
 
-	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/iunit"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 	"github.com/ipoluianov/gazer_node/utilities/uom"
@@ -24,7 +25,7 @@ type UnitServerRestUnitAlfa struct {
 	srv *http.Server
 }
 
-func New() common_interfaces.IUnit {
+func New() iunit.IUnit {
 	var c UnitServerRestUnitAlfa
 	c.receivedVariables = make(map[string]string)
 	return &c
@@ -40,7 +41,7 @@ var Image []byte
 func Info() units_common.UnitMeta {
 	var info units_common.UnitMeta
 	info.TypeName = "Server.Rest.Unit.Alfa"
-	info.Category = "network"
+	info.Category = "server"
 	info.DisplayName = "Server REST Alfa"
 	info.Constructor = New
 	info.ImgBytes = Image
@@ -50,7 +51,7 @@ func Info() units_common.UnitMeta {
 
 func (c *UnitServerRestUnitAlfa) GetConfigMeta() string {
 	meta := units_common.NewUnitConfigItem("", "", "", "", "", "", "")
-	meta.Add("port", "Port", "8880", "string", "", "", "")
+	meta.Add("port", "Port", "8880", "num", "", "", "")
 	meta.Add("unit_id", "Unit ID", "", "string", "", "", "")
 	return meta.Marshal()
 }
@@ -107,7 +108,7 @@ func (c *UnitServerRestUnitAlfa) Tick() {
 	dtLastTime := time.Now().UTC()
 
 	c.srv = &http.Server{
-		Addr: ":80",
+		Addr: ":" + fmt.Sprint(c.port),
 	}
 	c.srv.Handler = c
 	go c.ThServer()
@@ -143,5 +144,14 @@ func (c *UnitServerRestUnitAlfa) Tick() {
 }
 
 func (c *UnitServerRestUnitAlfa) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
+	state, err := c.Node().GetUnitState(c.unitId)
+	if err == nil {
+		bs, err := json.MarshalIndent(state, "", " ")
+		if err == nil {
+			w.Write(bs)
+		}
+	}
+	if err != nil {
+		w.Write([]byte(err.Error()))
+	}
 }

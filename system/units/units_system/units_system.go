@@ -10,8 +10,9 @@ import (
 	"time"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/iunit"
+	"github.com/ipoluianov/gazer_node/protocols/nodeinterface"
 	"github.com/ipoluianov/gazer_node/resources"
-	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
 	"github.com/ipoluianov/gazer_node/system/units/blockchain_ethereum_balance_alfa"
 	"github.com/ipoluianov/gazer_node/system/units/blockchain_ethereum_lastblock_alfa"
 	"github.com/ipoluianov/gazer_node/system/units/computer_network_adapters_alfa"
@@ -38,18 +39,21 @@ import (
 	"github.com/ipoluianov/gazer_node/system/units/raspberrypi_cpu_temperature_alfa"
 	"github.com/ipoluianov/gazer_node/system/units/raspberrypi_gpio_control_alfa"
 	"github.com/ipoluianov/gazer_node/system/units/serialport_keyvalue_watcher_alfa"
+	"github.com/ipoluianov/gazer_node/system/units/server_rest_unit_alfa"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
 
 type UnitsSystem struct {
-	units        []common_interfaces.IUnit
+	units        []iunit.IUnit
 	unitTypes    []*UnitType
 	unitTypesMap map[string]*UnitType
 	//iDataStorage common_interfaces.IDataStorage
 	mtx sync.Mutex
 
-	output chan common_interfaces.UnitMessage
+	output chan iunit.UnitMessage
+
+	inode nodeinterface.INode
 }
 
 var unitCategoriesIcons map[string][]byte
@@ -64,7 +68,7 @@ func New(iDataStorage common_interfaces.IDataStorage) *UnitsSystem {
 	var c UnitsSystem
 	c.unitTypes = make([]*UnitType, 0)
 	c.unitTypesMap = make(map[string]*UnitType)
-	c.output = make(chan common_interfaces.UnitMessage)
+	c.output = make(chan iunit.UnitMessage)
 
 	c.RegUnitType(network_ping_regular_alfa.Info())
 	c.RegUnitType(network_ping_range_alfa.Info())
@@ -102,18 +106,24 @@ func New(iDataStorage common_interfaces.IDataStorage) *UnitsSystem {
 	c.RegUnitType(blockchain_ethereum_lastblock_alfa.Info())
 	c.RegUnitType(blockchain_ethereum_balance_alfa.Info())
 
+	c.RegUnitType(server_rest_unit_alfa.Info())
+
 	c.initCategories()
 
 	return &c
 }
 
-func (c *UnitsSystem) OutputChannel() chan common_interfaces.UnitMessage {
+func (c *UnitsSystem) SetNode(inode nodeinterface.INode) {
+	c.inode = inode
+}
+
+func (c *UnitsSystem) OutputChannel() chan iunit.UnitMessage {
 	return c.output
 }
 
 func (c *UnitsSystem) ItemChanged(itemId uint64, itemName string, value common_interfaces.ItemValue) {
 	c.mtx.Lock()
-	units := make([]common_interfaces.IUnit, len(c.units))
+	units := make([]iunit.IUnit, len(c.units))
 	copy(units, c.units)
 	c.mtx.Unlock()
 
@@ -179,7 +189,7 @@ func (c *UnitsSystem) RegUnitType(info units_common.UnitMeta) *UnitType {
 	return &sType
 }
 
-func (c *UnitsSystem) RegisterUnit(typeName string, category string, displayName string, constructor func() common_interfaces.IUnit, imgBytes []byte, description string) *UnitType {
+func (c *UnitsSystem) RegisterUnit(typeName string, category string, displayName string, constructor func() iunit.IUnit, imgBytes []byte, description string) *UnitType {
 	var sType UnitType
 	sType.TypeCode = typeName
 	sType.Category = category
@@ -292,8 +302,8 @@ func (c *UnitsSystem) Stop() {
 	logger.Println("UNITS_SYSTEM stopping end")
 }
 
-func (c *UnitsSystem) MakeUnitByType(unitType string) common_interfaces.IUnit {
-	var unit common_interfaces.IUnit
+func (c *UnitsSystem) MakeUnitByType(unitType string) iunit.IUnit {
+	var unit iunit.IUnit
 
 	for _, st := range c.unitTypes {
 		if st.TypeCode == unitType {
@@ -304,13 +314,14 @@ func (c *UnitsSystem) MakeUnitByType(unitType string) common_interfaces.IUnit {
 
 	if unit != nil {
 		unit.Init()
+		unit.SetNode(c.inode)
 	}
 
 	return unit
 }
 
-func (c *UnitsSystem) AddUnit(unitType string, unitId string, displayName string, config string, fromCloud bool) (common_interfaces.IUnit, error) {
-	var unit common_interfaces.IUnit
+func (c *UnitsSystem) AddUnit(unitType string, unitId string, displayName string, config string, fromCloud bool) (iunit.IUnit, error) {
+	var unit iunit.IUnit
 	nameIsExists := false
 	c.mtx.Lock()
 	if len(unitId) == 0 {
@@ -344,7 +355,7 @@ func (c *UnitsSystem) AddUnit(unitType string, unitId string, displayName string
 		}
 	}
 
-	funcToOutput := func(ch chan common_interfaces.UnitMessage) {
+	funcToOutput := func(ch chan iunit.UnitMessage) {
 		for msg := range ch {
 			c.output <- msg
 		}
@@ -370,7 +381,7 @@ func (c *UnitsSystem) AddUnit(unitType string, unitId string, displayName string
 }
 
 func (c *UnitsSystem) GetUnitState(unitId string) (nodeinterface.UnitStateResponse, error) {
-	var unit common_interfaces.IUnit
+	var unit iunit.IUnit
 	c.mtx.Lock()
 	for _, s := range c.units {
 		if s.Id() == unitId {
@@ -481,7 +492,7 @@ func (c *UnitsSystem) RemoveUnits(units []string) error {
 	logger.Println("UnitsSystem RemoveUnits", units)
 	c.mtx.Lock()
 
-	var deletedUnit common_interfaces.IUnit
+	var deletedUnit iunit.IUnit
 	var unitIndex int
 	idsOfDeletedUnits := make([]string, 0)
 
@@ -507,7 +518,7 @@ func (c *UnitsSystem) RemoveUnits(units []string) error {
 
 	logger.Println("UnitsSystem RemoveUnits deleting items")
 	for _, idOfDeletedUnit := range idsOfDeletedUnits {
-		c.output <- &common_interfaces.UnitMessageRemoteItemsOfUnit{
+		c.output <- &iunit.UnitMessageRemoteItemsOfUnit{
 			UnitId: idOfDeletedUnit,
 		}
 	}
@@ -557,7 +568,7 @@ func (c *UnitsSystem) GetConfigByType(unitType string) (string, string, error) {
 }
 
 func (c *UnitsSystem) SetConfig(unitId string, name string, config string, fromCloud bool) error {
-	var unit common_interfaces.IUnit
+	var unit iunit.IUnit
 
 	c.mtx.Lock()
 	for _, s := range c.units {
@@ -625,7 +636,7 @@ func (c *UnitsSystem) SetConfig(unitId string, name string, config string, fromC
 
 func (c *UnitsSystem) UnitPropSet(unitId string, props []nodeinterface.PropItem) error {
 	var err error
-	var targetUnit common_interfaces.IUnit
+	var targetUnit iunit.IUnit
 	c.mtx.Lock()
 	for _, unit := range c.units {
 		if unit.Id() == unitId {
@@ -652,7 +663,7 @@ func (c *UnitsSystem) UnitPropSet(unitId string, props []nodeinterface.PropItem)
 func (c *UnitsSystem) UnitPropGet(unitId string) ([]nodeinterface.PropItem, error) {
 	var err error
 	result := make([]nodeinterface.PropItem, 0)
-	var targetUnit common_interfaces.IUnit
+	var targetUnit iunit.IUnit
 	c.mtx.Lock()
 	for _, unit := range c.units {
 		if unit.Id() == unitId {

@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/iunit"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"github.com/jackc/pgx"
 
@@ -24,7 +24,7 @@ type UnitPostgreSQL struct {
 	periodMs int
 }
 
-func New() common_interfaces.IUnit {
+func New() iunit.IUnit {
 	var c UnitPostgreSQL
 	return &c
 }

@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/protocols/nodeinterface"
 	"github.com/ipoluianov/gazer_node/system/history"
-	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
 

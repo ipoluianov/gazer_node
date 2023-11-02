@@ -4,12 +4,13 @@ import (
 	_ "embed"
 	"encoding/json"
 	"errors"
-	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"strconv"
+	"time"
+
+	"github.com/ipoluianov/gazer_node/iunit"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 	"github.com/ipoluianov/gazer_node/utilities/uom"
 	"github.com/stianeikeland/go-rpio/v4"
-	"strconv"
-	"time"
 )
 
 // "github.com/stianeikeland/go-rpio/v4"
@@ -33,7 +34,7 @@ type Config struct {
 	Pins   []*ConfigItem `json:"pins"`
 }
 
-func New() common_interfaces.IUnit {
+func New() iunit.IUnit {
 	var c UnitRaspberryPiGPIO
 	return &c
 }

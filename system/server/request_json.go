@@ -3,7 +3,7 @@ package server
 import (
 	"errors"
 
-	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
+	"github.com/ipoluianov/gazer_node/protocols/nodeinterface"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 )
 

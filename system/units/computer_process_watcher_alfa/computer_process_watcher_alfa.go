@@ -3,7 +3,7 @@ package computer_process_watcher_alfa
 import (
 	_ "embed"
 
-	"github.com/ipoluianov/gazer_node/common_interfaces"
+	"github.com/ipoluianov/gazer_node/iunit"
 	"github.com/ipoluianov/gazer_node/system/units/units_common"
 )
 
@@ -22,7 +22,7 @@ type UnitSystemProcess struct {
 //go:embed "image.png"
 var Image []byte
 
-func New() common_interfaces.IUnit {
+func New() iunit.IUnit {
 	var c UnitSystemProcess
 	return &c
 }

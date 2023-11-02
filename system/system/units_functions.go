@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/ipoluianov/gazer_node/common_interfaces"
-	"github.com/ipoluianov/gazer_node/system/protocols/lookup"
-	"github.com/ipoluianov/gazer_node/system/protocols/nodeinterface"
+	"github.com/ipoluianov/gazer_node/protocols/lookup"
+	"github.com/ipoluianov/gazer_node/protocols/nodeinterface"
 	"github.com/ipoluianov/gazer_node/system/units/computer_process_watcher_alfa"
 	"github.com/ipoluianov/gazer_node/utilities/logger"
 	"go.bug.st/serial"
