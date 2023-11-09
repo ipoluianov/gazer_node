@@ -189,17 +189,17 @@ func (c *UnitTxtTable) Tick() {
 
 		if err != nil {
 			c.SetString(ItemNameResult, err.Error(), "error")
-			c.SetError(err.Error())
+			//c.SetError(err.Error())
 		} else {
 			if len(names) == len(values) {
 				for i := 0; i < len(names); i++ {
 					c.SetString(names[i], values[i], "")
 				}
-				c.SetError("")
+				//c.SetError("")
 			} else {
 				err = errors.New("header fields doesn't match other rows")
 				c.SetString(ItemNameResult, err.Error(), "error")
-				c.SetError(err.Error())
+				//c.SetError(err.Error())
 			}
 		}
 

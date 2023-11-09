@@ -163,7 +163,7 @@ func (c *UnitPing) Tick() {
 
 		if !utilities.IsRoot() && runtime.GOOS == "linux" {
 			c.SetString(ItemNameTime, "no root", "error")
-			c.SetError("ping.NewPinger: " + "no root")
+			//c.SetError("ping.NewPinger: " + "no root")
 			dtLastPingTime = time.Now().UTC()
 			continue
 		}
@@ -172,7 +172,7 @@ func (c *UnitPing) Tick() {
 		//var frameSize int32 = int32(c.frameSize)
 
 		if c.addr == "" {
-			c.SetError("ipaddress == ''")
+			//c.SetError("ipaddress == ''")
 			c.SetString(ItemNameTime, "wrong address", "error")
 			continue
 		}
@@ -214,7 +214,7 @@ func (c *UnitPing) Tick() {
 				t := pingTime
 				c.SetInt(ItemNameTime, t, uom.MS)
 				if lastError != "" {
-					c.SetError("")
+					//c.SetError("")
 				}
 				lastError = ""
 			}
@@ -222,7 +222,7 @@ func (c *UnitPing) Tick() {
 			if lastError != err.Error() {
 				lastError = err.Error()
 				lastIP = ""
-				c.SetError(lastError)
+				//c.SetError(lastError)
 				c.SetString(ItemNameIP, lastIP, "error")
 			}
 			c.SetString(ItemNameTime, lastError, "error")

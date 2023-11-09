@@ -125,7 +125,6 @@ func (c *System) LoadConfig() error {
 			item.Id = itemConf.Id
 			item.Name = itemConf.Name
 			item.Properties = make(map[string]*common_interfaces.ItemProperty)
-			item.TranslateToItems = make(map[uint64]*common_interfaces.Item)
 			for _, p := range itemConf.Properties {
 				item.Properties[p.Name] = &common_interfaces.ItemProperty{
 					Name:  p.Name,

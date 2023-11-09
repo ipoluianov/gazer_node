@@ -129,7 +129,7 @@ func (c *UnitFileTail) Tick() {
 					_, err = file.Read(buffer)
 					if err == nil {
 						c.SetString(ItemNameContent, string(buffer), "")
-						c.SetError("")
+						//c.SetError("")
 					}
 				}
 			}
@@ -137,7 +137,7 @@ func (c *UnitFileTail) Tick() {
 
 		if err != nil {
 			c.SetString(ItemNameContent, err.Error(), "error")
-			c.SetError(err.Error())
+			//c.SetError(err.Error())
 		}
 	}
 	c.SetString(ItemNameContent, "", "stopped")

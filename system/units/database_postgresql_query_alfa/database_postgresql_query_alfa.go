@@ -176,7 +176,7 @@ func (c *UnitPostgreSQL) Tick() {
 									uom = fmt.Sprint(values[2])
 								}
 								c.SetString(name, value, uom)
-								c.SetError("")
+								//c.SetError("")
 							}
 						} else {
 							err = errors.New("no values returned")
@@ -193,7 +193,7 @@ func (c *UnitPostgreSQL) Tick() {
 				if err == nil {
 					if len(values) > 0 {
 						c.SetString(ItemNameResult, fmt.Sprint(values[0]), "")
-						c.SetError("")
+						//c.SetError("")
 					} else {
 						err = errors.New("no values returned")
 					}
@@ -204,7 +204,7 @@ func (c *UnitPostgreSQL) Tick() {
 
 		if err != nil {
 			c.SetString(ItemNameResult, err.Error(), "error")
-			c.SetError(err.Error())
+			//c.SetError(err.Error())
 		}
 	}
 

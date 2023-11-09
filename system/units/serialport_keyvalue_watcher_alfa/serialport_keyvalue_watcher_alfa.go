@@ -174,13 +174,13 @@ func (c *UnitSerialPortKeyValue) Tick() {
 
 	for !c.Stopping {
 		if c.serialPort == nil {
-			c.LogInfo("try to open serial port " + c.serialConfig.Name)
+			//c.LogInfo("try to open serial port " + c.serialConfig.Name)
 			c.serialPort, err = serial.OpenPort(c.serialConfig)
 			if err != nil {
 				c.serialPort = nil
 				c.SetString("status", err.Error(), "error")
-				c.SetError(err.Error())
-				c.LogError(err.Error())
+				//c.SetError(err.Error())
+				//c.LogError(err.Error())
 				for vName := range c.receivedVariables {
 					c.SetString(vName, "", "error")
 				}

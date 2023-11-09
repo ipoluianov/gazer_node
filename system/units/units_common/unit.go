@@ -165,12 +165,12 @@ func (c *Unit) Start() error {
 	if c.Started {
 		return errors.New("already started")
 	}
-	c.LogInfo("")
-	c.LogInfo("starting ...")
-	c.SetStringService("name", c.DisplayName(), "")
-	c.SetError("")
-	c.SetStringService("status", "started", "")
-	c.SetStringService("Unit", c.Type(), "")
+	//c.LogInfo("")
+	//c.LogInfo("starting ...")
+	//c.SetStringService("name", c.DisplayName(), "")
+	//c.SetError("")
+	//c.SetStringService("status", "started", "")
+	//c.SetStringService("Unit", c.Type(), "")
 
 	c.Stopping = false
 
@@ -178,10 +178,10 @@ func (c *Unit) Start() error {
 	err = c.iUnit.InternalUnitStart()
 
 	if err != nil {
-		c.SetError(err.Error())
-		c.LogError(err.Error())
+		//c.SetError(err.Error())
+		//c.LogError(err.Error())
 	} else {
-		c.LogInfo("started")
+		//c.LogInfo("started")
 	}
 
 	return err
@@ -193,13 +193,13 @@ func (c *Unit) Stop() {
 		logger.Println("Unit Stop - unit is not started", c.Id())
 		return
 	}
-	c.LogInfo("stopping ...")
+	//c.LogInfo("stopping ...")
 
 	/*for itemWatched, _ := range c.watchItems {
 		c.iDataStorage.RemoveFromWatch(c.Id(), itemWatched)
 	}*/
 
-	c.SetStringService("status", "stopping", "")
+	//c.SetStringService("status", "stopping", "")
 	c.Stopping = true
 	logger.Println("Unit Stop - stopping - waiting", c.Id())
 	for c.Started {
@@ -209,7 +209,7 @@ func (c *Unit) Stop() {
 	logger.Println("Unit Stop - stopping", c.Id())
 	logger.Println("Unit Stop - stopping - InternalDeInitItems", c.Id())
 	c.iUnit.InternalDeInitItems()
-	c.LogInfo("stopped")
+	//c.LogInfo("stopped")
 	logger.Println("Unit Stop - complete", c.Id())
 }
 
@@ -218,15 +218,14 @@ func (c *Unit) IsStarted() bool {
 }
 
 const (
-	UnitServicePrefix = ".service/"
-	ItemNameError     = "error"
+	ItemNameError = "error"
 )
 
 /*func (c *Unit) IDataStorage() common_interfaces.IDataStorage {
 	return c.iDataStorage
 }*/
 
-func (c *Unit) SetStringService(name string, value string, UOM string) {
+/*func (c *Unit) SetStringService(name string, value string, UOM string) {
 	fullName := c.Id() + "/" + UnitServicePrefix + name
 	c.output <- &iunit.UnitMessageItemValue{
 		ItemName: fullName,
@@ -234,9 +233,9 @@ func (c *Unit) SetStringService(name string, value string, UOM string) {
 		UOM:      UOM,
 	}
 	//c.iDataStorage.SetItemByName(fullName, value, UOM, time.Now().UTC(), false)
-}
+}*/
 
-func (c *Unit) LogInfo(value string) {
+/*func (c *Unit) LogInfo(value string) {
 	dt := time.Now().UTC()
 	if dt.Sub(c.lastLogDT) < 1*time.Microsecond {
 		dt = dt.Add(1 * time.Microsecond)
@@ -254,9 +253,9 @@ func (c *Unit) LogInfo(value string) {
 	}
 	c.lastInfo = value
 	time.Sleep(1 * time.Microsecond)
-}
+}*/
 
-func (c *Unit) LogError(value string) {
+/*func (c *Unit) LogError(value string) {
 	dt := time.Now().UTC()
 	if dt.Sub(c.lastLogDT) < 1*time.Microsecond {
 		dt = dt.Add(1 * time.Microsecond)
@@ -274,16 +273,16 @@ func (c *Unit) LogError(value string) {
 	}
 	c.lastError = value
 	time.Sleep(1 * time.Microsecond)
-}
+}*/
 
-func (c *Unit) SetError(value string) {
+/*func (c *Unit) SetError(value string) {
 	fullName := c.Id() + "/" + UnitServicePrefix + ItemNameError
 	c.output <- &iunit.UnitMessageItemValue{
 		ItemName: fullName,
 		Value:    value,
 		UOM:      "",
 	}
-}
+}*/
 
 func (c *Unit) SetStringForAll(value string, UOM string) {
 	//fullName := c.Id()

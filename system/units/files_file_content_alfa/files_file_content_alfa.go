@@ -168,11 +168,11 @@ func (c *UnitFileContent) Tick() {
 
 		if err == nil {
 			c.SetString(ItemNameContent, contentStr, c.uom)
-			c.SetError("")
+			//c.SetError("")
 			c.SetString(ItemNameReadResult, "Success", "")
 		} else {
 			c.SetString(ItemNameContent, string(content), "error")
-			c.SetError(err.Error())
+			//c.SetError(err.Error())
 			c.SetString(ItemNameReadResult, err.Error(), "error")
 		}
 	}

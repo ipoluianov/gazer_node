@@ -180,14 +180,14 @@ func (c *UnitTcpConnect) Tick() {
 			if lastError != err.Error() {
 				lastError = err.Error()
 				lastIP = ""
-				c.SetError(lastError)
+				//c.SetError(lastError)
 				c.SetString(ItemNameIP, lastIP, uom.ERROR)
 			}
 			c.SetString(ItemNameTime, lastError, uom.ERROR)
 		} else {
 			if !c.Stopping {
 				if lastError != "" {
-					c.SetError("")
+					//c.SetError("")
 				}
 				lastError = ""
 			}

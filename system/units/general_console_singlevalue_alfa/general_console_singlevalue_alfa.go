@@ -152,14 +152,14 @@ func (c *UnitGeneralCGI) Tick() {
 
 		if err == nil {
 			c.SetString(ItemNameResult, result, "")
-			c.SetError("")
+			//c.SetError("")
 		} else {
 			if c.showError {
 				c.SetString(ItemNameResult, result, "error")
 			} else {
 				c.SetString(ItemNameResult, err.Error(), "error")
 			}
-			c.SetError(err.Error())
+			//c.SetError(err.Error())
 		}
 	}
 	c.SetString(ItemNameResult, "", "stopped")

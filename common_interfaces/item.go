@@ -12,25 +12,20 @@ type ItemValue struct {
 }
 
 type Item struct {
-	Id               uint64    `json:"id"`
-	UnitId           string    `json:"unit_id"`
-	Name             string    `json:"name"`
-	Value            ItemValue `json:"value"`
-	Properties       map[string]*ItemProperty
-	TranslateToItems map[uint64]*Item
+	//Id         uint64    `json:"id"`
+	Name       string    `json:"name"`
+	Value      ItemValue `json:"value"`
+	Properties map[string]*ItemProperty
 
-	SourceItemId            uint64
-	PostprocessingTrim      bool    `json:"postprocessing_trim"`
-	PostprocessingAdjust    bool    `json:"postprocessing_adjust"`
-	PostprocessingScale     float64 `json:"postprocessing_scale"`
-	PostprocessingOffset    float64 `json:"postprocessing_offset"`
-	PostprocessingPrecision int     `json:"postprocessing_precision"`
+	postprocessingTrim      bool
+	postprocessingAdjust    bool
+	postprocessingScale     float64
+	postprocessingOffset    float64
+	postprocessingPrecision int
 }
 
 type ItemGetUnitItems struct {
 	Item
-	CloudChannels      []string `json:"cloud_channels"`
-	CloudChannelsNames []string `json:"cloud_channels_names"`
 }
 
 type ItemStateInfo struct {
@@ -45,23 +40,42 @@ type ItemStateInfo struct {
 func NewItem() *Item {
 	var c Item
 	c.Properties = make(map[string]*ItemProperty)
-	c.TranslateToItems = make(map[uint64]*Item)
 	return &c
 }
 
+func (c *Item) SetPostprocessingTrim(postprocessingTrim bool) {
+	c.postprocessingTrim = postprocessingTrim
+}
+
+func (c *Item) SetPostprocessingAdjust(postprocessingAdjust bool) {
+	c.postprocessingAdjust = postprocessingAdjust
+}
+
+func (c *Item) SetPostprocessingScale(postprocessingScale float64) {
+	c.postprocessingScale = postprocessingScale
+}
+
+func (c *Item) SetPostprocessingOffset(postprocessingOffset float64) {
+	c.postprocessingOffset = postprocessingOffset
+}
+
+func (c *Item) SetPostprocessingPrecision(postprocessingPrecision int) {
+	c.postprocessingPrecision = postprocessingPrecision
+}
+
 func (c *Item) PostprocessingValue(value string) string {
-	if c.PostprocessingTrim {
+	if c.postprocessingTrim {
 		value = strings.Trim(value, " \r\n\t")
 	}
 
-	if c.PostprocessingAdjust {
+	if c.postprocessingAdjust {
 		var err error
 		var valueFloat float64
 		valueFloat, err = strconv.ParseFloat(value, 64)
 		if err == nil {
-			valueFloat = valueFloat*c.PostprocessingScale + c.PostprocessingOffset
-			value = strconv.FormatFloat(valueFloat, 'f', c.PostprocessingPrecision, 64)
-			if strings.Index(value, ".") >= 0 {
+			valueFloat = valueFloat*c.postprocessingScale + c.postprocessingOffset
+			value = strconv.FormatFloat(valueFloat, 'f', c.postprocessingPrecision, 64)
+			if strings.Contains(value, ".") {
 				value = strings.TrimRight(value, "0")
 			}
 		}

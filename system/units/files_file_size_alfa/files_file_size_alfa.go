@@ -106,10 +106,10 @@ func (c *UnitFileSize) Tick() {
 		stat, err := os.Stat(c.fileName)
 		if err == nil {
 			c.SetString(ItemNameSize, fmt.Sprint(stat.Size()), "bytes")
-			c.SetError("")
+			//c.SetError("")
 		} else {
 			c.SetString(ItemNameSize, "", "")
-			c.SetError(err.Error())
+			//c.SetError(err.Error())
 		}
 	}
 	c.SetString(ItemNameSize, "", "stopped")

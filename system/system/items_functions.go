@@ -99,10 +99,6 @@ func (c *System) SetItem(itemId uint64, value common_interfaces.ItemValue, count
 		c.history.Write(item.Id, value)
 	}
 
-	for _, itemDest := range item.TranslateToItems {
-		c.SetItem(itemDest.Id, value, counter, true)
-	}
-
 	if external {
 		c.unitsSystem.ItemChanged(item.Id, item.Name, value)
 	}
@@ -133,39 +129,23 @@ func (c *System) applyItemsProperties() {
 	// Need to be synced
 	for _, item := range c.items {
 		for _, prop := range item.Properties {
-			if prop.Name == "source" {
-				if prop.Value != "" {
-					srcItemId, err := strconv.ParseUint(prop.Value, 10, 64)
-					if err == nil {
-						for _, itemToClearUp := range c.items {
-							delete(itemToClearUp.TranslateToItems, item.Id)
-						}
-						if srcItem, ok := c.itemsById[srcItemId]; ok {
-							srcItem.TranslateToItems[item.Id] = item
-						}
-					}
-				} else {
-					for _, itemToClearUp := range c.items {
-						delete(itemToClearUp.TranslateToItems, item.Id)
-					}
-				}
-			}
-
 			if prop.Name == "tune_trim" {
-				item.PostprocessingTrim = prop.Value == "1"
+				item.SetPostprocessingTrim(prop.Value == "1")
 			}
 			if prop.Name == "tune_on" {
-				item.PostprocessingAdjust = prop.Value == "1"
+				item.SetPostprocessingAdjust(prop.Value == "1")
 			}
 			if prop.Name == "tune_scale" {
-				item.PostprocessingScale, _ = strconv.ParseFloat(prop.Value, 64)
+				v, _ := strconv.ParseFloat(prop.Value, 64)
+				item.SetPostprocessingScale(v)
 			}
 			if prop.Name == "tune_offset" {
-				item.PostprocessingOffset, _ = strconv.ParseFloat(prop.Value, 64)
+				v, _ := strconv.ParseFloat(prop.Value, 64)
+				item.SetPostprocessingOffset(v)
 			}
 			if prop.Name == "tune_precision" {
 				precision, _ := strconv.ParseInt(prop.Value, 10, 64)
-				item.PostprocessingPrecision = int(precision)
+				item.SetPostprocessingPrecision(int(precision))
 			}
 		}
 	}

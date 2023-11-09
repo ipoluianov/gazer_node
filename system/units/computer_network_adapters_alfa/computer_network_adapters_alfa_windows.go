@@ -132,7 +132,7 @@ func (c *UnitNetwork) Tick() {
 			c.SetFloat64("TotalOutSpeed", totalOutSpeed, "KB/sec", 1)
 			c.SetFloat64("TotalSpeed", totalSpeed, "KB/sec", 1)
 		} else {
-			c.SetError(err.Error())
+			//c.SetError(err.Error())
 		}
 	}
 
