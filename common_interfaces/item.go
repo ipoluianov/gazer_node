@@ -12,7 +12,7 @@ type ItemValue struct {
 }
 
 type Item struct {
-	//Id         uint64    `json:"id"`
+	Id         uint64    `json:"id"`
 	Name       string    `json:"name"`
 	Value      ItemValue `json:"value"`
 	Properties map[string]*ItemProperty
