@@ -33,6 +33,7 @@ func New() iunit.IUnit {
 
 const (
 	ItemNameStatus = "Status"
+	ItemNameURL    = "URL"
 )
 
 //go:embed "image.png"
@@ -85,7 +86,8 @@ func (c *UnitServerRestUnitAlfa) InternalUnitStart() error {
 
 	c.SetMainItem(ItemNameStatus)
 
-	c.SetString(ItemNameStatus, "", "")
+	c.SetString(ItemNameStatus, "", uom.STARTED)
+	c.SetString(ItemNameURL, "http://localhost:"+fmt.Sprint(c.port)+"/", "")
 	go c.Tick()
 	return nil
 }
